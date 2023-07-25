@@ -362,6 +362,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     height: 10,
+    padding: 0,
     gap: 3,
     margin: 24,
     marginBottom: 26,
@@ -370,8 +371,9 @@ const styles = StyleSheet.create({
   activePillText: {
     color: '#fff',
     textAlign: 'center',
+    paddingBottom: 14,
   },
-  inActivePillText: {color: '#222', textAlign: 'center'},
+  inActivePillText: {color: '#222', textAlign: 'center', paddingBottom: 14},
   activePill: {
     width: '25%',
     backgroundColor: '#222222',

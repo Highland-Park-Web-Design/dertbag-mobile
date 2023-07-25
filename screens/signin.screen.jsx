@@ -85,7 +85,7 @@ function SignIn({navigation}) {
             </View>
             <TouchableOpacity
               onPress={() => {
-                navigation.navigate('Product');
+                navigation.navigate('Dashboard');
               }}
               activeOpacity={0.5}
               style={styles.buttonStyle}>
