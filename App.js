@@ -2,6 +2,9 @@ import SignIn from './screens/signin.screen';
 import SignUp from './screens/signup.screen';
 import Splash from './screens/splash.screen';
 import Product from './screens/product.screen';
+import Bag from './screens/checkoutBag.screen';
+import Recreation from './screens/blogRecreation.screen';
+import Settings from './screens/profileSettings.screen';
 import ResetPassword from './screens/reset.screen';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
@@ -9,31 +12,6 @@ import {Text, View, Image} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 const Stack = createNativeStackNavigator();
-
-function Bag() {
-  return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text>Checkout</Text>
-    </View>
-  );
-}
-
-function Recreation() {
-  return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text>Recreation</Text>
-    </View>
-  );
-}
-
-function Settings() {
-  return (
-    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Text>Profile</Text>
-    </View>
-  );
-}
-
 const Tab = createBottomTabNavigator();
 
 function Dashboard() {
@@ -44,6 +22,7 @@ function Dashboard() {
         component={Product}
         options={{
           tabBarLabel: 'For You',
+          headerShown: false,
           tabBarActiveTintColor: 'black',
           tabBarIcon: ({focused}) =>
             focused ? (
@@ -57,6 +36,7 @@ function Dashboard() {
         name="Bag"
         component={Bag}
         options={{
+          headerShown: false,
           tabBarLabel: 'Bag',
           tabBarActiveTintColor: 'black',
           tabBarIcon: ({focused}) =>
@@ -71,6 +51,7 @@ function Dashboard() {
         name="Recreation"
         component={Recreation}
         options={{
+          headerShown: false,
           tabBarLabel: 'Recreation',
           tabBarActiveTintColor: 'black',
           tabBarIcon: ({focused}) =>
@@ -89,6 +70,7 @@ function Dashboard() {
         name="Profile"
         component={Settings}
         options={{
+          headerShown: false,
           tabBarLabel: 'Profile',
           tabBarActiveTintColor: 'black',
           tabBarIcon: ({focused}) =>
