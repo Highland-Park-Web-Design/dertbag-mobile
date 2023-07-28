@@ -21,7 +21,7 @@ function Dashboard() {
         name="For You"
         component={Product}
         options={{
-          tabBarLabel: 'For You',
+          // tabBarLabel: 'For You',
           headerShown: false,
           tabBarActiveTintColor: 'black',
           tabBarIcon: ({focused}) =>
@@ -37,7 +37,7 @@ function Dashboard() {
         component={Bag}
         options={{
           headerShown: false,
-          tabBarLabel: 'Bag',
+          // tabBarLabel: 'Bag',
           tabBarActiveTintColor: 'black',
           tabBarIcon: ({focused}) =>
             focused ? (
@@ -52,7 +52,7 @@ function Dashboard() {
         component={Recreation}
         options={{
           headerShown: false,
-          tabBarLabel: 'Recreation',
+          // tabBarLabel: 'Recreation',
           tabBarActiveTintColor: 'black',
           tabBarIcon: ({focused}) =>
             focused ? (
@@ -71,7 +71,7 @@ function Dashboard() {
         component={Settings}
         options={{
           headerShown: false,
-          tabBarLabel: 'Profile',
+          // tabBarLabel: 'Profile',
           tabBarActiveTintColor: 'black',
           tabBarIcon: ({focused}) =>
             focused ? (
