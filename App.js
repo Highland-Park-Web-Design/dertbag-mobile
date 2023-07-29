@@ -21,7 +21,6 @@ function Dashboard() {
         name="For You"
         component={Product}
         options={{
-          // tabBarLabel: 'For You',
           headerShown: false,
           tabBarActiveTintColor: 'black',
           tabBarIcon: ({focused}) =>
@@ -37,7 +36,6 @@ function Dashboard() {
         component={Bag}
         options={{
           headerShown: false,
-          // tabBarLabel: 'Bag',
           tabBarActiveTintColor: 'black',
           tabBarIcon: ({focused}) =>
             focused ? (
@@ -71,7 +69,6 @@ function Dashboard() {
         component={Settings}
         options={{
           headerShown: false,
-          // tabBarLabel: 'Profile',
           tabBarActiveTintColor: 'black',
           tabBarIcon: ({focused}) =>
             focused ? (
@@ -95,7 +92,7 @@ const App = () => {
           options={{title: 'Sign In', headerShown: false}}
         />
         <Stack.Screen
-          name="Dashboard"
+          name="Product"
           component={Dashboard}
           options={{title: 'Home', headerShown: false}}
         />
