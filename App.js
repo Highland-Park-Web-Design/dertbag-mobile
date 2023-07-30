@@ -14,7 +14,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
-function Dashboard() {
+function ProductScreens() {
   return (
     <Tab.Navigator>
       <Tab.Screen
@@ -93,7 +93,7 @@ const App = () => {
         />
         <Stack.Screen
           name="Product"
-          component={Dashboard}
+          component={ProductScreens}
           options={{title: 'Home', headerShown: false}}
         />
         <Stack.Screen
