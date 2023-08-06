@@ -99,8 +99,8 @@ function SignIn({navigation}) {
                 textAlign: 'center',
                 fontSize: 16,
                 fontFamily: 'Helvetica',
-                fontStyle: 'normal',
-                fontWeight: '400',
+                //fontStyle: 'normal',
+                //fontWeight: '400',
                 lineHeight: 24,
               }}>
               New here?
@@ -131,8 +131,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'Helvetica',
     fontSize: 16,
-    fontStyle: 'normal',
-    fontWeight: '700',
+    //fontStyle: 'normal',
+    //fontWeight: '700',
     lineHeight: 24,
     textTransform: 'uppercase',
   },
@@ -141,24 +141,24 @@ const styles = StyleSheet.create({
     color: '#000',
     textTransform: 'uppercase',
     fontSize: 32,
-    fontWeight: '700',
+    //fontWeight: '700',
     lineHeight: 44,
-    fontStyle: 'normal',
+    //fontStyle: 'normal',
     fontFamily: 'Helvetica',
   },
   forgotPwLabel: {
     fontSize: 12,
     fontFamily: 'Helvetica',
-    fontStyle: 'normal',
-    fontWeight: '400',
+    //fontStyle: 'normal',
+    //fontWeight: '400',
     lineHeight: 16,
     color: '#000',
   },
   inputLabel: {
     fontSize: 14,
     fontFamily: 'Helvetica',
-    fontStyle: 'normal',
-    fontWeight: '300',
+    //fontStyle: 'normal',
+    //fontWeight: 300,
     lineHeight: 24,
     color: '#000',
   },
@@ -172,7 +172,7 @@ const styles = StyleSheet.create({
   },
 
   highlight: {
-    fontWeight: '700',
+    //fontWeight: '700',
   },
 });
 
