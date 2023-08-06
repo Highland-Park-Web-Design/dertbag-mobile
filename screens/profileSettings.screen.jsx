@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   },
   optionText: {
     fontSize: 18,
-    fontWeight: 'bold',
+    //fontWeight: '500',
     color: '#333',
   },
   separator: {
