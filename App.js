@@ -17,6 +17,7 @@ import Help from './screens/profileSettingsHelp.screen';
 import Feedback from './screens/profileSettingsFeedback.screen';
 import Legal from './screens/profileSettingsLegal.screen';
 import About from './screens/profileSettingsAbout.screen';
+import Profile from './screens/profileSettingsProfile.screen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -153,6 +154,11 @@ const App = () => {
           name="About"
           component={About}
           options={{title: 'Setting', headerShown: false}}
+        />
+        <Stack.Screen
+          name="Profile"
+          component={Profile}
+          options={{title: 'Profile', headerShown: false}}
         />
         <Stack.Screen
           name="SignUp"

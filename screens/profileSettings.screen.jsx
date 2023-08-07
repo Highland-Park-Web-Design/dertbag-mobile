@@ -7,6 +7,7 @@ import {
   FlatList,
   SafeAreaView,
   Image,
+  ScrollView,
 } from 'react-native';
 
 const settingsOptions = [
@@ -53,18 +54,42 @@ const settingsOptions = [
 ];
 
 const Settings = ({navigation}) => {
-  const Divider = () => {
-    return <View style={styles.divider}></View>;
-  };
-
+  const headerComponent = () => (
+    <View>
+      <Text style={styles.headingText}>MENU</Text>
+      <TouchableOpacity
+        style={styles.profileTileContainer}
+        onPress={() => {
+          navigation.navigate('Profile');
+        }}>
+        <View style={styles.profileTile}>
+          <Image
+            source={require('../assets/images/db-profile-icon.png')}></Image>
+          <View>
+            <Text
+              style={{
+                fontFamily: 'Helvetica',
+                fontWeight: 'bold',
+                marginBottom: '5%',
+              }}>
+              philip@dertbag.us{' '}
+            </Text>
+            <Text style={{fontFamily: 'Helvetica', fontWeight: 'normal'}}>
+              VIEW PROFILE
+            </Text>
+          </View>
+          <Image
+            style={styles.chevron}
+            source={require('../assets/images/chevron-icon.png')}
+          />
+        </View>
+      </TouchableOpacity>
+    </View>
+  );
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.headingText}>MENU</Text>
-
-      <View style={styles.profileTileContainer}>
-        <View style={styles.profileTile}></View>
-      </View>
       <FlatList
+        ListHeaderComponent={headerComponent}
         style={styles.settings}
         data={settingsOptions}
         keyExtractor={(item, index) => index.toString()}
@@ -103,6 +128,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'normal',
     color: '#111',
+    marginBottom: '2.5%',
   },
 
   menuItem: {
@@ -110,7 +136,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingLeft: 25,
     paddingRight: 25,
-    paddingBottom: 15,
+    // paddingBottom: 10,
     borderBottomWidth: 1, // Width of the border
     borderBottomColor: '#DCDCDC', // Color of the border
   },
@@ -123,6 +149,12 @@ const styles = StyleSheet.create({
     height: 115,
   },
   profileTile: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    // justifyContent: 'center',
+    justifyContent: 'space-between',
+    padding: '3%',
     width: '85%',
     height: '80%',
     backgroundColor: '#F5F5F5',
@@ -140,11 +172,12 @@ const styles = StyleSheet.create({
     fontStyle: 'normal',
     fontFamily: 'Helvetica',
     alignSelf: 'baseline',
-    paddingTop: 25,
+    paddingTop: 20,
     paddingLeft: 25,
   },
   icons: {
     marginRight: 15,
+    marginBottom: '2.5%',
   },
 });
 
