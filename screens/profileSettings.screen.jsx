@@ -1,16 +1,3 @@
-// import React, {useState} from 'react';
-// import {StyleSheet, View, Text} from 'react-native';
-
-// export default function Settings() {
-//   return (
-//     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-//       <Text>Profile</Text>
-//     </View>
-//   );
-// }
-
-// SettingsScreen.js
-
 import React from 'react';
 import {
   View,
@@ -28,7 +15,7 @@ const settingsOptions = [
   {title: 'Get Help'},
   {title: 'Send Us Feedback'},
   {title: 'Legal Information'},
-  {title: 'About'},
+  {title: 'About Dertbag'},
   {title: 'Sign Out'},
 ];
 
