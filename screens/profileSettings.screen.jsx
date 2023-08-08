@@ -11,7 +11,8 @@ import {
 } from 'react-native';
 import ChevronIcon from '../components/ChevronIcon';
 import ProfileCard from '../components/ProfileCard';
-const settingsOptions = [
+
+const menuOptions = [
   {
     title: 'SETTINGS',
     link: 'Setting',
@@ -69,7 +70,7 @@ const Settings = ({navigation}) => {
       <FlatList
         ListHeaderComponent={headerComponent}
         style={styles.settings}
-        data={settingsOptions}
+        data={menuOptions}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({item}) => (
           <TouchableOpacity
