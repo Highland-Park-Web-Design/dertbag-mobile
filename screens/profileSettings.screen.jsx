@@ -9,7 +9,8 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
-
+import ChevronIcon from '../components/ChevronIcon';
+import ProfileCard from '../components/ProfileCard';
 const settingsOptions = [
   {
     title: 'SETTINGS',
@@ -57,33 +58,10 @@ const Settings = ({navigation}) => {
   const headerComponent = () => (
     <View>
       <Text style={styles.headingText}>MENU</Text>
-      <TouchableOpacity
-        style={styles.profileTileContainer}
-        onPress={() => {
-          navigation.navigate('Profile');
-        }}>
-        <View style={styles.profileTile}>
-          <Image
-            source={require('../assets/images/db-profile-icon.png')}></Image>
-          <View>
-            <Text
-              style={{
-                fontFamily: 'Helvetica',
-                fontWeight: 'bold',
-                marginBottom: '5%',
-              }}>
-              philip@dertbag.us{' '}
-            </Text>
-            <Text style={{fontFamily: 'Helvetica', fontWeight: 'normal'}}>
-              VIEW PROFILE
-            </Text>
-          </View>
-          <Image
-            style={styles.chevron}
-            source={require('../assets/images/chevron-icon.png')}
-          />
-        </View>
-      </TouchableOpacity>
+      <ProfileCard
+        email="philip@dertbag.us"
+        onPress={() => navigation.navigate('Profile')}
+      />
     </View>
   );
   return (
@@ -104,10 +82,7 @@ const Settings = ({navigation}) => {
                 <Image style={styles.icons} source={item.imageSource} />
                 <Text style={styles.optionText}>{item.title}</Text>
               </View>
-              <Image
-                style={styles.chevron}
-                source={require('../assets/images/chevron-icon.png')}
-              />
+              <ChevronIcon />
             </View>
           </TouchableOpacity>
         )}
@@ -128,7 +103,8 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'normal',
     color: '#111',
-    marginBottom: '2.5%',
+    marginTop: 0,
+    marginBottom: '1.1%',
   },
 
   menuItem: {
@@ -136,32 +112,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingLeft: 25,
     paddingRight: 25,
-    // paddingBottom: 10,
-    borderBottomWidth: 1, // Width of the border
-    borderBottomColor: '#DCDCDC', // Color of the border
+    borderBottomWidth: 1,
+    borderBottomColor: '#DCDCDC',
   },
   menuColumn: {
     flexDirection: 'row',
     alignItems: 'center',
   },
 
-  profileTileContainer: {
-    height: 115,
-  },
-  profileTile: {
-    flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
-    // justifyContent: 'center',
-    justifyContent: 'space-between',
-    padding: '3%',
-    width: '85%',
-    height: '80%',
-    backgroundColor: '#F5F5F5',
-    marginTop: 20,
-    marginLeft: 25,
-    borderRadius: 5,
-  },
   headingText: {
     textAlign: 'center',
     color: '#000',
@@ -177,7 +135,7 @@ const styles = StyleSheet.create({
   },
   icons: {
     marginRight: 15,
-    marginBottom: '2.5%',
+    marginBottom: '1.1%',
   },
 });
 

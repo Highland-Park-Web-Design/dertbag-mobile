@@ -32,8 +32,8 @@ function ProductScreens() {
           headerShown: false,
           tabBarActiveTintColor: 'black',
           labelStyle: {
-            fontSize: 16, // Adjust the font size as needed
-            fontFamily: 'Helvetica', // Specify the font family here
+            fontSize: 16,
+            fontFamily: 'Helvetica',
           },
           tabBarIcon: ({focused}) =>
             focused ? (
@@ -50,8 +50,8 @@ function ProductScreens() {
           headerShown: false,
           tabBarActiveTintColor: 'black',
           labelStyle: {
-            fontSize: 16, // Adjust the font size as needed
-            fontFamily: 'Helvetica', // Specify the font family here
+            fontSize: 16,
+            fontFamily: 'Helvetica',
           },
           tabBarIcon: ({focused}) =>
             focused ? (
@@ -67,8 +67,8 @@ function ProductScreens() {
         options={{
           headerShown: false,
           labelStyle: {
-            fontSize: 16, // Adjust the font size as needed
-            fontFamily: 'Helvetica', // Specify the font family here
+            fontSize: 16,
+            fontFamily: 'Helvetica',
           },
           // tabBarLabel: 'Recreation',
           tabBarActiveTintColor: 'black',
@@ -91,8 +91,15 @@ function ProductScreens() {
           headerShown: false,
           tabBarActiveTintColor: 'black',
           labelStyle: {
-            fontSize: 16, // Adjust the font size as needed
-            fontFamily: 'Helvetica', // Specify the font family here
+            fontSize: 16,
+            fontFamily: 'Helvetica',
+          },
+          activeTintColor: '#D09900',
+          itemStyle: {
+            borderRadius: 0,
+            marginVertical: 0,
+            borderBottomWidth: 10,
+            borderBottomColor: '#D09900',
           },
           tabBarIcon: ({focused}) =>
             focused ? (
