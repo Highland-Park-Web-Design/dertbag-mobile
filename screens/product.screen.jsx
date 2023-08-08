@@ -115,7 +115,6 @@ function Product({navigation}) {
             </TouchableOpacity>
           </View>
         </View>
-
         <ScrollView
           showsVerticalScrollIndicator={false}
           style={styles.scrollableContainer}>

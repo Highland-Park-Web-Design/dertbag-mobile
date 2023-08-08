@@ -31,9 +31,7 @@ function ProductDetails({navigation}) {
   const snapPoints = useMemo(() => ['25%', '70%'], []);
 
   // callbacks
-  const handleSheetChanges = useCallback(index => {
-    console.log('handleSheetChanges', index);
-  }, []);
+  const handleSheetChanges = useCallback(index => {}, []);
 
   const handlePresentModalPress = useCallback(() => {
     bottomSheetRef.current?.present();
