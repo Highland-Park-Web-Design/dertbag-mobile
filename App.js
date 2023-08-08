@@ -1,3 +1,4 @@
+import 'react-native-gesture-handler';
 import SignIn from './screens/signin.screen';
 import SignUp from './screens/signup.screen';
 import Splash from './screens/splash.screen';
@@ -18,6 +19,9 @@ import Feedback from './screens/profileSettingsFeedback.screen';
 import Legal from './screens/profileSettingsLegal.screen';
 import About from './screens/profileSettingsAbout.screen';
 import Profile from './screens/profileSettingsProfile.screen';
+import ProductDetails from './screens/Product/productDetails.screen';
+import ProductProvider from './context/ProductContext';
+import {GestureHandlerRootView} from 'react-native-gesture-handler';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -115,70 +119,112 @@ function ProductScreens() {
 
 const App = () => {
   return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen
-          name="SignIn"
-          component={SignIn}
-          options={{title: 'Sign In', headerShown: false}}
-        />
-        <Stack.Screen
-          name="Product"
-          component={ProductScreens}
-          options={{title: 'Home', headerShown: false}}
-        />
-        <Stack.Screen
-          name="Setting"
-          component={Setting}
-          options={{title: 'Setting', headerShown: false}}
-        />
-        <Stack.Screen
-          name="Orders"
-          component={Orders}
-          options={{title: 'Setting', headerShown: false}}
-        />
-        <Stack.Screen
-          name="Stores"
-          component={Stores}
-          options={{title: 'Setting', headerShown: false}}
-        />
-        <Stack.Screen
-          name="Help"
-          component={Help}
-          options={{title: 'Setting', headerShown: false}}
-        />
-        <Stack.Screen
-          name="Feedback"
-          component={Feedback}
-          options={{title: 'Setting', headerShown: false}}
-        />
-        <Stack.Screen
-          name="Legal"
-          component={Legal}
-          options={{title: 'Setting', headerShown: false}}
-        />
-        <Stack.Screen
-          name="About"
-          component={About}
-          options={{title: 'Setting', headerShown: false}}
-        />
-        <Stack.Screen
-          name="Profile"
-          component={Profile}
-          options={{title: 'Profile', headerShown: false}}
-        />
-        <Stack.Screen
-          name="SignUp"
-          component={SignUp}
-          options={{title: 'Sign Up', headerShown: false}}
-        />
-        <Stack.Screen
-          name="ResetPassword"
-          component={ResetPassword}
-          options={{title: 'Reset Password', headerShown: false}}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <GestureHandlerRootView style={{flex: 1}}>
+      <ProductProvider>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen
+              name="SignIn"
+              component={SignIn}
+              options={{title: 'Sign In', headerShown: false}}
+            />
+            <Stack.Screen
+              name="Product"
+              component={ProductScreens}
+              options={{title: 'Home', headerShown: false}}
+            />
+            <Stack.Screen
+              name="ProductDetails"
+              component={ProductDetails}
+              options={{title: 'ProductDetails', headerShown: false}}
+            />
+            <Stack.Screen
+              name="Setting"
+              component={Setting}
+              options={{title: 'Setting', headerShown: false}}
+            />
+            <Stack.Screen
+              name="Orders"
+              component={Orders}
+              options={{title: 'Setting', headerShown: false}}
+            />
+            <Stack.Screen
+              name="Stores"
+              component={Stores}
+              options={{title: 'Setting', headerShown: false}}
+            />
+            <Stack.Screen
+              name="Help"
+              component={Help}
+              options={{title: 'Setting', headerShown: false}}
+            />
+            <Stack.Screen
+              name="Feedback"
+              component={Feedback}
+              options={{title: 'Setting', headerShown: false}}
+            />
+            <Stack.Screen
+              name="Legal"
+              component={Legal}
+              options={{title: 'Setting', headerShown: false}}
+            />
+            <Stack.Screen
+              name="About"
+              component={About}
+              options={{title: 'Setting', headerShown: false}}
+            />
+            <Stack.Screen
+              name="Profile"
+              component={Profile}
+              options={{title: 'Profile', headerShown: false}}
+            />
+            <Stack.Screen
+              name="SignUp"
+              component={SignUp}
+              options={{title: 'Sign Up', headerShown: false}}
+            />
+            <Stack.Screen
+              name="ResetPassword"
+              component={ResetPassword}
+              options={{title: 'Reset Password', headerShown: false}}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </ProductProvider>
+    </GestureHandlerRootView>
+    // <GestureHandlerRootView style={{flex: 1}}>
+    //   <ProductProvider>
+    //     <NavigationContainer>
+    //       <Stack.Navigator>
+    //         <Stack.Screen
+    //           name="SignIn"
+    //           component={SignIn}
+    //           options={{title: 'Sign In', headerShown: false}}
+    //         />
+    //         <Stack.Screen
+    //           name="Product"
+    //           component={ProductScreens}
+    //           options={{title: 'Home', headerShown: false}}
+    //         />
+    //         <Stack.Screen
+    //           name="ProductDetails"
+    //           component={ProductDetails}
+    //           options={{title: 'ProductDetails', headerShown: false}}
+    //         />
+    //         <Stack.Screen
+    //           name="SignUp"
+    //           component={SignUp}
+    //           options={{title: 'Sign Up', headerShown: false}}
+    //         />
+    //         <Stack.Screen
+    //           name="ResetPassword"
+    //           component={ResetPassword}
+    //           options={{title: 'Reset Password', headerShown: false}}
+    //         />
+    //       </Stack.Navigator>
+    //     </NavigationContainer>
+    //   </ProductProvider>
+    // </GestureHandlerRootView>
   );
 };
 

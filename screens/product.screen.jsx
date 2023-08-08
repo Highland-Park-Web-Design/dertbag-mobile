@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {
   StyleSheet,
   View,
@@ -10,10 +10,12 @@ import {
 } from 'react-native';
 import CustomInput from '../components/input';
 import {productDemoData} from './constant';
+import {ProductContext} from '../context/ProductContext';
 
-function Product() {
+function Product({navigation}) {
   const [productText, onChangeProductText] = useState('');
   const [selectedOrientation, onChangeSelectedOrientation] = useState('all');
+  const {state, dispatch} = useContext(ProductContext);
   return (
     <SafeAreaView style={styles.screenContainer}>
       <View style={styles.pageWrapper}>
@@ -113,7 +115,6 @@ function Product() {
             </TouchableOpacity>
           </View>
         </View>
-
         <ScrollView
           showsVerticalScrollIndicator={false}
           style={styles.scrollableContainer}>
@@ -125,7 +126,18 @@ function Product() {
               style={styles.newArrivalContainer}>
               {productDemoData.map((product, index) => {
                 return (
-                  <View key={index} style={styles.productCard}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.navigate('ProductDetails', {
+                        data: product.id,
+                      });
+                      dispatch({
+                        type: 'SET_PRODUCT_ID',
+                        payload: product,
+                      });
+                    }}
+                    key={index}
+                    style={styles.productCard}>
                     <Image
                       source={product.imageUrl}
                       style={styles.productImage}
@@ -137,7 +149,7 @@ function Product() {
                       <Text>{product.productSubtitle}</Text>
                       <Text>${product.price}</Text>
                     </View>
-                  </View>
+                  </TouchableOpacity>
                 );
               })}
 
@@ -306,8 +318,8 @@ const styles = StyleSheet.create({
     color: '#111',
     fontFamily: 'Helvetica',
     fontSize: 16,
-    fontStyle: 'normal',
-    fontWeight: 700,
+    //fontStyle: 'normal',
+    //fontWeight: '700',
     lineHeight: 24,
     textTransform: 'uppercase',
   },
@@ -318,8 +330,8 @@ const styles = StyleSheet.create({
     // whitespace: 'nowrap',
     fontFamily: 'Helvetica',
     fontSize: 16,
-    fontStyle: 'normal',
-    fontWeight: 700,
+    //fontStyle: 'normal',
+    //fontWeight: '700',
     lineHeight: 24,
     textTransform: 'uppercase',
   },
@@ -327,16 +339,16 @@ const styles = StyleSheet.create({
     color: '#000',
     fontFamily: 'Helvetica',
     fontSize: 16,
-    fontStyle: 'normal',
-    fontWeight: 400,
+    //fontStyle: 'normal',
+    //fontWeight: '400',
     lineHeight: 24,
   },
   productPrice: {
     color: '#000',
     fontFamily: 'Helvetica',
     fontSize: 14,
-    fontStyle: 'normal',
-    fontWeight: 700,
+    //fontStyle: 'normal',
+    //fontWeight: '700',
     lineHeight: 24,
   },
 
@@ -348,8 +360,8 @@ const styles = StyleSheet.create({
     color: '#000',
     fontFamily: 'Helvetica',
     fontSize: 24,
-    fontStyle: 'normal',
-    fontWeight: '400',
+    //fontStyle: 'normal',
+    //fontWeight: '400',
     lineHeight: 32,
     marginBottom: 16,
     marginLeft: 24,
