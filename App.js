@@ -146,32 +146,32 @@ const App = () => {
             <Stack.Screen
               name="Orders"
               component={Orders}
-              options={{title: 'Setting', headerShown: false}}
+              options={{title: 'Orders', headerShown: false}}
             />
             <Stack.Screen
               name="Stores"
               component={Stores}
-              options={{title: 'Setting', headerShown: false}}
+              options={{title: 'Stores', headerShown: false}}
             />
             <Stack.Screen
               name="Help"
               component={Help}
-              options={{title: 'Setting', headerShown: false}}
+              options={{title: 'Help', headerShown: false}}
             />
             <Stack.Screen
               name="Feedback"
               component={Feedback}
-              options={{title: 'Setting', headerShown: false}}
+              options={{title: 'Feedback', headerShown: false}}
             />
             <Stack.Screen
               name="Legal"
               component={Legal}
-              options={{title: 'Setting', headerShown: false}}
+              options={{title: 'Legal', headerShown: false}}
             />
             <Stack.Screen
               name="About"
               component={About}
-              options={{title: 'Setting', headerShown: false}}
+              options={{title: 'About', headerShown: false}}
             />
             <Stack.Screen
               name="Profile"
