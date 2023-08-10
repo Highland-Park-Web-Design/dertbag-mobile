@@ -192,39 +192,6 @@ const App = () => {
         </NavigationContainer>
       </ProductProvider>
     </GestureHandlerRootView>
-    // <GestureHandlerRootView style={{flex: 1}}>
-    //   <ProductProvider>
-    //     <NavigationContainer>
-    //       <Stack.Navigator>
-    //         <Stack.Screen
-    //           name="SignIn"
-    //           component={SignIn}
-    //           options={{title: 'Sign In', headerShown: false}}
-    //         />
-    //         <Stack.Screen
-    //           name="Product"
-    //           component={ProductScreens}
-    //           options={{title: 'Home', headerShown: false}}
-    //         />
-    //         <Stack.Screen
-    //           name="ProductDetails"
-    //           component={ProductDetails}
-    //           options={{title: 'ProductDetails', headerShown: false}}
-    //         />
-    //         <Stack.Screen
-    //           name="SignUp"
-    //           component={SignUp}
-    //           options={{title: 'Sign Up', headerShown: false}}
-    //         />
-    //         <Stack.Screen
-    //           name="ResetPassword"
-    //           component={ResetPassword}
-    //           options={{title: 'Reset Password', headerShown: false}}
-    //         />
-    //       </Stack.Navigator>
-    //     </NavigationContainer>
-    //   </ProductProvider>
-    // </GestureHandlerRootView>
   );
 };
 
