@@ -11,6 +11,14 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Text, View, Image} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import Setting from './screens/profileSettingsSetting.screen';
+import Orders from './screens/profileSettingsOrders.screen';
+import Stores from './screens/profileSettingsStores.screen';
+import Help from './screens/profileSettingsHelp.screen';
+import Feedback from './screens/profileSettingsFeedback.screen';
+import Legal from './screens/profileSettingsLegal.screen';
+import About from './screens/profileSettingsAbout.screen';
+import Profile from './screens/profileSettingsProfile.screen';
 import ProductDetails from './screens/Product/productDetails.screen';
 import ProductProvider from './context/ProductContext';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
@@ -22,11 +30,15 @@ function ProductScreens() {
   return (
     <Tab.Navigator>
       <Tab.Screen
-        name="For You"
+        name="FOR YOU"
         component={Product}
         options={{
           headerShown: false,
           tabBarActiveTintColor: 'black',
+          labelStyle: {
+            fontSize: 16,
+            fontFamily: 'Helvetica',
+          },
           tabBarIcon: ({focused}) =>
             focused ? (
               <Image source={require('./assets/images/product-active.png')} />
@@ -36,11 +48,15 @@ function ProductScreens() {
         }}
       />
       <Tab.Screen
-        name="Bag"
+        name="BAG"
         component={Bag}
         options={{
           headerShown: false,
           tabBarActiveTintColor: 'black',
+          labelStyle: {
+            fontSize: 16,
+            fontFamily: 'Helvetica',
+          },
           tabBarIcon: ({focused}) =>
             focused ? (
               <Image source={require('./assets/images/bag-active.png')} />
@@ -50,10 +66,14 @@ function ProductScreens() {
         }}
       />
       <Tab.Screen
-        name="Recreation"
+        name="RECREATION"
         component={Recreation}
         options={{
           headerShown: false,
+          labelStyle: {
+            fontSize: 16,
+            fontFamily: 'Helvetica',
+          },
           // tabBarLabel: 'Recreation',
           tabBarActiveTintColor: 'black',
           tabBarIcon: ({focused}) =>
@@ -69,11 +89,22 @@ function ProductScreens() {
         }}
       />
       <Tab.Screen
-        name="Profile"
+        name="PROFILE"
         component={Settings}
         options={{
           headerShown: false,
           tabBarActiveTintColor: 'black',
+          labelStyle: {
+            fontSize: 16,
+            fontFamily: 'Helvetica',
+          },
+          activeTintColor: '#D09900',
+          itemStyle: {
+            borderRadius: 0,
+            marginVertical: 0,
+            borderBottomWidth: 10,
+            borderBottomColor: '#D09900',
+          },
           tabBarIcon: ({focused}) =>
             focused ? (
               <Image source={require('./assets/images/profile-active.png')} />
@@ -106,6 +137,46 @@ const App = () => {
               name="ProductDetails"
               component={ProductDetails}
               options={{title: 'ProductDetails', headerShown: false}}
+            />
+            <Stack.Screen
+              name="Setting"
+              component={Setting}
+              options={{title: 'Setting', headerShown: false}}
+            />
+            <Stack.Screen
+              name="Orders"
+              component={Orders}
+              options={{title: 'Orders', headerShown: false}}
+            />
+            <Stack.Screen
+              name="Stores"
+              component={Stores}
+              options={{title: 'Stores', headerShown: false}}
+            />
+            <Stack.Screen
+              name="Help"
+              component={Help}
+              options={{title: 'Help', headerShown: false}}
+            />
+            <Stack.Screen
+              name="Feedback"
+              component={Feedback}
+              options={{title: 'Feedback', headerShown: false}}
+            />
+            <Stack.Screen
+              name="Legal"
+              component={Legal}
+              options={{title: 'Legal', headerShown: false}}
+            />
+            <Stack.Screen
+              name="About"
+              component={About}
+              options={{title: 'About', headerShown: false}}
+            />
+            <Stack.Screen
+              name="Profile"
+              component={Profile}
+              options={{title: 'Profile', headerShown: false}}
             />
             <Stack.Screen
               name="SignUp"
