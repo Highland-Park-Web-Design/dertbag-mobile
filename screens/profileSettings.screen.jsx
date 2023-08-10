@@ -7,7 +7,6 @@ import {
   FlatList,
   SafeAreaView,
   Image,
-  ScrollView,
 } from 'react-native';
 import ChevronIcon from '../components/ChevronIcon';
 import ProfileCard from '../components/ProfileCard';
@@ -58,7 +57,7 @@ const menuOptions = [
 const Settings = ({navigation}) => {
   const headerComponent = () => (
     <View>
-      <Text style={styles.headingText}>MENU</Text>
+      <Text style={styles.headingText}>PROFILE</Text>
       <ProfileCard
         email="philip@dertbag.us"
         onPress={() => navigation.navigate('Profile')}
