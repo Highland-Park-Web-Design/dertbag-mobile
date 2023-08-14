@@ -3,6 +3,7 @@ import SignIn from './screens/signin.screen';
 import SignUp from './screens/signup.screen';
 import Splash from './screens/splash.screen';
 import Product from './screens/product.screen';
+import FlashMessage from 'react-native-flash-message';
 // import Bag from './screens/checkoutBag.screen';
 import Recreation from './screens/blogRecreation.screen';
 import Settings from './screens/profileSettings.screen';
@@ -209,6 +210,7 @@ const App = () => {
             />
           </Stack.Navigator>
         </NavigationContainer>
+        <FlashMessage position="top" />
       </ProductProvider>
     </GestureHandlerRootView>
   );

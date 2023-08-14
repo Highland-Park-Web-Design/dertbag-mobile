@@ -13,6 +13,7 @@ import {
 import {Formik} from 'formik';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import * as Yup from 'yup';
+import {showMessage, hideMessage} from 'react-native-flash-message';
 import {RegisterUser} from '../api';
 import Loader from '../components/Loader';
 import {storeData} from '../store';
@@ -37,17 +38,20 @@ function SignUp({navigation}) {
   const handleSignUp = async (values, formikBag) => {
     try {
       setSubmtting(true);
-      // console.log('values', values);
-      RegisterUser(values).then(async res => {
-        console.log('res', res.data);
-        await storeData('user', {...res.data.user, token: res.data.token});
-        setSubmtting(false);
-        return navigation.navigate('Product');
-      });
+      let res = await RegisterUser(values);
+      console.log('res', res.data);
+      await storeData('user', {...res.data.user, token: res.data.token});
+      setSubmtting(false);
+      return navigation.navigate('Product');
     } catch (err) {
       setSubmtting(false);
-      if (err.response) console.log(err.response);
-      else console.log('err', err);
+      if (err.response) {
+        showMessage({
+          message: err.response.data.message,
+          type: 'danger',
+        });
+        console.log('err response', err.response.data, err.response);
+      } else console.log('err', err);
     }
   };
 
@@ -73,8 +77,16 @@ function SignUp({navigation}) {
               email: '',
               password: '',
             }}
+            validateOnBlur
             validationSchema={validationSchema}>
-            {({values, handleChange, handleBlur, errors, handleSubmit}) => {
+            {({
+              values,
+              handleChange,
+              handleBlur,
+              errors,
+              handleSubmit,
+              touched,
+            }) => {
               return (
                 <>
                   <View style={{...backgroundStyle, height: '100%'}}>
@@ -113,7 +125,9 @@ function SignUp({navigation}) {
                             onBlur={handleBlur('fullName')}
                             value={values.fullName}
                           />
-                          <Text style={styles.error}>{errors.fullName}</Text>
+                          {touched.fullName && errors.fullName ? (
+                            <Text style={styles.error}>{errors.fullName}</Text>
+                          ) : null}
                         </View>
                         <View
                           style={{
@@ -127,7 +141,11 @@ function SignUp({navigation}) {
                             onBlur={handleBlur('phoneNumber')}
                             value={values.phoneNumber}
                           />
-                          <Text style={styles.error}>{errors.phoneNumber}</Text>
+                          {touched.phoneNumber && errors.phoneNumber ? (
+                            <Text style={styles.error}>
+                              {errors.phoneNumber}
+                            </Text>
+                          ) : null}
                         </View>
                         <View
                           style={{
@@ -141,7 +159,9 @@ function SignUp({navigation}) {
                             onBlur={handleBlur('email')}
                             value={values.email}
                           />
-                          <Text style={styles.error}>{errors.email}</Text>
+                          {touched.email && errors.email ? (
+                            <Text style={styles.error}>{errors.email}</Text>
+                          ) : null}
                         </View>
                         <View
                           style={{
@@ -156,7 +176,9 @@ function SignUp({navigation}) {
                             value={values.password}
                             secureTextEntry={true}
                           />
-                          <Text style={styles.error}>{errors.password}</Text>
+                          {touched.password && errors.password ? (
+                            <Text style={styles.error}>{errors.password}</Text>
+                          ) : null}
                         </View>
                         <TouchableOpacity
                           activeOpacity={0.5}
