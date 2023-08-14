@@ -14,6 +14,8 @@ import {Formik} from 'formik';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import * as Yup from 'yup';
 import {RegisterUser} from '../api';
+import Loader from '../components/Loader';
+import {storeData} from '../store';
 
 function SignUp({navigation}) {
   const [submitting, setSubmtting] = useState(false);
@@ -36,8 +38,9 @@ function SignUp({navigation}) {
     try {
       setSubmtting(true);
       // console.log('values', values);
-      RegisterUser(values).then(res => {
-        // console.log('res', res.data);
+      RegisterUser(values).then(async res => {
+        console.log('res', res.data);
+        await storeData('user', {...res.data.user, token: res.data.token});
         setSubmtting(false);
         return navigation.navigate('Product');
       });
@@ -53,137 +56,145 @@ function SignUp({navigation}) {
   // }, []);
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <Formik
-        onSubmit={handleSignUp}
-        initialValues={{
-          fullName: '',
-          phoneNumber: '',
-          email: '',
-          password: '',
-        }}
-        validationSchema={validationSchema}>
-        {({values, handleChange, handleBlur, errors, handleSubmit}) => {
-          return (
-            <>
-              <View style={{...backgroundStyle, height: '100%'}}>
-                <View
-                  style={{
-                    backgroundColor: isDarkMode ? Colors.black : Colors.white,
-                    flex: 1,
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    height: '100%',
-                  }}>
-                  <View
-                    style={{
-                      width: '100%',
-                    }}>
-                    <Text style={styles.headingText}>Sign UP</Text>
+    <>
+      {submitting ? (
+        <Loader />
+      ) : (
+        <SafeAreaView style={backgroundStyle}>
+          <StatusBar
+            barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+            backgroundColor={backgroundStyle.backgroundColor}
+          />
+          <Formik
+            onSubmit={handleSignUp}
+            initialValues={{
+              fullName: '',
+              phoneNumber: '',
+              email: '',
+              password: '',
+            }}
+            validationSchema={validationSchema}>
+            {({values, handleChange, handleBlur, errors, handleSubmit}) => {
+              return (
+                <>
+                  <View style={{...backgroundStyle, height: '100%'}}>
+                    <View
+                      style={{
+                        backgroundColor: isDarkMode
+                          ? Colors.black
+                          : Colors.white,
+                        flex: 1,
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        height: '100%',
+                      }}>
+                      <View
+                        style={{
+                          width: '100%',
+                        }}>
+                        <Text style={styles.headingText}>Sign UP</Text>
+                      </View>
+                      <View
+                        style={{
+                          width: '100%',
+                          padding: 24,
+                          marginBottom: 64,
+                        }}>
+                        <View
+                          style={{
+                            marginBottom: 17,
+                          }}>
+                          <Text style={styles.inputLabel}>FullName</Text>
+                          <TextInput
+                            placeholder="Enter FullName"
+                            style={styles.inputControl}
+                            onChangeText={handleChange('fullName')}
+                            onBlur={handleBlur('fullName')}
+                            value={values.fullName}
+                          />
+                          <Text style={styles.error}>{errors.fullName}</Text>
+                        </View>
+                        <View
+                          style={{
+                            marginBottom: 17,
+                          }}>
+                          <Text style={styles.inputLabel}>Phone</Text>
+                          <TextInput
+                            placeholder="Enter Phone"
+                            style={styles.inputControl}
+                            onChangeText={handleChange('phoneNumber')}
+                            onBlur={handleBlur('phoneNumber')}
+                            value={values.phoneNumber}
+                          />
+                          <Text style={styles.error}>{errors.phoneNumber}</Text>
+                        </View>
+                        <View
+                          style={{
+                            marginBottom: 17,
+                          }}>
+                          <Text style={styles.inputLabel}>Email</Text>
+                          <TextInput
+                            placeholder="Enter Email"
+                            style={styles.inputControl}
+                            onChangeText={handleChange('email')}
+                            onBlur={handleBlur('email')}
+                            value={values.email}
+                          />
+                          <Text style={styles.error}>{errors.email}</Text>
+                        </View>
+                        <View
+                          style={{
+                            marginBottom: 17,
+                          }}>
+                          <Text style={styles.inputLabel}>Password</Text>
+                          <TextInput
+                            placeholder="Set Password"
+                            style={styles.inputControl}
+                            onChangeText={handleChange('password')}
+                            onBlur={handleBlur('password')}
+                            value={values.password}
+                            secureTextEntry={true}
+                          />
+                          <Text style={styles.error}>{errors.password}</Text>
+                        </View>
+                        <TouchableOpacity
+                          activeOpacity={0.5}
+                          style={styles.buttonStyle}
+                          disabled={submitting}
+                          onPress={handleSubmit}>
+                          <Text style={styles.textStyle}>
+                            {submitting ? 'Signing up...' : 'Sign Up'}
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                      <View>
+                        <Text
+                          style={{
+                            color: '#000000',
+                            textAlign: 'center',
+                            fontSize: 16,
+                            fontFamily: 'Helvetica',
+                            //fontStyle: 'normal',
+                            //fontWeight: '400',
+                            lineHeight: 24,
+                          }}>
+                          Already a fan?
+                          <TouchableOpacity
+                            onPress={() => navigation.navigate('SignIn')}>
+                            <Text style={styles.highlight}>Sign In</Text>
+                          </TouchableOpacity>
+                        </Text>
+                      </View>
+                    </View>
                   </View>
-                  <View
-                    style={{
-                      width: '100%',
-                      padding: 24,
-                      marginBottom: 64,
-                    }}>
-                    <View
-                      style={{
-                        marginBottom: 17,
-                      }}>
-                      <Text style={styles.inputLabel}>FullName</Text>
-                      <TextInput
-                        placeholder="Enter FullName"
-                        style={styles.inputControl}
-                        onChangeText={handleChange('fullName')}
-                        onBlur={handleBlur('fullName')}
-                        value={values.fullName}
-                      />
-                      <Text style={styles.error}>{errors.fullName}</Text>
-                    </View>
-                    <View
-                      style={{
-                        marginBottom: 17,
-                      }}>
-                      <Text style={styles.inputLabel}>Phone</Text>
-                      <TextInput
-                        placeholder="Enter Phone"
-                        style={styles.inputControl}
-                        onChangeText={handleChange('phoneNumber')}
-                        onBlur={handleBlur('phoneNumber')}
-                        value={values.phoneNumber}
-                      />
-                      <Text style={styles.error}>{errors.phoneNumber}</Text>
-                    </View>
-                    <View
-                      style={{
-                        marginBottom: 17,
-                      }}>
-                      <Text style={styles.inputLabel}>Email</Text>
-                      <TextInput
-                        placeholder="Enter Email"
-                        style={styles.inputControl}
-                        onChangeText={handleChange('email')}
-                        onBlur={handleBlur('email')}
-                        value={values.email}
-                      />
-                      <Text style={styles.error}>{errors.email}</Text>
-                    </View>
-                    <View
-                      style={{
-                        marginBottom: 17,
-                      }}>
-                      <Text style={styles.inputLabel}>Password</Text>
-                      <TextInput
-                        placeholder="Set Password"
-                        style={styles.inputControl}
-                        onChangeText={handleChange('password')}
-                        onBlur={handleBlur('password')}
-                        value={values.password}
-                        secureTextEntry={true}
-                      />
-                      <Text style={styles.error}>{errors.password}</Text>
-                    </View>
-                    <TouchableOpacity
-                      activeOpacity={0.5}
-                      style={styles.buttonStyle}
-                      disabled={submitting}
-                      onPress={handleSubmit}>
-                      <Text style={styles.textStyle}>
-                        {submitting ? 'Signing up...' : 'Sign Up'}
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                  <View>
-                    <Text
-                      style={{
-                        color: '#000000',
-                        textAlign: 'center',
-                        fontSize: 16,
-                        fontFamily: 'Helvetica',
-                        //fontStyle: 'normal',
-                        //fontWeight: '400',
-                        lineHeight: 24,
-                      }}>
-                      Already a fan?
-                      <TouchableOpacity
-                        onPress={() => navigation.navigate('SignIn')}>
-                        <Text style={styles.highlight}>Sign In</Text>
-                      </TouchableOpacity>
-                    </Text>
-                  </View>
-                </View>
-              </View>
-            </>
-          );
-        }}
-      </Formik>
-    </SafeAreaView>
+                </>
+              );
+            }}
+          </Formik>
+        </SafeAreaView>
+      )}
+    </>
   );
 }
 
