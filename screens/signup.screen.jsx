@@ -13,7 +13,7 @@ import {
 import {Formik} from 'formik';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import * as Yup from 'yup';
-import {showMessage, hideMessage} from 'react-native-flash-message';
+import {showMessage} from 'react-native-flash-message';
 import {RegisterUser} from '../api';
 import Loader from '../components/Loader';
 import {storeData} from '../store';
@@ -50,8 +50,14 @@ function SignUp({navigation}) {
           message: err.response.data.message,
           type: 'danger',
         });
-        console.log('err response', err.response.data, err.response);
-      } else console.log('err', err);
+        // console.log('err response', err.response.data, err.response);
+      } else {
+        // console.log('err', err);
+        showMessage({
+          message: 'unable to reach server, check internet',
+          type: 'danger',
+        });
+      }
     }
   };
 
