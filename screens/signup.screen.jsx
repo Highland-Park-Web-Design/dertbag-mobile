@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   StatusBar,
@@ -13,8 +13,10 @@ import {
 import {Formik} from 'formik';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import * as Yup from 'yup';
+import {RegisterUser} from '../api';
 
 function SignUp({navigation}) {
+  const [submitting, setSubmtting] = useState(false);
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
@@ -26,14 +28,29 @@ function SignUp({navigation}) {
       .email('Please enter a valid email')
       .required('Email Address is Required'),
     password: Yup.string().required('Password is Required'),
-    phone: Yup.string().required('Phone is Required'),
+    phoneNumber: Yup.string().required('Phone is Required'),
     fullName: Yup.string().required('Full Name is Required'),
   });
 
-  const handleSignUp = (values, formikBag) => {
-    // console.log('form values', values, formikBag);
-    return navigation.navigate('Product');
+  const handleSignUp = async (values, formikBag) => {
+    try {
+      setSubmtting(true);
+      // console.log('values', values);
+      RegisterUser(values).then(res => {
+        // console.log('res', res.data);
+        setSubmtting(false);
+        return navigation.navigate('Product');
+      });
+    } catch (err) {
+      setSubmtting(false);
+      if (err.response) console.log(err.response);
+      else console.log('err', err);
+    }
   };
+
+  // useEffect(() => {
+  //   getProduct();
+  // }, []);
 
   return (
     <SafeAreaView style={backgroundStyle}>
@@ -45,7 +62,7 @@ function SignUp({navigation}) {
         onSubmit={handleSignUp}
         initialValues={{
           fullName: '',
-          phone: '',
+          phoneNumber: '',
           email: '',
           password: '',
         }}
@@ -97,11 +114,11 @@ function SignUp({navigation}) {
                       <TextInput
                         placeholder="Enter Phone"
                         style={styles.inputControl}
-                        onChangeText={handleChange('phone')}
-                        onBlur={handleBlur('phone')}
-                        value={values.phone}
+                        onChangeText={handleChange('phoneNumber')}
+                        onBlur={handleBlur('phoneNumber')}
+                        value={values.phoneNumber}
                       />
-                      <Text style={styles.error}>{errors.phone}</Text>
+                      <Text style={styles.error}>{errors.phoneNumber}</Text>
                     </View>
                     <View
                       style={{
@@ -135,8 +152,11 @@ function SignUp({navigation}) {
                     <TouchableOpacity
                       activeOpacity={0.5}
                       style={styles.buttonStyle}
+                      disabled={submitting}
                       onPress={handleSubmit}>
-                      <Text style={styles.textStyle}>Sign Up</Text>
+                      <Text style={styles.textStyle}>
+                        {submitting ? 'Signing up...' : 'Sign Up'}
+                      </Text>
                     </TouchableOpacity>
                   </View>
                   <View>
