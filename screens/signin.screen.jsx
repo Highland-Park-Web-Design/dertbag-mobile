@@ -111,7 +111,7 @@ function SignIn({navigation}) {
                   </View>
                   <TouchableOpacity
                     onPress={() => {
-                      handleSubmit;
+                      handleSubmit();
                     }}
                     activeOpacity={0.5}
                     style={styles.buttonStyle}>
