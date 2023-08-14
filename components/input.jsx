@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
   inputControl: {
     borderRadius: 16,
     padding: 16,
-    height: 56,
+    minHeight: 56,
     borderWidth: 1,
     borderColor: 'rgba(0, 0, 0, 0.10)',
     backgroundColor: '#FAFAFA',

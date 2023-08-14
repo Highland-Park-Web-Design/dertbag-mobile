@@ -3,7 +3,7 @@ import SignIn from './screens/signin.screen';
 import SignUp from './screens/signup.screen';
 import Splash from './screens/splash.screen';
 import Product from './screens/product.screen';
-import Bag from './screens/checkoutBag.screen';
+// import Bag from './screens/checkoutBag.screen';
 import Recreation from './screens/blogRecreation.screen';
 import Settings from './screens/profileSettings.screen';
 import ResetPassword from './screens/reset.screen';
@@ -22,6 +22,10 @@ import Profile from './screens/profileSettingsProfile.screen';
 import ProductDetails from './screens/Product/productDetails.screen';
 import ProductProvider from './context/ProductContext';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import Bag from './screens/CheckOutScreens/Bag';
+import DeliveryDetails from './screens/CheckOutScreens/DeliveryDetails';
+import StoreDetails from './screens/CheckOutScreens/StoreDetails';
+import Checkout from './screens/CheckOutScreens/Checkout';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -187,6 +191,21 @@ const App = () => {
               name="ResetPassword"
               component={ResetPassword}
               options={{title: 'Reset Password', headerShown: false}}
+            />
+            <Stack.Screen
+              name="DeliveryDetails"
+              component={DeliveryDetails}
+              options={{title: 'Delivery Details', headerShown: false}}
+            />
+            <Stack.Screen
+              name="StoreDetails"
+              component={StoreDetails}
+              options={{title: 'Delivery Details', headerShown: false}}
+            />
+            <Stack.Screen
+              name="Checkout"
+              component={Checkout}
+              options={{title: 'Delivery Details', headerShown: false}}
             />
           </Stack.Navigator>
         </NavigationContainer>
