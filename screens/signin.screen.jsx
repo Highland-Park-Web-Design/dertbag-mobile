@@ -27,7 +27,7 @@ function SignIn({navigation}) {
   });
 
   const handleSignIn = (values, formikBag) => {
-    // console.log('form values', values, formikBag);
+    console.log('form values', values, formikBag);
     return navigation.navigate('Product');
   };
 
@@ -35,7 +35,7 @@ function SignIn({navigation}) {
     <SafeAreaView style={backgroundStyle}>
       <Formik
         onSubmit={handleSignIn}
-        validationSchema={validationSchema}
+        // validationSchema={validationSchema}
         initialValues={{password: '', email: ''}}>
         {({values, errors, handleSubmit, handleChange, handleBlur}) => {
           return (
@@ -111,7 +111,7 @@ function SignIn({navigation}) {
                   </View>
                   <TouchableOpacity
                     onPress={() => {
-                      handleSubmit;
+                      handleSubmit();
                     }}
                     activeOpacity={0.5}
                     style={styles.buttonStyle}>
