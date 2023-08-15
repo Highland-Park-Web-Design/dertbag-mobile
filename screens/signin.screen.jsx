@@ -17,8 +17,9 @@ import * as Yup from 'yup';
 import Loader from '../components/Loader';
 
 function SignIn({navigation}) {
+  10;
   const isDarkMode = useColorScheme() === 'dark';
-  const [submitting, setSubmtting] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -33,13 +34,13 @@ function SignIn({navigation}) {
 
   const handleSignIn = async values => {
     try {
-      setSubmtting(true);
+      setSubmitting(true);
       let res = await LoginUser(values);
       await storeData('user', {...res.data.user, token: res.data.token});
-      setSubmtting(false);
+      setSubmitting(false);
       return navigation?.navigate('Product');
     } catch (err) {
-      setSubmtting(false);
+      setSubmitting(false);
       if (err.response) {
         showMessage({
           message: err.response.data.message,
@@ -170,7 +171,7 @@ function SignIn({navigation}) {
                         New here?
                         <TouchableOpacity
                           onPress={() => {
-                            navigation?.navigate('SignUp');
+                            navigation?.push('SignUp');
                           }}>
                           <Text style={styles.highlight}>Sign Up</Text>
                         </TouchableOpacity>

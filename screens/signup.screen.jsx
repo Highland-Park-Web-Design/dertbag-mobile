@@ -39,7 +39,6 @@ function SignUp({navigation}) {
     try {
       setSubmtting(true);
       let res = await RegisterUser(values);
-      console.log('res', res.data);
       await storeData('user', {...res.data.user, token: res.data.token});
       setSubmtting(false);
       return navigation.navigate('Product');
@@ -209,7 +208,7 @@ function SignUp({navigation}) {
                           }}>
                           Already a fan?
                           <TouchableOpacity
-                            onPress={() => navigation.navigate('SignIn')}>
+                            onPress={() => navigation.push('SignIn')}>
                             <Text style={styles.highlight}>Sign In</Text>
                           </TouchableOpacity>
                         </Text>

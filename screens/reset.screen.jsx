@@ -100,7 +100,7 @@ function ResetPassword({navigation}) {
                     Already a fan?
                     <TouchableOpacity
                       onPress={() => {
-                        navigation.navigate('SignIn');
+                        navigation.push('SignIn');
                       }}>
                       <Text style={styles.highlight}>Sign In</Text>
                     </TouchableOpacity>
