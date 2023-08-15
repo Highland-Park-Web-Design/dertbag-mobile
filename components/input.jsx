@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(0, 0, 0, 0.10)',
     backgroundColor: '#FAFAFA',
+    fontFamily: 'Helvetica',
   },
 });
 
