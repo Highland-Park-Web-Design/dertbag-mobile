@@ -1,8 +1,9 @@
 import axios from 'axios';
-import {REACT_APP_API_URL} from '@env';
+// import {REACT_APP_API_URL} from '@env';
 
 const instance = axios.create({
-  baseURL: REACT_APP_API_URL || 'https://dertbag-server.onrender.com/',
+  // baseURL: REACT_APP_API_URL || 'https://dertbag-server.onrender.com/',
+  baseURL: 'https://dertbag-server.onrender.com/',
   //   timeout: 1000,
   //   headers: {'X-Custom-Header': 'foobar'},
 });

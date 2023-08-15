@@ -133,7 +133,7 @@ function Product({navigation}) {
                       });
                       dispatch({
                         type: 'SET_PRODUCT_ID',
-                        payload: product,
+                        payload: product.id,
                       });
                     }}
                     key={index}
@@ -420,7 +420,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     margin: 24,
     borderRadius: 16,
-    padding: 16,
+    // padding: 16,
     height: 56,
     borderWidth: 1,
     borderColor: 'rgba(0, 0, 0, 0.10)',

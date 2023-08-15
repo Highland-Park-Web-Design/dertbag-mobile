@@ -257,8 +257,6 @@ const styles = StyleSheet.create({
   },
   ProjectScrollContainer: {
     flexDirection: 'row',
-    // flex: 0.5,
-    gap: 50,
   },
   bottomView: {
     paddingHorizontal: 24,

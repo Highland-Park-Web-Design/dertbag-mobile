@@ -5,7 +5,7 @@ export const initialState = {
 export default function reducer(state, action) {
   const {type, payload} = action;
   switch (type) {
-    case 'SET_PRODUCT_ID':
+    case 'SET_RECREATION_ID':
       return {
         ...state,
         id: payload,
