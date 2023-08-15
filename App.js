@@ -5,7 +5,7 @@ import Splash from './screens/splash.screen';
 import Product from './screens/product.screen';
 import FlashMessage from 'react-native-flash-message';
 // import Bag from './screens/checkoutBag.screen';
-import Recreation from './screens/blogRecreation.screen';
+// import Recreation from './screens/blogRecreation.screen';
 import Settings from './screens/profileSettings.screen';
 import ResetPassword from './screens/reset.screen';
 import {NavigationContainer} from '@react-navigation/native';
@@ -27,6 +27,9 @@ import Bag from './screens/CheckOutScreens/Bag';
 import DeliveryDetails from './screens/CheckOutScreens/DeliveryDetails';
 import StoreDetails from './screens/CheckOutScreens/StoreDetails';
 import Checkout from './screens/CheckOutScreens/Checkout';
+import Recreation from './screens/Recreation/Recreation';
+import RecreationView from './screens/Recreation/RecreationView';
+import RecreationProvider from './context/RecreationContext';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -126,91 +129,98 @@ const App = () => {
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <ProductProvider>
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen
-              name="SignIn"
-              component={SignIn}
-              options={{title: 'Sign In', headerShown: false}}
-            />
-            <Stack.Screen
-              name="Product"
-              component={ProductScreens}
-              options={{title: 'Home', headerShown: false}}
-            />
-            <Stack.Screen
-              name="ProductDetails"
-              component={ProductDetails}
-              options={{title: 'ProductDetails', headerShown: false}}
-            />
-            <Stack.Screen
-              name="Setting"
-              component={Setting}
-              options={{title: 'Setting', headerShown: false}}
-            />
-            <Stack.Screen
-              name="Orders"
-              component={Orders}
-              options={{title: 'Orders', headerShown: false}}
-            />
-            <Stack.Screen
-              name="Stores"
-              component={Stores}
-              options={{title: 'Stores', headerShown: false}}
-            />
-            <Stack.Screen
-              name="Help"
-              component={Help}
-              options={{title: 'Help', headerShown: false}}
-            />
-            <Stack.Screen
-              name="Feedback"
-              component={Feedback}
-              options={{title: 'Feedback', headerShown: false}}
-            />
-            <Stack.Screen
-              name="Legal"
-              component={Legal}
-              options={{title: 'Legal', headerShown: false}}
-            />
-            <Stack.Screen
-              name="About"
-              component={About}
-              options={{title: 'About', headerShown: false}}
-            />
-            <Stack.Screen
-              name="Profile"
-              component={Profile}
-              options={{title: 'Profile', headerShown: false}}
-            />
-            <Stack.Screen
-              name="SignUp"
-              component={SignUp}
-              options={{title: 'Sign Up', headerShown: false}}
-            />
-            <Stack.Screen
-              name="ResetPassword"
-              component={ResetPassword}
-              options={{title: 'Reset Password', headerShown: false}}
-            />
-            <Stack.Screen
-              name="DeliveryDetails"
-              component={DeliveryDetails}
-              options={{title: 'Delivery Details', headerShown: false}}
-            />
-            <Stack.Screen
-              name="StoreDetails"
-              component={StoreDetails}
-              options={{title: 'Delivery Details', headerShown: false}}
-            />
-            <Stack.Screen
-              name="Checkout"
-              component={Checkout}
-              options={{title: 'Delivery Details', headerShown: false}}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
-        <FlashMessage position="top" />
+        <RecreationProvider>
+          <NavigationContainer>
+            <Stack.Navigator>
+              <Stack.Screen
+                name="SignIn"
+                component={SignIn}
+                options={{title: 'Sign In', headerShown: false}}
+              />
+              <Stack.Screen
+                name="Product"
+                component={ProductScreens}
+                options={{title: 'Home', headerShown: false}}
+              />
+              <Stack.Screen
+                name="ProductDetails"
+                component={ProductDetails}
+                options={{title: 'ProductDetails', headerShown: false}}
+              />
+              <Stack.Screen
+                name="Setting"
+                component={Setting}
+                options={{title: 'Setting', headerShown: false}}
+              />
+              <Stack.Screen
+                name="RecreationView"
+                component={RecreationView}
+                options={{title: 'Setting', headerShown: false}}
+              />
+              <Stack.Screen
+                name="Orders"
+                component={Orders}
+                options={{title: 'Orders', headerShown: false}}
+              />
+              <Stack.Screen
+                name="Stores"
+                component={Stores}
+                options={{title: 'Stores', headerShown: false}}
+              />
+              <Stack.Screen
+                name="Help"
+                component={Help}
+                options={{title: 'Help', headerShown: false}}
+              />
+              <Stack.Screen
+                name="Feedback"
+                component={Feedback}
+                options={{title: 'Feedback', headerShown: false}}
+              />
+              <Stack.Screen
+                name="Legal"
+                component={Legal}
+                options={{title: 'Legal', headerShown: false}}
+              />
+              <Stack.Screen
+                name="About"
+                component={About}
+                options={{title: 'About', headerShown: false}}
+              />
+              <Stack.Screen
+                name="Profile"
+                component={Profile}
+                options={{title: 'Profile', headerShown: false}}
+              />
+              <Stack.Screen
+                name="SignUp"
+                component={SignUp}
+                options={{title: 'Sign Up', headerShown: false}}
+              />
+              <Stack.Screen
+                name="ResetPassword"
+                component={ResetPassword}
+                options={{title: 'Reset Password', headerShown: false}}
+              />
+              <Stack.Screen
+                name="DeliveryDetails"
+                component={DeliveryDetails}
+                options={{title: 'Delivery Details', headerShown: false}}
+              />
+              <Stack.Screen
+                name="StoreDetails"
+                component={StoreDetails}
+                options={{title: 'Delivery Details', headerShown: false}}
+              />
+              <Stack.Screen
+                name="Checkout"
+                component={Checkout}
+                options={{title: 'Delivery Details', headerShown: false}}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+          <FlashMessage position="top" />
+        </RecreationProvider>
       </ProductProvider>
     </GestureHandlerRootView>
   );

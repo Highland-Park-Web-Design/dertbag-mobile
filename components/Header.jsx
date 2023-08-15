@@ -31,7 +31,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   headerTitle: {
-    fontFamily: 'Helvetica',
+    // fontFamily: 'Helvetica',
     fontSize: 32,
     color: '#000',
     fontWeight: '700',
