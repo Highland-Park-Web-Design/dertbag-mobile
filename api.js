@@ -8,3 +8,6 @@ const instance = axios.create({
 export const RegisterUser = async user => {
   return await instance.post('auth/signup', user);
 };
+export const LoginUser = async user => {
+  return await instance.post('auth/login', user);
+};
