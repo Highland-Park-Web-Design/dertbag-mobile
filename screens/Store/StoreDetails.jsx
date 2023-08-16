@@ -12,7 +12,8 @@ import {
 
 import Button from '../../components/Button';
 
-function StoreDetails({navigation}) {
+function StoreDetails({navigation, route}) {
+  console.log(route?.params?.id);
   return (
     <SafeAreaView style={styles.container}>
       <Header navigation={navigation} title={'DERTBAG ATELIER 🎨'} />
@@ -108,7 +109,7 @@ function StoreDetails({navigation}) {
         </View>
         <View style={{marginTop: 32, marginBottom: 10}}>
           <Button
-            onpress={() => navigation.navigate('Checkout')}
+            // onpress={() => navigation.navigate('Checkout')}
             title={'GET DIRECTION'}
           />
         </View>

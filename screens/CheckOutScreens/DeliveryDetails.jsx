@@ -157,7 +157,7 @@ function DeliveryDetails({navigation}) {
           </View>
           <View>
             <Button
-              onpress={() => navigation.navigate('StoreDetails')}
+              onpress={() => navigation.navigate('Checkout')}
               title={'CONTINUE'}
             />
           </View>

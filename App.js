@@ -14,22 +14,27 @@ import {Text, View, Image} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Setting from './screens/profileSettingsSetting.screen';
 import Orders from './screens/profileSettingsOrders.screen';
-import Stores from './screens/profileSettingsStores.screen';
+// import Stores from './screens/profileSettingsStores.screen';
 import Help from './screens/profileSettingsHelp.screen';
 import Feedback from './screens/profileSettingsFeedback.screen';
-import Legal from './screens/profileSettingsLegal.screen';
-import About from './screens/profileSettingsAbout.screen';
+// import Legal from './screens/profileSettingsLegal.screen';
+// import About from './screens/profileSettingsAbout.screen';
 import Profile from './screens/profileSettingsProfile.screen';
 import ProductDetails from './screens/Product/productDetails.screen';
 import ProductProvider from './context/ProductContext';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import Bag from './screens/CheckOutScreens/Bag';
 import DeliveryDetails from './screens/CheckOutScreens/DeliveryDetails';
-import StoreDetails from './screens/CheckOutScreens/StoreDetails';
+import StoreDetails from './screens/Store/StoreDetails';
 import Checkout from './screens/CheckOutScreens/Checkout';
 import Recreation from './screens/Recreation/Recreation';
 import RecreationView from './screens/Recreation/RecreationView';
 import RecreationProvider from './context/RecreationContext';
+import Store from './screens/Store/Store';
+import About from './screens/About/About';
+import Legal from './screens/LegalScreens/Legal';
+import TermsAndCondition from './screens/LegalScreens/TermsAndCondition';
+import PrivacyPolicy from './screens/LegalScreens/PrivacyPolicy';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -164,7 +169,7 @@ const App = () => {
               />
               <Stack.Screen
                 name="Stores"
-                component={Stores}
+                component={Store}
                 options={{title: 'Stores', headerShown: false}}
               />
               <Stack.Screen
@@ -181,6 +186,16 @@ const App = () => {
                 name="Legal"
                 component={Legal}
                 options={{title: 'Legal', headerShown: false}}
+              />
+              <Stack.Screen
+                name="TermsAndCondition"
+                component={TermsAndCondition}
+                options={{title: 'TermsAndCondition', headerShown: false}}
+              />
+              <Stack.Screen
+                name="PrivacyPolicy"
+                component={PrivacyPolicy}
+                options={{title: 'PrivacyPolicy', headerShown: false}}
               />
               <Stack.Screen
                 name="About"

@@ -47,7 +47,7 @@ function Loader() {
               marginBottom: 16,
               marginTop: 19,
               fontSize: 24,
-              fontWeight: 400,
+              fontFamily: 'Helvetica',
               color: '#111',
             }}>
             Loading
@@ -56,7 +56,7 @@ function Loader() {
             style={{
               textAlign: 'center',
               fontSize: 16,
-              fontWeight: 300,
+              fontFamily: 'Helvetica-Light',
               color: '#484848',
             }}>
             Please wait...
