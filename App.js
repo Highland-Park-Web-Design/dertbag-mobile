@@ -17,7 +17,7 @@ import Orders from './screens/profileSettingsOrders.screen';
 // import Stores from './screens/profileSettingsStores.screen';
 import Help from './screens/profileSettingsHelp.screen';
 import Feedback from './screens/profileSettingsFeedback.screen';
-import Legal from './screens/profileSettingsLegal.screen';
+// import Legal from './screens/profileSettingsLegal.screen';
 // import About from './screens/profileSettingsAbout.screen';
 import Profile from './screens/profileSettingsProfile.screen';
 import ProductDetails from './screens/Product/productDetails.screen';
@@ -32,6 +32,9 @@ import RecreationView from './screens/Recreation/RecreationView';
 import RecreationProvider from './context/RecreationContext';
 import Store from './screens/Store/Store';
 import About from './screens/About/About';
+import Legal from './screens/LegalScreens/Legal';
+import TermsAndCondition from './screens/LegalScreens/TermsAndCondition';
+import PrivacyPolicy from './screens/LegalScreens/PrivacyPolicy';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -183,6 +186,16 @@ const App = () => {
                 name="Legal"
                 component={Legal}
                 options={{title: 'Legal', headerShown: false}}
+              />
+              <Stack.Screen
+                name="TermsAndCondition"
+                component={TermsAndCondition}
+                options={{title: 'TermsAndCondition', headerShown: false}}
+              />
+              <Stack.Screen
+                name="PrivacyPolicy"
+                component={PrivacyPolicy}
+                options={{title: 'PrivacyPolicy', headerShown: false}}
               />
               <Stack.Screen
                 name="About"
