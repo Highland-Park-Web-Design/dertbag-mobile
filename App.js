@@ -35,6 +35,8 @@ import About from './screens/About/About';
 import Legal from './screens/LegalScreens/Legal';
 import TermsAndCondition from './screens/LegalScreens/TermsAndCondition';
 import PrivacyPolicy from './screens/LegalScreens/PrivacyPolicy';
+import NewPassword from './screens/newPassword';
+import OtpValidation from './screens/otpValidation';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -215,6 +217,16 @@ const App = () => {
               <Stack.Screen
                 name="ResetPassword"
                 component={ResetPassword}
+                options={{title: 'Reset Password', headerShown: false}}
+              />
+              <Stack.Screen
+                name="NewPassword"
+                component={NewPassword}
+                options={{title: 'Reset Password', headerShown: false}}
+              />
+              <Stack.Screen
+                name="OtpValidation"
+                component={OtpValidation}
                 options={{title: 'Reset Password', headerShown: false}}
               />
               <Stack.Screen
