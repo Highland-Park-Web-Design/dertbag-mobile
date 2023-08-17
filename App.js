@@ -15,7 +15,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 // import Setting from './screens/profileSettingsSetting.screen';
 import Orders from './screens/profileSettingsOrders.screen';
 // import Stores from './screens/profileSettingsStores.screen';
-import Help from './screens/profileSettingsHelp.screen';
+// import Help from './screens/profileSettingsHelp.screen';
 // import Feedback from './screens/profileSettingsFeedback.screen';
 // import Legal from './screens/profileSettingsLegal.screen';
 // import About from './screens/profileSettingsAbout.screen';
@@ -42,6 +42,7 @@ import MainSettings from './screens/Settings/Settings';
 import Notification from './screens/Settings/Notification';
 import ChangePassword from './screens/Settings/ChangePassword';
 import DeleteAccount from './screens/Settings/DeleteAccount';
+import Help from './screens/Help/Help';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
