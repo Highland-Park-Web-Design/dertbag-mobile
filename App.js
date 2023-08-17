@@ -16,7 +16,7 @@ import Setting from './screens/profileSettingsSetting.screen';
 import Orders from './screens/profileSettingsOrders.screen';
 // import Stores from './screens/profileSettingsStores.screen';
 import Help from './screens/profileSettingsHelp.screen';
-import Feedback from './screens/profileSettingsFeedback.screen';
+// import Feedback from './screens/profileSettingsFeedback.screen';
 // import Legal from './screens/profileSettingsLegal.screen';
 // import About from './screens/profileSettingsAbout.screen';
 import Profile from './screens/profileSettingsProfile.screen';
@@ -37,6 +37,7 @@ import TermsAndCondition from './screens/LegalScreens/TermsAndCondition';
 import PrivacyPolicy from './screens/LegalScreens/PrivacyPolicy';
 import NewPassword from './screens/newPassword';
 import OtpValidation from './screens/otpValidation';
+import Feedback from './screens/Feedback/Feedback';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
