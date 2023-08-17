@@ -12,7 +12,7 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Text, View, Image} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Setting from './screens/profileSettingsSetting.screen';
+// import Setting from './screens/profileSettingsSetting.screen';
 import Orders from './screens/profileSettingsOrders.screen';
 // import Stores from './screens/profileSettingsStores.screen';
 import Help from './screens/profileSettingsHelp.screen';
@@ -38,6 +38,10 @@ import PrivacyPolicy from './screens/LegalScreens/PrivacyPolicy';
 import NewPassword from './screens/newPassword';
 import OtpValidation from './screens/otpValidation';
 import Feedback from './screens/Feedback/Feedback';
+import MainSettings from './screens/Settings/Settings';
+import Notification from './screens/Settings/Notification';
+import ChangePassword from './screens/Settings/ChangePassword';
+import DeleteAccount from './screens/Settings/DeleteAccount';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -157,7 +161,22 @@ const App = () => {
               />
               <Stack.Screen
                 name="Setting"
-                component={Setting}
+                component={MainSettings}
+                options={{title: 'Setting', headerShown: false}}
+              />
+              <Stack.Screen
+                name="Notification"
+                component={Notification}
+                options={{title: 'Setting', headerShown: false}}
+              />
+              <Stack.Screen
+                name="ChangePassword"
+                component={ChangePassword}
+                options={{title: 'Setting', headerShown: false}}
+              />
+              <Stack.Screen
+                name="DeleteAccount"
+                component={DeleteAccount}
                 options={{title: 'Setting', headerShown: false}}
               />
               <Stack.Screen
