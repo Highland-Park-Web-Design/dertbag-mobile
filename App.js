@@ -13,7 +13,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {Text, View, Image} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 // import Setting from './screens/profileSettingsSetting.screen';
-import Orders from './screens/profileSettingsOrders.screen';
+// import Orders from './screens/profileSettingsOrders.screen';
 // import Stores from './screens/profileSettingsStores.screen';
 // import Help from './screens/profileSettingsHelp.screen';
 // import Feedback from './screens/profileSettingsFeedback.screen';
@@ -43,6 +43,8 @@ import Notification from './screens/Settings/Notification';
 import ChangePassword from './screens/Settings/ChangePassword';
 import DeleteAccount from './screens/Settings/DeleteAccount';
 import Help from './screens/Help/Help';
+import Orders from './screens/MyOrders/Orders';
+import OrderDetails from './screens/MyOrders/OrderDetails';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -188,6 +190,11 @@ const App = () => {
               <Stack.Screen
                 name="Orders"
                 component={Orders}
+                options={{title: 'Orders', headerShown: false}}
+              />
+              <Stack.Screen
+                name="OrderDetails"
+                component={OrderDetails}
                 options={{title: 'Orders', headerShown: false}}
               />
               <Stack.Screen
