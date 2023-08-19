@@ -34,5 +34,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Helvetica-Bold',
     fontSize: 32,
     color: '#000',
+    textTransform: 'uppercase',
   },
 });
