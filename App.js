@@ -19,7 +19,7 @@ import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 // import Feedback from './screens/profileSettingsFeedback.screen';
 // import Legal from './screens/profileSettingsLegal.screen';
 // import About from './screens/profileSettingsAbout.screen';
-import Profile from './screens/profileSettingsProfile.screen';
+// import Profile from './screens/profileSettingsProfile.screen';
 import ProductDetails from './screens/Product/productDetails.screen';
 import ProductProvider from './context/ProductContext';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
@@ -45,6 +45,8 @@ import DeleteAccount from './screens/Settings/DeleteAccount';
 import Help from './screens/Help/Help';
 import Orders from './screens/MyOrders/Orders';
 import OrderDetails from './screens/MyOrders/OrderDetails';
+import Profile from './screens/Profile/Profile';
+import ProfileEdit from './screens/Profile/ProfileEdit';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -235,6 +237,11 @@ const App = () => {
               <Stack.Screen
                 name="Profile"
                 component={Profile}
+                options={{title: 'Profile', headerShown: false}}
+              />
+              <Stack.Screen
+                name="ProfileEdit"
+                component={ProfileEdit}
                 options={{title: 'Profile', headerShown: false}}
               />
               <Stack.Screen
