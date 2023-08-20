@@ -13,6 +13,7 @@ import InActiveIcon from '../../Icons/InactiveSquareSelect.svg';
 import CustomInput from '../../components/input';
 import Button from '../../components/Button';
 import {Dropdown} from 'react-native-element-dropdown';
+import dropdownStyle from '../../components/dropdown.style';
 
 function DeliveryDetails({navigation}) {
   const [deliveryMethod, setDeliveryMethod] = useState(true);
@@ -183,45 +184,5 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '300',
     marginBottom: 4,
-  },
-});
-
-const dropdownStyle = StyleSheet.create({
-  container: {
-    backgroundColor: 'white',
-    // paddingVertical: 16,
-    // paddingHorizontal: 10,
-    // marginTop: 16,
-  },
-  dropdown: {
-    height: 50,
-    borderColor: '#0000001a',
-    backgroundColor: '#f4f4f4',
-    borderWidth: 1,
-    borderRadius: 16,
-    padding: 16,
-    height: 56,
-  },
-  label: {
-    position: 'absolute',
-    backgroundColor: 'white',
-    left: 22,
-    top: 8,
-    zIndex: 999,
-    paddingHorizontal: 8,
-    fontSize: 14,
-  },
-  placeholderStyle: {
-    fontSize: 16,
-    // fontFamily: 'Poppins',
-  },
-  selectedTextStyle: {
-    fontSize: 16,
-    // fontFamily: 'Poppins',
-  },
-
-  inputSearchStyle: {
-    height: 40,
-    fontSize: 16,
   },
 });
