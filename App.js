@@ -47,6 +47,8 @@ import Orders from './screens/MyOrders/Orders';
 import OrderDetails from './screens/MyOrders/OrderDetails';
 import Profile from './screens/Profile/Profile';
 import ProfileEdit from './screens/Profile/ProfileEdit';
+import Onboarding from './screens/Onboarding';
+import Welcome from './screens/Onboarding/Welcome';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -149,6 +151,16 @@ const App = () => {
         <RecreationProvider>
           <NavigationContainer>
             <Stack.Navigator>
+              <Stack.Screen
+                name="Onboarding"
+                component={Onboarding}
+                options={{title: 'Onboarding', headerShown: false}}
+              />
+              <Stack.Screen
+                name="Welcome"
+                component={Welcome}
+                options={{title: 'Welcome', headerShown: false}}
+              />
               <Stack.Screen
                 name="SignIn"
                 component={SignIn}
