@@ -26,11 +26,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: '3%',
-    width: '85%',
+    // width: '85%',
     height: '80%',
     backgroundColor: '#F5F5F5',
     marginTop: 20,
-    marginLeft: 25,
+    marginHorizontal: 25,
     borderRadius: 5,
   },
 });
