@@ -74,7 +74,7 @@ function OtpValidation({navigation}) {
                   }}>
                   <View
                     style={{
-                      marginBottom: 17,
+                      marginBottom: 24,
                     }}>
                     <OTPTextView
                       handleTextChange={data => {
