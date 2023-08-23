@@ -86,25 +86,28 @@ function ResetPassword({navigation}) {
                     <Text style={styles.textStyle}>Reset</Text>
                   </TouchableOpacity>
                 </View>
-                <View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    gap: 3,
+                    alignItems: 'center',
+                  }}>
                   <Text
                     style={{
                       color: '#000000',
                       textAlign: 'center',
                       fontSize: 16,
                       fontFamily: 'Helvetica',
-                      //fontStyle: 'normal',
-                      //fontWeight: '400',
                       lineHeight: 24,
                     }}>
                     Already a fan?
-                    <TouchableOpacity
-                      onPress={() => {
-                        navigation.push('SignIn');
-                      }}>
-                      <Text style={styles.highlight}>Sign In</Text>
-                    </TouchableOpacity>
                   </Text>
+                  <TouchableOpacity
+                    onPress={() => {
+                      navigation.push('SignIn');
+                    }}>
+                    <Text style={styles.highlight}>Sign In</Text>
+                  </TouchableOpacity>
                 </View>
               </View>
             </View>
@@ -126,10 +129,8 @@ const styles = StyleSheet.create({
   textStyle: {
     color: '#ffffff',
     textAlign: 'center',
-    fontFamily: 'Helvetica',
+    fontFamily: 'Helvetica-Bold',
     fontSize: 16,
-    //fontStyle: 'normal',
-    //fontWeight: '700',
     lineHeight: 24,
     textTransform: 'uppercase',
   },
@@ -138,30 +139,27 @@ const styles = StyleSheet.create({
     color: '#000',
     textTransform: 'uppercase',
     fontSize: 32,
-    //fontWeight: '700',
     lineHeight: 44,
-    //fontStyle: 'normal',
-    fontFamily: 'Helvetica',
+    fontFamily: 'Helvetica-Bold',
   },
   forgotPwLabel: {
     fontSize: 12,
     fontFamily: 'Helvetica',
-    //fontStyle: 'normal',
-    //fontWeight: '400',
     lineHeight: 16,
     color: '#000',
   },
   inputLabel: {
     fontSize: 14,
     fontFamily: 'Helvetica',
-    //fontStyle: 'normal',
-    //fontWeight: '300',
     lineHeight: 24,
     color: '#000',
   },
 
   highlight: {
-    //fontWeight: '700',
+    fontFamily: 'Helvetica-Bold',
+    color: '#000',
+    fontSize: 16,
+    lineHeight: 24,
   },
   error: {
     color: 'red',

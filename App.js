@@ -49,13 +49,14 @@ import Profile from './screens/Profile/Profile';
 import ProfileEdit from './screens/Profile/ProfileEdit';
 import Onboarding from './screens/Onboarding';
 import Welcome from './screens/Onboarding/Welcome';
+import MyTabBar from './components/CustomTab';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 function ProductScreens() {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator tabBar={props => <MyTabBar {...props} />}>
       <Tab.Screen
         name="FOR YOU"
         component={Product}
@@ -66,12 +67,12 @@ function ProductScreens() {
             fontSize: 16,
             fontFamily: 'Helvetica',
           },
-          tabBarIcon: ({focused}) =>
-            focused ? (
-              <Image source={require('./assets/images/product-active.png')} />
-            ) : (
-              <Image source={require('./assets/images/product-inactive.png')} />
-            ),
+          tabBarIcon: (
+            <Image source={require('./assets/images/product-active.png')} />
+          ),
+          inactiveIcon: (
+            <Image source={require('./assets/images/product-inactive.png')} />
+          ),
         }}
       />
       <Tab.Screen
@@ -84,12 +85,12 @@ function ProductScreens() {
             fontSize: 16,
             fontFamily: 'Helvetica',
           },
-          tabBarIcon: ({focused}) =>
-            focused ? (
-              <Image source={require('./assets/images/bag-active.png')} />
-            ) : (
-              <Image source={require('./assets/images/bag-inactive.png')} />
-            ),
+          tabBarIcon: (
+            <Image source={require('./assets/images/bag-active.png')} />
+          ),
+          inactiveIcon: (
+            <Image source={require('./assets/images/bag-inactive.png')} />
+          ),
         }}
       />
       <Tab.Screen
@@ -103,16 +104,14 @@ function ProductScreens() {
           },
           // tabBarLabel: 'Recreation',
           tabBarActiveTintColor: 'black',
-          tabBarIcon: ({focused}) =>
-            focused ? (
-              <Image
-                source={require('./assets/images/recreation-active.png')}
-              />
-            ) : (
-              <Image
-                source={require('./assets/images/recreation-inactive.png')}
-              />
-            ),
+          tabBarIcon: (
+            <Image source={require('./assets/images/recreation-active.png')} />
+          ),
+          inactiveIcon: (
+            <Image
+              source={require('./assets/images/recreation-inactive.png')}
+            />
+          ),
         }}
       />
       <Tab.Screen
@@ -132,12 +131,12 @@ function ProductScreens() {
             borderBottomWidth: 10,
             borderBottomColor: '#D09900',
           },
-          tabBarIcon: ({focused}) =>
-            focused ? (
-              <Image source={require('./assets/images/profile-active.png')} />
-            ) : (
-              <Image source={require('./assets/images/profile-inactive.png')} />
-            ),
+          tabBarIcon: (
+            <Image source={require('./assets/images/profile-active.png')} />
+          ),
+          inactiveIcon: (
+            <Image source={require('./assets/images/profile-inactive.png')} />
+          ),
         }}
       />
     </Tab.Navigator>

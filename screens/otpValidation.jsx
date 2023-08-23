@@ -14,7 +14,6 @@ import * as Yup from 'yup';
 import {Formik} from 'formik';
 import CustomInput from '../components/input';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
-import OTPInputView from '@twotalltotems/react-native-otp-input';
 import OTPTextView from 'react-native-otp-textinput';
 
 function OtpValidation({navigation}) {
