@@ -17,6 +17,10 @@ export const RequestReset = async user => {
   return await instance.post('auth/forgot-password', user);
 };
 
-export const ResetPassword = async user => {
-  return await instance.post('auth/auth/reset-password/', user);
+export const VerifyOTP = async otpData => {
+  return await instance.post('auth/verify-otp', otpData);
+};
+
+export const ResetPasswordWithOTP = async resetData => {
+  return await instance.post('auth/reset-password', resetData);
 };

@@ -37,7 +37,10 @@ function ResetPassword({navigation}) {
       setSubmitting(true);
       const res = await RequestReset(values);
       console.log('reset request res', res);
-      navigation.navigate('OtpValidation', {otpToken: res.data.token});
+      navigation.navigate('OtpValidation', {
+        otpToken: res.data.otpToken,
+        email: values.email,
+      });
       setSubmitting(false);
       return;
     } catch (err) {
