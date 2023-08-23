@@ -17,12 +17,10 @@ import * as Yup from 'yup';
 import Loader from '../components/Loader';
 
 function SignIn({navigation}) {
-  10;
-  const isDarkMode = useColorScheme() === 'dark';
   const [submitting, setSubmitting] = useState(false);
 
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: '#FFF',
   };
 
   const validationSchema = Yup.object().shape({
@@ -77,7 +75,7 @@ function SignIn({navigation}) {
                 <View style={{...backgroundStyle, height: '100%'}}>
                   <View
                     style={{
-                      backgroundColor: isDarkMode ? Colors.black : Colors.white,
+                      backgroundColor: '#fff',
                       flex: 1,
                       flexDirection: 'column',
                       alignItems: 'center',

@@ -19,11 +19,10 @@ import {RequestReset} from '../api';
 import Loader from '../components/Loader';
 
 function ResetPassword({navigation}) {
-  const isDarkMode = useColorScheme() === 'dark';
   const [submitting, setSubmitting] = useState(false);
 
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: '#FFF',
   };
 
   const validationSchema = Yup.object().shape({
@@ -76,7 +75,7 @@ function ResetPassword({navigation}) {
                 <View style={{...backgroundStyle, height: '100%'}}>
                   <View
                     style={{
-                      backgroundColor: isDarkMode ? Colors.black : Colors.white,
+                      backgroundColor: '#fff',
                       flex: 1,
                       flexDirection: 'column',
                       alignItems: 'center',

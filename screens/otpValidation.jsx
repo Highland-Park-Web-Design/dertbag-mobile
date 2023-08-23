@@ -21,7 +21,6 @@ import Loader from '../components/Loader';
 import {storeData} from '../store';
 
 function OtpValidation({navigation, route}) {
-  const isDarkMode = useColorScheme() === 'dark';
   const [submitting, setSubmitting] = useState(false);
   console.log('route params', route.params);
   const {email, otpToken} = route.params;
@@ -31,7 +30,7 @@ function OtpValidation({navigation, route}) {
   });
 
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: '#FFF',
   };
 
   const handleOTPValidation = async values => {
@@ -79,7 +78,7 @@ function OtpValidation({navigation, route}) {
                 <View style={{...backgroundStyle, height: '100%'}}>
                   <View
                     style={{
-                      backgroundColor: isDarkMode ? Colors.black : Colors.white,
+                      backgroundColor: '#fff',
                       flex: 1,
                       flexDirection: 'column',
                       alignItems: 'center',

@@ -19,11 +19,10 @@ import Loader from '../components/Loader';
 import {storeData} from '../store';
 
 function SignUp({navigation}) {
-  const [submitting, setSubmtting] = useState(false);
   const isDarkMode = useColorScheme() === 'dark';
-
+  const [submitting, setSubmtting] = useState(false);
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: '#FFF',
   };
 
   const validationSchema = Yup.object().shape({
@@ -70,10 +69,10 @@ function SignUp({navigation}) {
         <Loader />
       ) : (
         <SafeAreaView style={backgroundStyle}>
-          <StatusBar
+          {/* <StatusBar
             barStyle={isDarkMode ? 'light-content' : 'dark-content'}
             backgroundColor={backgroundStyle.backgroundColor}
-          />
+          /> */}
           <Formik
             onSubmit={handleSignUp}
             initialValues={{
@@ -98,7 +97,7 @@ function SignUp({navigation}) {
                     <View
                       style={{
                         backgroundColor: isDarkMode
-                          ? Colors.black
+                          ? Colors.white
                           : Colors.white,
                         flex: 1,
                         flexDirection: 'column',
