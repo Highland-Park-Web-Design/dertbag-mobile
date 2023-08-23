@@ -1,9 +1,24 @@
 import axios from 'axios';
 import {REACT_APP_API_URL} from '@env';
+import {getData} from './store';
 
 const instance = axios.create({
   baseURL: REACT_APP_API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
+
+instance.interceptors.request.use(
+  async config => {
+    const user = await getData('user');
+    config.headers['Authorization'] = `Bearer ${user?.token}`;
+    return config;
+  },
+  error => {
+    return Promise.reject(error);
+  },
+);
 
 export const RegisterUser = async user => {
   return await instance.post('auth/signup', user);

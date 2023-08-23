@@ -42,12 +42,12 @@ function NewPassword({navigation, route}) {
         otpToken,
         password: values.password,
       });
-      console.log('verify otp res', res);
       await storeData('user', {token: res.data.token});
       navigation.navigate('Product');
       setSubmitting(false);
       return;
     } catch (err) {
+      console.log(err.response);
       setSubmitting(false);
       if (err.response) {
         showMessage({
@@ -108,6 +108,7 @@ function NewPassword({navigation, route}) {
                         <CustomInput
                           onChangeText={handleChange('password')}
                           onBlur={handleBlur('password')}
+                          secureTextEntry
                           value={values.password}
                           placeholder="Enter Password"
                         />
@@ -119,6 +120,7 @@ function NewPassword({navigation, route}) {
                         }}>
                         <Text style={styles.inputLabel}>Confirm Password</Text>
                         <CustomInput
+                          secureTextEntry
                           onChangeText={handleChange('passwordConfirmation')}
                           onBlur={handleBlur('passwordConfirmation')}
                           value={values.passwordConfirmation}

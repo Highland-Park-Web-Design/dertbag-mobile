@@ -19,6 +19,7 @@ import OTPTextView from 'react-native-otp-textinput';
 import {RequestReset, VerifyOTP} from '../api';
 import {showMessage} from 'react-native-flash-message';
 import Loader from '../components/Loader';
+import {storeData} from '../store';
 
 function OtpValidation({navigation, route}) {
   const isDarkMode = useColorScheme() === 'dark';
@@ -39,7 +40,8 @@ function OtpValidation({navigation, route}) {
     try {
       setSubmitting(true);
       const res = await VerifyOTP(values);
-      console.log(screenParams);
+      // console.log('otp verification res', res.data);
+      await storeData('user', {token: res.data.token});
       navigation.navigate('NewPassword', {
         otpToken: screenParams.otpToken,
         otpCode: values.otpCode,
