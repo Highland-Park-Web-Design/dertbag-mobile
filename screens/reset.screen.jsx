@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   StatusBar,
@@ -10,13 +10,17 @@ import {
   Button,
   TouchableOpacity,
 } from 'react-native';
+import {showMessage} from 'react-native-flash-message';
 import * as Yup from 'yup';
 import {Formik} from 'formik';
 import CustomInput from '../components/input';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import {RequestReset} from '../api';
+import Loader from '../components/Loader';
 
 function ResetPassword({navigation}) {
   const isDarkMode = useColorScheme() === 'dark';
+  const [submitting, setSubmitting] = useState(false);
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
@@ -28,90 +32,116 @@ function ResetPassword({navigation}) {
       .required('Email Address is Required'),
   });
 
-  const handleReset = (values, formikBag) => {
-    // console.log('form values', values, formikBag);
-    return navigation.navigate('Product');
+  const handleReset = async values => {
+    try {
+      setSubmitting(true);
+      const res = await RequestReset(values);
+      console.log('reset request res', res);
+      navigation.navigate('OtpValidation', {
+        otpToken: res.data.otpToken,
+        email: values.email,
+      });
+      setSubmitting(false);
+      return;
+    } catch (err) {
+      setSubmitting(false);
+      if (err.response) {
+        showMessage({
+          message: err.response.data.message,
+          type: 'danger',
+        });
+      } else {
+        showMessage({
+          message: 'unable to reach server, check internet',
+          type: 'danger',
+        });
+      }
+    }
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <Formik
-        onSubmit={handleReset}
-        initialValues={{
-          email: '',
-        }}
-        validationSchema={validationSchema}>
-        {({values, errors, handleSubmit, handleChange, handleBlur}) => {
-          return (
-            <View style={{...backgroundStyle, height: '100%'}}>
-              <View
-                style={{
-                  backgroundColor: isDarkMode ? Colors.black : Colors.white,
-                  flex: 1,
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: '100%',
-                }}>
-                <View
-                  style={{
-                    width: '100%',
-                  }}>
-                  <Text style={styles.headingText}>Reset Password</Text>
-                </View>
-                <View
-                  style={{
-                    width: '100%',
-                    padding: 24,
-                    marginBottom: 64,
-                  }}>
+    <>
+      {submitting ? (
+        <Loader />
+      ) : (
+        <SafeAreaView style={backgroundStyle}>
+          <Formik
+            onSubmit={handleReset}
+            initialValues={{
+              email: '',
+            }}
+            validationSchema={validationSchema}>
+            {({values, errors, handleSubmit, handleChange, handleBlur}) => {
+              return (
+                <View style={{...backgroundStyle, height: '100%'}}>
                   <View
                     style={{
-                      marginBottom: 17,
+                      backgroundColor: isDarkMode ? Colors.black : Colors.white,
+                      flex: 1,
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      height: '100%',
                     }}>
-                    <Text style={styles.inputLabel}>Email</Text>
-                    <CustomInput
-                      onChangeText={handleChange('email')}
-                      onBlur={handleBlur('email')}
-                      value={values.email}
-                      placeholder="Enter Email"
-                    />
-                    <Text style={styles.error}>{errors.email}</Text>
-                  </View>
-
-                  <TouchableOpacity
-                    activeOpacity={0.5}
-                    style={styles.buttonStyle}
-                    onPress={handleSubmit}>
-                    <Text style={styles.textStyle}>Reset</Text>
-                  </TouchableOpacity>
-                </View>
-                <View>
-                  <Text
-                    style={{
-                      color: '#000000',
-                      textAlign: 'center',
-                      fontSize: 16,
-                      fontFamily: 'Helvetica',
-                      //fontStyle: 'normal',
-                      //fontWeight: '400',
-                      lineHeight: 24,
-                    }}>
-                    Already a fan?
-                    <TouchableOpacity
-                      onPress={() => {
-                        navigation.push('SignIn');
+                    <View
+                      style={{
+                        width: '100%',
                       }}>
-                      <Text style={styles.highlight}>Sign In</Text>
-                    </TouchableOpacity>
-                  </Text>
+                      <Text style={styles.headingText}>Reset Password</Text>
+                    </View>
+                    <View
+                      style={{
+                        width: '100%',
+                        padding: 24,
+                        marginBottom: 64,
+                      }}>
+                      <View
+                        style={{
+                          marginBottom: 17,
+                        }}>
+                        <Text style={styles.inputLabel}>Email</Text>
+                        <CustomInput
+                          onChangeText={handleChange('email')}
+                          onBlur={handleBlur('email')}
+                          value={values.email}
+                          placeholder="Enter Email"
+                        />
+                        <Text style={styles.error}>{errors.email}</Text>
+                      </View>
+
+                      <TouchableOpacity
+                        activeOpacity={0.5}
+                        style={styles.buttonStyle}
+                        onPress={handleSubmit}>
+                        <Text style={styles.textStyle}>Reset</Text>
+                      </TouchableOpacity>
+                    </View>
+                    <View>
+                      <Text
+                        style={{
+                          color: '#000000',
+                          textAlign: 'center',
+                          fontSize: 16,
+                          fontFamily: 'Helvetica',
+                          lineHeight: 24,
+                        }}>
+                        Already a fan?
+                        <TouchableOpacity
+                          onPress={() => {
+                            navigation.push('SignIn');
+                          }}>
+                          <Text style={styles.highlight}>Sign In</Text>
+                        </TouchableOpacity>
+                      </Text>
+                    </View>
+                  </View>
                 </View>
-              </View>
-            </View>
-          );
-        }}
-      </Formik>
-    </SafeAreaView>
+              );
+            }}
+          </Formik>
+        </SafeAreaView>
+      )}
+    </>
   );
 }
 

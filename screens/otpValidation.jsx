@@ -16,113 +16,167 @@ import CustomInput from '../components/input';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import OTPTextView from 'react-native-otp-textinput';
+import {RequestReset, VerifyOTP} from '../api';
+import {showMessage} from 'react-native-flash-message';
+import Loader from '../components/Loader';
+import {storeData} from '../store';
 
-function OtpValidation({navigation}) {
+function OtpValidation({navigation, route}) {
   const isDarkMode = useColorScheme() === 'dark';
-  const [errorsMsg, setErrorsMsg] = useState();
-  const [code, setCode] = useState();
+  const [submitting, setSubmitting] = useState(false);
+  console.log('route params', route.params);
+  const {email, otpToken} = route.params;
+  const [screenParams, setScreenParams] = useState({
+    email,
+    otpToken,
+  });
 
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
 
-  const validationSchema = Yup.object().shape({
-    password: Yup.string().required('Password is required'),
-    passwordConfirmation: Yup.string()
-      .required()
-      .oneOf([Yup.ref('password'), null], 'Passwords must match'),
-  });
-
-  const handleValidation = (values, formikBag) => {
-    // console.log('form values', values, formikBag);
-    return navigation.navigate('Product');
+  const handleOTPValidation = async values => {
+    values.otpToken = screenParams.otpToken;
+    try {
+      setSubmitting(true);
+      const res = await VerifyOTP(values);
+      // console.log('otp verification res', res.data);
+      await storeData('user', {token: res.data.token});
+      navigation.navigate('NewPassword', {
+        otpToken: screenParams.otpToken,
+        otpCode: values.otpCode,
+      });
+      setSubmitting(false);
+      return;
+    } catch (err) {
+      setSubmitting(false);
+      if (err.response) {
+        showMessage({
+          message: err.response.data.message,
+          type: 'danger',
+        });
+      } else {
+        showMessage({
+          message: 'unable to reach server, check internet',
+          type: 'danger',
+        });
+      }
+    }
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <Formik
-        onSubmit={handleValidation}
-        // initialValues={{
-        //   code: '',
-        //   passwordConfirmation: '',
-        // }}
-        // validationSchema={validationSchema}
-      >
-        {({values, errors, handleSubmit, handleChange, handleBlur}) => {
-          return (
-            <View style={{...backgroundStyle, height: '100%'}}>
-              <View
-                style={{
-                  backgroundColor: isDarkMode ? Colors.black : Colors.white,
-                  flex: 1,
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: '100%',
-                }}>
-                <View
-                  style={{
-                    width: '100%',
-                  }}>
-                  <Text style={styles.headingText}>OTP Validation</Text>
-                </View>
-                <View
-                  style={{
-                    width: '100%',
-                    padding: 24,
-                    marginBottom: 64,
-                  }}>
+    <>
+      {submitting ? (
+        <Loader />
+      ) : (
+        <SafeAreaView style={backgroundStyle}>
+          <Formik
+            onSubmit={handleOTPValidation}
+            initialValues={{
+              otpCode: '',
+            }}>
+            {({values, setFieldValue, handleSubmit}) => {
+              return (
+                <View style={{...backgroundStyle, height: '100%'}}>
                   <View
                     style={{
-                      marginBottom: 17,
+                      backgroundColor: isDarkMode ? Colors.black : Colors.white,
+                      flex: 1,
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      height: '100%',
                     }}>
-                    <OTPTextView
-                      handleTextChange={data => {
-                        console.log(data);
-                      }}
-                      containerStyle={styles.textInputContainer}
-                      textInputStyle={styles.InputStyle}
-                      tintColor="#000"
-                      inputCount={6}
-                    />
-                    <Text style={styles.error}>{errorsMsg}</Text>
+                    <View
+                      style={{
+                        width: '100%',
+                      }}>
+                      <Text style={styles.headingText}>OTP Validation</Text>
+                    </View>
+                    <View
+                      style={{
+                        width: '100%',
+                        padding: 24,
+                        marginBottom: 64,
+                      }}>
+                      <View
+                        style={{
+                          marginBottom: 24,
+                        }}>
+                        <OTPTextView
+                          handleTextChange={data => {
+                            setFieldValue('otpCode', data);
+                          }}
+                          containerStyle={styles.textInputContainer}
+                          textInputStyle={styles.InputStyle}
+                          tintColor="#000"
+                          inputCount={6}
+                        />
+                      </View>
+                      <TouchableOpacity
+                        disabled={values?.otpCode < 6}
+                        activeOpacity={0.5}
+                        style={styles.buttonStyle}
+                        onPress={handleSubmit}>
+                        <Text style={styles.textStyle}>Validate</Text>
+                      </TouchableOpacity>
+                    </View>
+                    <View
+                      style={{
+                        alignItems: 'center',
+                        gap: 3,
+                        flexDirection: 'row',
+                      }}>
+                      <Text
+                        style={{
+                          color: '#000000',
+                          textAlign: 'center',
+                          fontSize: 16,
+                          fontFamily: 'Helvetica',
+                          lineHeight: 24,
+                        }}>
+                        Didn't get the code?
+                      </Text>
+                      <TouchableOpacity
+                        onPress={async () => {
+                          try {
+                            const res = await RequestReset({
+                              email: screenParams.email,
+                            });
+                            setScreenParams(prev => {
+                              return {...prev, otpToken: res.data.otpToken};
+                            });
+                            showMessage({
+                              message: 'new otp sent to your email',
+                              type: 'success',
+                            });
+                          } catch (err) {
+                            console.error(err);
+                            if (err.response) {
+                              showMessage({
+                                message: err.response.data.message,
+                                type: 'danger',
+                              });
+                            } else {
+                              showMessage({
+                                message:
+                                  'unable to reach server, check internet',
+                                type: 'danger',
+                              });
+                            }
+                          }
+                        }}>
+                        <Text style={styles.highlight}>Resend</Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
-                  <TouchableOpacity
-                    activeOpacity={0.5}
-                    style={styles.buttonStyle}
-                    onPress={handleSubmit}>
-                    <Text style={styles.textStyle}>Validate</Text>
-                  </TouchableOpacity>
                 </View>
-                <View
-                  style={{
-                    alignItems: 'center',
-                    gap: 3,
-                    flexDirection: 'row',
-                  }}>
-                  <Text
-                    style={{
-                      color: '#000000',
-                      textAlign: 'center',
-                      fontSize: 16,
-                      fontFamily: 'Helvetica',
-                      lineHeight: 24,
-                    }}>
-                    Already a fan?
-                  </Text>
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.push('SignIn');
-                    }}>
-                    <Text style={styles.highlight}>Sign In</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-          );
-        }}
-      </Formik>
-    </SafeAreaView>
+              );
+            }}
+          </Formik>
+        </SafeAreaView>
+      )}
+    </>
   );
 }
 

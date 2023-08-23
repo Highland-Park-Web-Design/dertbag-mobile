@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   SafeAreaView,
   StatusBar,
@@ -14,10 +14,15 @@ import * as Yup from 'yup';
 import {Formik} from 'formik';
 import CustomInput from '../components/input';
 import {Colors} from 'react-native/Libraries/NewAppScreen';
+import Loader from '../components/Loader';
+import {showMessage} from 'react-native-flash-message';
+import {ResetPasswordWithOTP} from '../api';
+import {storeData} from '../store';
 
-function NewPassword({navigation}) {
+function NewPassword({navigation, route}) {
   const isDarkMode = useColorScheme() === 'dark';
-
+  const [submitting, setSubmitting] = useState(false);
+  const {otpCode, otpToken} = route.params;
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
   };
@@ -29,108 +34,140 @@ function NewPassword({navigation}) {
       .oneOf([Yup.ref('password'), null], 'Passwords must match'),
   });
 
-  const handleReset = (values, formikBag) => {
-    // console.log('form values', values, formikBag);
-    return navigation.navigate('Product');
+  const handleReset = async values => {
+    try {
+      setSubmitting(true);
+      const res = await ResetPasswordWithOTP({
+        otpCode,
+        otpToken,
+        password: values.password,
+      });
+      await storeData('user', {token: res.data.token});
+      navigation.navigate('Product');
+      setSubmitting(false);
+      return;
+    } catch (err) {
+      console.log(err.response);
+      setSubmitting(false);
+      if (err.response) {
+        showMessage({
+          message: err.response.data.message,
+          type: 'danger',
+        });
+      } else {
+        showMessage({
+          message: 'unable to reach server, check internet',
+          type: 'danger',
+        });
+      }
+    }
   };
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <Formik
-        onSubmit={handleReset}
-        initialValues={{
-          password: '',
-          passwordConfirmation: '',
-        }}
-        validationSchema={validationSchema}>
-        {({values, errors, handleSubmit, handleChange, handleBlur}) => {
-          return (
-            <View style={{...backgroundStyle, height: '100%'}}>
-              <View
-                style={{
-                  backgroundColor: isDarkMode ? Colors.black : Colors.white,
-                  flex: 1,
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  height: '100%',
-                }}>
-                <View
-                  style={{
-                    width: '100%',
-                  }}>
-                  <Text style={styles.headingText}>Set New Password</Text>
-                </View>
-                <View
-                  style={{
-                    width: '100%',
-                    padding: 24,
-                    marginBottom: 64,
-                  }}>
+    <>
+      {submitting ? (
+        <Loader />
+      ) : (
+        <SafeAreaView style={backgroundStyle}>
+          <Formik
+            onSubmit={handleReset}
+            initialValues={{
+              password: '',
+              passwordConfirmation: '',
+            }}
+            validationSchema={validationSchema}>
+            {({values, errors, handleSubmit, handleChange, handleBlur}) => {
+              return (
+                <View style={{...backgroundStyle, height: '100%'}}>
                   <View
                     style={{
-                      marginBottom: 17,
+                      backgroundColor: isDarkMode ? Colors.black : Colors.white,
+                      flex: 1,
+                      flexDirection: 'column',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      height: '100%',
                     }}>
-                    <Text style={styles.inputLabel}>New Password</Text>
-                    <CustomInput
-                      onChangeText={handleChange('password')}
-                      onBlur={handleBlur('password')}
-                      value={values.password}
-                      placeholder="Enter Password"
-                    />
-                    <Text style={styles.error}>{errors.password}</Text>
+                    <View
+                      style={{
+                        width: '100%',
+                      }}>
+                      <Text style={styles.headingText}>Set New Password</Text>
+                    </View>
+                    <View
+                      style={{
+                        width: '100%',
+                        padding: 24,
+                        marginBottom: 64,
+                      }}>
+                      <View
+                        style={{
+                          marginBottom: 17,
+                        }}>
+                        <Text style={styles.inputLabel}>New Password</Text>
+                        <CustomInput
+                          onChangeText={handleChange('password')}
+                          onBlur={handleBlur('password')}
+                          secureTextEntry
+                          value={values.password}
+                          placeholder="Enter Password"
+                        />
+                        <Text style={styles.error}>{errors.password}</Text>
+                      </View>
+                      <View
+                        style={{
+                          marginBottom: 17,
+                        }}>
+                        <Text style={styles.inputLabel}>Confirm Password</Text>
+                        <CustomInput
+                          secureTextEntry
+                          onChangeText={handleChange('passwordConfirmation')}
+                          onBlur={handleBlur('passwordConfirmation')}
+                          value={values.passwordConfirmation}
+                          placeholder="Enter Password"
+                        />
+                        <Text style={styles.error}>
+                          {errors.passwordConfirmation}
+                        </Text>
+                      </View>
+                      <TouchableOpacity
+                        activeOpacity={0.5}
+                        style={styles.buttonStyle}
+                        onPress={handleSubmit}>
+                        <Text style={styles.textStyle}>UPDATE</Text>
+                      </TouchableOpacity>
+                    </View>
+                    <View
+                      style={{
+                        alignItems: 'center',
+                        gap: 3,
+                        flexDirection: 'row',
+                      }}>
+                      <Text
+                        style={{
+                          color: '#000000',
+                          textAlign: 'center',
+                          fontSize: 16,
+                          fontFamily: 'Helvetica',
+                          lineHeight: 24,
+                        }}>
+                        Already a fan?
+                      </Text>
+                      <TouchableOpacity
+                        onPress={() => {
+                          navigation.push('SignIn');
+                        }}>
+                        <Text style={styles.highlight}>Sign In</Text>
+                      </TouchableOpacity>
+                    </View>
                   </View>
-                  <View
-                    style={{
-                      marginBottom: 17,
-                    }}>
-                    <Text style={styles.inputLabel}>Confirm Password</Text>
-                    <CustomInput
-                      onChangeText={handleChange('passwordConfirmation')}
-                      onBlur={handleBlur('passwordConfirmation')}
-                      value={values.passwordConfirmation}
-                      placeholder="Enter Password"
-                    />
-                    <Text style={styles.error}>
-                      {errors.passwordConfirmation}
-                    </Text>
-                  </View>
-                  <TouchableOpacity
-                    activeOpacity={0.5}
-                    style={styles.buttonStyle}
-                    onPress={handleSubmit}>
-                    <Text style={styles.textStyle}>UPDATE</Text>
-                  </TouchableOpacity>
                 </View>
-                <View
-                  style={{
-                    alignItems: 'center',
-                    gap: 3,
-                    flexDirection: 'row',
-                  }}>
-                  <Text
-                    style={{
-                      color: '#000000',
-                      textAlign: 'center',
-                      fontSize: 16,
-                      fontFamily: 'Helvetica',
-                      lineHeight: 24,
-                    }}>
-                    Already a fan?
-                  </Text>
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.push('SignIn');
-                    }}>
-                    <Text style={styles.highlight}>Sign In</Text>
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-          );
-        }}
-      </Formik>
-    </SafeAreaView>
+              );
+            }}
+          </Formik>
+        </SafeAreaView>
+      )}
+    </>
   );
 }
 
