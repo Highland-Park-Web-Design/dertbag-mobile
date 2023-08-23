@@ -23,7 +23,7 @@ function Bag({navigation}) {
           MY BAG
         </Text>
       </View>
-      <ScrollView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <Text
           style={{
             fontWeight: '400',

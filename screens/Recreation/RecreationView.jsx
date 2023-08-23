@@ -15,7 +15,9 @@ function RecreationView({navigation}) {
   return (
     <SafeAreaView style={styles.container}>
       <Header title={'KYLA for GERL'} navigation={navigation} />
-      <ScrollView style={styles.contentContainer}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={styles.contentContainer}>
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}

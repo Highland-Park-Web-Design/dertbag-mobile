@@ -56,8 +56,7 @@ const menuOptions = [
 
 const Settings = ({navigation}) => {
   const headerComponent = () => (
-    <View>
-      <Text style={styles.headingText}>PROFILE</Text>
+    <View style={{marginBottom: 36}}>
       <ProfileCard
         email="philip@dertbag.us"
         onPress={() => navigation.navigate('Profile')}
@@ -66,7 +65,9 @@ const Settings = ({navigation}) => {
   );
   return (
     <SafeAreaView style={styles.container}>
+      <Text style={styles.headingText}>MENU</Text>
       <FlatList
+        showsVerticalScrollIndicator={false}
         ListHeaderComponent={headerComponent}
         style={styles.settings}
         data={menuOptions}
@@ -95,9 +96,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+    paddingHorizontal: 24,
   },
   optionContainer: {
-    paddingVertical: 20,
+    // paddingVertical: 20,
   },
   optionText: {
     fontSize: 18,
@@ -110,10 +112,10 @@ const styles = StyleSheet.create({
   menuItem: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingLeft: 25,
-    paddingRight: 25,
+    paddingVertical: 16,
     borderBottomWidth: 1,
-    borderBottomColor: '#DCDCDC',
+    borderBottomColor: 'rgba(0, 0, 0, 0.05)',
+    alignItems: 'center',
   },
   menuColumn: {
     flexDirection: 'row',
@@ -128,10 +130,9 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     lineHeight: 44,
     fontStyle: 'normal',
-    fontFamily: 'Helvetica',
+    fontFamily: 'Helvetica-Bold',
     alignSelf: 'baseline',
     paddingTop: 20,
-    paddingLeft: 25,
   },
   icons: {
     marginRight: 15,

@@ -17,12 +17,10 @@ import * as Yup from 'yup';
 import Loader from '../components/Loader';
 
 function SignIn({navigation}) {
-  10;
-  const isDarkMode = useColorScheme() === 'dark';
   const [submitting, setSubmitting] = useState(false);
 
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: '#FFF',
   };
 
   const validationSchema = Yup.object().shape({
@@ -77,7 +75,7 @@ function SignIn({navigation}) {
                 <View style={{...backgroundStyle, height: '100%'}}>
                   <View
                     style={{
-                      backgroundColor: isDarkMode ? Colors.black : Colors.white,
+                      backgroundColor: '#fff',
                       flex: 1,
                       flexDirection: 'column',
                       alignItems: 'center',
@@ -169,8 +167,6 @@ function SignIn({navigation}) {
                           textAlign: 'center',
                           fontSize: 16,
                           fontFamily: 'Helvetica',
-                          //fontStyle: 'normal',
-                          //fontWeight: '400',
                           lineHeight: 24,
                         }}>
                         New here?
@@ -206,8 +202,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontFamily: 'Helvetica-Bold',
     fontSize: 16,
-    //fontStyle: 'normal',
-    //fontWeight: '700',
     lineHeight: 24,
     textTransform: 'uppercase',
   },
@@ -216,24 +210,18 @@ const styles = StyleSheet.create({
     color: '#000',
     textTransform: 'uppercase',
     fontSize: 32,
-    //fontWeight: '700',
     lineHeight: 44,
-    //fontStyle: 'normal',
     fontFamily: 'Helvetica-Bold',
   },
   forgotPwLabel: {
     fontSize: 12,
     fontFamily: 'Helvetica',
-    //fontStyle: 'normal',
-    //fontWeight: '400',
     lineHeight: 16,
     color: '#000',
   },
   inputLabel: {
     fontSize: 14,
     fontFamily: 'Helvetica',
-    //fontStyle: 'normal',
-    //fontWeight: 300,
     lineHeight: 24,
     color: '#000',
   },
@@ -249,8 +237,10 @@ const styles = StyleSheet.create({
     color: 'red',
   },
   highlight: {
-    //fontWeight: '700',
     fontFamily: 'Helvetica-Bold',
+    color: '#000',
+    fontSize: 16,
+    lineHeight: 24,
   },
 });
 

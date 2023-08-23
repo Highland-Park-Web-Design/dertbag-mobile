@@ -24,7 +24,7 @@ function NewPassword({navigation, route}) {
   const [submitting, setSubmitting] = useState(false);
   const {otpCode, otpToken} = route.params;
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: '#fff',
   };
 
   const validationSchema = Yup.object().shape({
@@ -81,7 +81,7 @@ function NewPassword({navigation, route}) {
                 <View style={{...backgroundStyle, height: '100%'}}>
                   <View
                     style={{
-                      backgroundColor: isDarkMode ? Colors.black : Colors.white,
+                      backgroundColor: '#fff',
                       flex: 1,
                       flexDirection: 'column',
                       alignItems: 'center',
@@ -209,7 +209,10 @@ const styles = StyleSheet.create({
   },
 
   highlight: {
-    //fontWeight: '700',
+    fontFamily: 'Helvetica-Bold',
+    color: '#000',
+    fontSize: 16,
+    lineHeight: 24,
   },
   error: {
     color: 'red',

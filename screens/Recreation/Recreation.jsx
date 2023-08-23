@@ -52,7 +52,9 @@ function Recreation({navigation}) {
         </Text>
       </View>
 
-      <ScrollView style={styles.contentContainer}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={styles.contentContainer}>
         <TouchableOpacity
           activeOpacity={0.8}
           onPress={() => {

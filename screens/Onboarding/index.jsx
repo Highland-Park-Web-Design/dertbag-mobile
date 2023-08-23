@@ -7,60 +7,72 @@ import {
   Image,
   StyleSheet,
   TouchableOpacity,
+  useColorScheme,
+  StatusBar,
 } from 'react-native';
 import Swiper from 'react-native-swiper';
 import LinearGradient from 'react-native-linear-gradient';
 
 function Onboarding({navigation}) {
+  const isDarkMode = useColorScheme() === 'dark';
+  const backgroundStyle = {
+    backgroundColor: '#FFF',
+  };
   return (
-    <Swiper
-      paginationStyle={{
-        // marginBottom: 20,
-        position: 'absolute',
-        bottom: 50,
-      }}
-      dot={
-        <View
-          style={{
-            backgroundColor: '#808080',
-            width: 8,
-            height: 8,
-            borderRadius: 4,
-            marginLeft: 5,
-            marginRight: 5,
-            // marginTop: 3,
-            // marginBottom: 3,
-          }}
-        />
-      }
-      activeDot={
-        <View
-          style={{
-            backgroundColor: '#FFF',
-            width: 16,
-            height: 8,
-            borderRadius: 4,
-            marginLeft: 5,
-            marginRight: 5,
-          }}
-        />
-      }
-      style={styles.wrapper}
-      showsButtons={false}
-      loop={false}>
-      <View testID="SlideThree" style={styles.slide}>
-        <SlideOne navigation={navigation} />
-      </View>
-      <View testID="SlideThree" style={styles.slide}>
-        <SlideTwo navigation={navigation} />
-      </View>
-      <View testID="SlideThree" style={styles.slide}>
-        <SlideThree navigation={navigation} />
-      </View>
-      <View testID="SlideFour" style={styles.slide}>
-        <SlideFour navigation={navigation} />
-      </View>
-    </Swiper>
+    <>
+      <StatusBar
+        barStyle={'dark-content'}
+        backgroundColor={backgroundStyle.backgroundColor}
+      />
+      <Swiper
+        paginationStyle={{
+          // marginBottom: 20,
+          position: 'absolute',
+          bottom: 50,
+        }}
+        dot={
+          <View
+            style={{
+              backgroundColor: '#808080',
+              width: 8,
+              height: 8,
+              borderRadius: 4,
+              marginLeft: 5,
+              marginRight: 5,
+              // marginTop: 3,
+              // marginBottom: 3,
+            }}
+          />
+        }
+        activeDot={
+          <View
+            style={{
+              backgroundColor: '#FFF',
+              width: 16,
+              height: 8,
+              borderRadius: 4,
+              marginLeft: 5,
+              marginRight: 5,
+            }}
+          />
+        }
+        style={styles.wrapper}
+        showsButtons={false}
+        loop={false}>
+        <View testID="SlideThree" style={styles.slide}>
+          <SlideOne navigation={navigation} />
+        </View>
+        <View testID="SlideThree" style={styles.slide}>
+          <SlideTwo navigation={navigation} />
+        </View>
+        <View testID="SlideThree" style={styles.slide}>
+          <SlideThree navigation={navigation} />
+        </View>
+        <View testID="SlideFour" style={styles.slide}>
+          <SlideFour navigation={navigation} />
+        </View>
+      </Swiper>
+    </>
   );
 }
 

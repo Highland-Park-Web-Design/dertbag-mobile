@@ -15,7 +15,7 @@ import {ProductContext} from '../context/ProductContext';
 function Product({navigation}) {
   const [productText, onChangeProductText] = useState('');
   const [selectedOrientation, onChangeSelectedOrientation] = useState('all');
-  const {state, dispatch} = useContext(ProductContext);
+  const {dispatch} = useContext(ProductContext);
   return (
     <SafeAreaView style={styles.screenContainer}>
       <View style={styles.pageWrapper}>
@@ -260,7 +260,7 @@ function Product({navigation}) {
 
 const styles = StyleSheet.create({
   stickyFooter: {
-    height: 80,
+    // height: 80,
     // backgroundColor: 'black',
   },
   scrollableSection: {marginBottom: 26},
@@ -368,7 +368,7 @@ const styles = StyleSheet.create({
     // backgroundColor: 'black',
   },
   pillsContainer: {
-    backgroundColor: '#f4f4f4',
+    // backgroundColor: '#f4f4f4',
     // flex: 0.05,
     justifyContent: 'space-between',
     alignItems: 'center',
