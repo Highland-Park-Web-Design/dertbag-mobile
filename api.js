@@ -44,3 +44,8 @@ export const ResetPasswordWithOTP = async resetData => {
 export const ChangeLoggedinPassword = async changeData => {
   return await instance.post('auth/change-password', changeData);
 };
+
+// Endpoint to Delete User
+export const DeleteUser = async () => {
+  return await instance.delete('user/delete-profile');
+};
