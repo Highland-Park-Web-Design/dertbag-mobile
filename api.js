@@ -39,3 +39,8 @@ export const VerifyOTP = async otpData => {
 export const ResetPasswordWithOTP = async resetData => {
   return await instance.post('auth/reset-password', resetData);
 };
+
+// Endpoint to Edit Loggedin Password
+export const ChangeLoggedinPassword = async changeData => {
+  return await instance.post('auth/change-password', changeData);
+};
