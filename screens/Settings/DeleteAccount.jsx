@@ -28,7 +28,6 @@ function DeleteAccount({navigation}) {
       navigation.navigate('SignIn');
     } catch (err) {
       setSubmitting(false);
-      console.log(err);
       if (err.response) {
         showMessage({
           message: err.response.data.message,
