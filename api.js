@@ -49,3 +49,13 @@ export const ChangeLoggedinPassword = async changeData => {
 export const DeleteUser = async () => {
   return await instance.delete('user/delete-profile');
 };
+
+// Endpoint to Get User Profile
+export const GetUser = async () => {
+  return await instance.get('user/profile');
+};
+
+// Endpoint to send feedback
+export const SendFeedback = async data => {
+  return await instance.post('feedback', data);
+};

@@ -5,18 +5,58 @@ import {
   TouchableOpacity,
   View,
   Text,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import Header from '../../components/Header';
 import CustomInput from '../../components/input';
 import Button from '../../components/Button';
+import {SendFeedback} from '../../api';
+import {showMessage} from 'react-native-flash-message';
 
 function Feedback({navigation}) {
   const [currentRate, setCurrentRate] = useState('');
   const [recRate, setRecRate] = useState('');
+  const [message, setMessage] = useState('');
+  const [submitting, setSubmitting] = useState('');
+
+  async function SendUserFeedback() {
+    try {
+      setSubmitting(true);
+      const data = await SendFeedback({
+        rate: currentRate,
+        recomendation: recRate,
+        message: message,
+      });
+      setSubmitting(false);
+      showMessage({
+        message: data?.data?.message,
+        type: 'success',
+      });
+      setCurrentRate('');
+      setRecRate('');
+      setMessage('');
+    } catch (err) {
+      setSubmitting(false);
+      if (err.response) {
+        showMessage({
+          message: err.response.data.message,
+          type: 'danger',
+        });
+      } else {
+        showMessage({
+          message: 'unable to reach server, check internet',
+          type: 'danger',
+        });
+      }
+    }
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <Header navigation={navigation} title={'Send Us Feedback'} />
-      <View style={styles.contentContainer}>
+      <ScrollView style={styles.contentContainer}>
         <View style={{gap: 56}}>
           <View>
             <Text
@@ -158,15 +198,24 @@ function Feedback({navigation}) {
                 fontFamily: 'Helvetica',
                 fontSize: 16,
               }}>
-              How can we improve dertbag for you?
+              How can we improve dertbag or you?
             </Text>
-            <CustomInput
-              numberOfLines={10}
-              placeholder={'Give us your thought'}
-            />
+            {/* <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.container}>
+
+      </KeyboardAvoidingView> */}
+            <View style={{paddingBottom: 90}}>
+              <CustomInput
+                onChangeText={setMessage}
+                value={message}
+                numberOfLines={10}
+                placeholder={'Give us your thought'}
+              />
+            </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
       <View
         style={{
           position: 'absolute',
@@ -174,7 +223,11 @@ function Feedback({navigation}) {
           width: '100%',
           paddingHorizontal: 24,
         }}>
-        <Button title={'Send Feedback'} />
+        <Button
+          disabled={submitting}
+          onpress={() => SendUserFeedback()}
+          title={submitting ? 'Sending Feedback...' : 'Send Feedback'}
+        />
       </View>
     </SafeAreaView>
   );
