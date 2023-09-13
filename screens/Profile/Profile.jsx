@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -10,8 +10,24 @@ import {
 } from 'react-native';
 import Header from '../../components/Header';
 import EditIco from '../../Icons/EditIco.svg';
+import {GetUser} from '../../api';
+import dayjs from 'dayjs';
 
 function Profile({navigation}) {
+  const [userProfile, setUserProfile] = useState();
+
+  useEffect(() => {
+    async function GetUserProfile() {
+      try {
+        const {data} = await GetUser();
+        setUserProfile(data?.user);
+        console.log(data);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    GetUserProfile();
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       <Header navigation={navigation} title={'Profile'} />
@@ -31,9 +47,12 @@ function Profile({navigation}) {
                 borderRadius={64}
                 source={require('../../assets/images/profileImg.png')}
               />
-              <Text style={styles.username}>Gilbert Umeh</Text>
-              <Text style={styles.email}>gilbert@megastack.com</Text>
-              <Text style={styles.date}>Member Since: Nov 2021</Text>
+              <Text style={styles.username}>{userProfile?.fullName}</Text>
+              <Text style={styles.email}>{userProfile?.email}</Text>
+              <Text style={styles.date}>
+                Member Since:
+                {dayjs(userProfile?.createdAt).format(' MMM YYYY')}
+              </Text>
             </View>
             <TouchableOpacity
               onPress={() => navigation.navigate('ProfileEdit')}
