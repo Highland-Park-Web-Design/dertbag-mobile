@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import {
   StyleSheet,
   View,
@@ -6,16 +6,54 @@ import {
   Text,
   SafeAreaView,
   TouchableOpacity,
+  FlatList,
   ScrollView,
 } from 'react-native';
 import CustomInput from '../components/input';
 import {productDemoData} from './constant';
 import {ProductContext} from '../context/ProductContext';
-
+import {GetProductList} from '../api';
+import ProductCard from '../components/ProductCard';
+import CustomSkeleton from '../components/Skeleton';
 function Product({navigation}) {
   const [productText, onChangeProductText] = useState('');
   const [selectedOrientation, onChangeSelectedOrientation] = useState('all');
   const {dispatch} = useContext(ProductContext);
+  const [allProduct, setAllProducts] = useState();
+  const [newArivals, setNewArivals] = useState();
+  const [recomendation, setRecomendation] = useState();
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    async function getProducts() {
+      try {
+        const {data} = await GetProductList();
+        // setAllProducts(data?.products);
+
+        if (data?.products?.length > 0) {
+          const oneWeekAgo = new Date();
+          oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+
+          const filternewArival = data?.products?.filter(
+            product =>
+              product.created_at >= oneWeekAgo &&
+              product.created_at <= new Date(),
+          );
+
+          const filterBystatus = data?.products?.filter(
+            product => product.status === 'active',
+          );
+          setAllProducts(filterBystatus);
+          setNewArivals(filternewArival);
+          setLoading(false);
+        }
+      } catch (err) {
+        setLoading(false);
+        console.log(err);
+      }
+    }
+    getProducts();
+  }, []);
+
   return (
     <SafeAreaView style={styles.screenContainer}>
       <View style={styles.pageWrapper}>
@@ -120,106 +158,139 @@ function Product({navigation}) {
           style={styles.scrollableContainer}>
           <View style={styles.scrollableSection}>
             <Text style={styles.screenHeading}>NEW ARRIVALS</Text>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              style={styles.newArrivalContainer}>
-              {productDemoData.map((product, index) => {
-                return (
-                  <TouchableOpacity
-                    onPress={() => {
-                      navigation.navigate('ProductDetails', {
-                        data: product.id,
-                      });
-                      dispatch({
-                        type: 'SET_PRODUCT_ID',
-                        payload: product.id,
-                      });
-                    }}
-                    key={index}
-                    style={styles.productCard}>
-                    <Image
-                      source={product.imageUrl}
-                      style={styles.productImage}
-                    />
-                    <View style={styles.productCaption}>
-                      <Text style={styles.productTitle}>
-                        {product.productTitle}
-                      </Text>
-                      <Text>{product.productSubtitle}</Text>
-                      <Text>${product.price}</Text>
-                    </View>
-                  </TouchableOpacity>
-                );
-              })}
-
-              <View style={styles.seeMoreCard}>
-                <View style={styles.seeMoreCaption}>
-                  <Text style={styles.seeMoreLabel}>See More</Text>
+            <View style={styles.newArrivalContainer}>
+              {!newArivals && (
+                <View style={{marginLeft: 24, flexDirection: 'row'}}>
+                  <CustomSkeleton loading={!loading} height={384} width={281} />
+                  <CustomSkeleton loading={!loading} height={384} width={281} />
                 </View>
-              </View>
-            </ScrollView>
+              )}
+
+              {newArivals && (
+                <>
+                  <FlatList
+                    style={{width: '100%'}}
+                    horizontal
+                    data={newArivals}
+                    renderItem={({item}) => (
+                      <ProductCard
+                        index={item?.id}
+                        navigation={navigation}
+                        product={item}
+                        key={item?.id}
+                        dispatch={dispatch}
+                      />
+                    )}
+                    keyExtractor={item => item?.id}
+                    ListFooterComponent={
+                      <View style={styles.seeMoreCard}>
+                        <View style={styles.seeMoreCaption}>
+                          <Text style={styles.seeMoreLabel}>See More</Text>
+                        </View>
+                      </View>
+                    }
+                    ListEmptyComponent={
+                      <View style={styles.seeMoreCard}>
+                        <View style={styles.seeMoreCaption}>
+                          <Text style={styles.seeMoreLabel}>
+                            No Product Available
+                          </Text>
+                        </View>
+                      </View>
+                    }
+                  />
+                </>
+              )}
+            </View>
           </View>
 
           <View style={styles.scrollableSection}>
             <Text style={styles.screenHeading}>RECOMMENDATIONS</Text>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              style={styles.newArrivalContainer}>
-              {productDemoData.map((product, index) => {
-                return (
-                  <View key={index} style={styles.productCard}>
-                    <Image
-                      source={product.imageUrl}
-                      style={styles.productImage}
-                    />
-                    <View style={styles.productCaption}>
-                      <Text style={styles.productTitle}>
-                        {product.productTitle}
-                      </Text>
-                      <Text>{product.productSubtitle}</Text>
-                      <Text>${product.price}</Text>
-                    </View>
-                  </View>
-                );
-              })}
-              <View style={styles.seeMoreCard}>
-                <View style={styles.seeMoreCaption}>
-                  <Text style={styles.seeMoreLabel}>See More</Text>
+            <View style={styles.newArrivalContainer}>
+              {!allProduct && (
+                <View style={{gap: 5, flexDirection: 'row', marginLeft: 24}}>
+                  <CustomSkeleton loading={!loading} height={384} width={281} />
+                  <CustomSkeleton loading={!loading} height={384} width={281} />
                 </View>
-              </View>
-            </ScrollView>
+              )}
+
+              {allProduct && (
+                <>
+                  <FlatList
+                    style={{width: '100%'}}
+                    horizontal
+                    data={allProduct}
+                    renderItem={({item}) => (
+                      <ProductCard
+                        index={item.id}
+                        navigation={navigation}
+                        product={item}
+                        key={item.id}
+                        dispatch={dispatch}
+                      />
+                    )}
+                    keyExtractor={item => item.id}
+                    ListFooterComponent={
+                      <View style={styles.seeMoreCard}>
+                        <View style={styles.seeMoreCaption}>
+                          <Text style={styles.seeMoreLabel}>See More</Text>
+                        </View>
+                      </View>
+                    }
+                    ListEmptyComponent={
+                      <View style={styles.seeMoreCard}>
+                        <Text>No Product Available</Text>
+                      </View>
+                    }
+                    List
+                  />
+                </>
+              )}
+            </View>
           </View>
           <View style={styles.scrollableSection}>
             <Text style={styles.screenHeading}>FEATURED COLLECTIONS</Text>
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              style={styles.newArrivalContainer}>
-              {productDemoData.map((product, index) => {
-                return (
-                  <View key={index} style={styles.productCard}>
-                    <Image
-                      source={product.imageUrl}
-                      style={styles.productImage}
-                    />
-                    <View style={styles.productCaption}>
-                      <Text style={styles.productTitle}>
-                        {product.productTitle}
-                      </Text>
-                      <Text>{product.productSubtitle}</Text>
-                      <Text>${product.price}</Text>
-                    </View>
-                  </View>
-                );
-              })}
-              <View style={styles.seeMoreCard}>
-                <View style={styles.seeMoreCaption}>
-                  <Text style={styles.seeMoreLabel}>See More</Text>
+            <View style={styles.newArrivalContainer}>
+              {!allProduct && (
+                <View style={{gap: 5, flexDirection: 'row', marginLeft: 24}}>
+                  <CustomSkeleton loading={!loading} height={384} width={281} />
+                  <CustomSkeleton loading={!loading} height={384} width={281} />
                 </View>
-              </View>
-            </ScrollView>
+              )}
+
+              {allProduct && (
+                <>
+                  <FlatList
+                    style={{width: '100%'}}
+                    horizontal
+                    data={allProduct}
+                    renderItem={({item}) => (
+                      <ProductCard
+                        index={item.id}
+                        navigation={navigation}
+                        product={item}
+                        key={item.id}
+                        dispatch={dispatch}
+                      />
+                    )}
+                    keyExtractor={item => item.id}
+                    ListFooterComponent={
+                      <View style={styles.seeMoreCard}>
+                        <View style={styles.seeMoreCaption}>
+                          <Text style={styles.seeMoreLabel}>See More</Text>
+                        </View>
+                      </View>
+                    }
+                    ListEmptyComponent={
+                      <View style={styles.seeMoreCard}>
+                        <Text>No Product Available</Text>
+                      </View>
+                    }
+                    List
+                  />
+                </>
+              )}
+            </View>
           </View>
           {/* <View style={styles.scrollableSection}>
             <Text style={styles.screenHeading}>BEST SELLERS</Text>

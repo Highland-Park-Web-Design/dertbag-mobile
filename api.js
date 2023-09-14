@@ -59,3 +59,18 @@ export const GetUser = async () => {
 export const SendFeedback = async data => {
   return await instance.post('feedback', data);
 };
+
+// Endpoint to get Stores
+export const GetStores = async () => {
+  return await instance.get('store');
+};
+
+// Endpoint to get Product
+export const GetProductList = async () => {
+  return await instance.get('product');
+};
+
+// Endpoint to get Product by ID
+export const GetProductByID = async id => {
+  return await instance.get(`product/${id}`);
+};
