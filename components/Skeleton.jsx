@@ -13,7 +13,7 @@ function CustomSkeleton({height, width, loading}) {
         isLoading={loading}
         layout={[
           {key: 'someId', width: width, height: height},
-          //   {key: 'someId', width: width, height: height},
+          {key: 'someId', width: width, height: height},
         ]}
       />
     </>

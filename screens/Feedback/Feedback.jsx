@@ -19,7 +19,7 @@ function Feedback({navigation}) {
   const [currentRate, setCurrentRate] = useState('');
   const [recRate, setRecRate] = useState('');
   const [message, setMessage] = useState('');
-  const [submitting, setSubmitting] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   async function SendUserFeedback() {
     try {

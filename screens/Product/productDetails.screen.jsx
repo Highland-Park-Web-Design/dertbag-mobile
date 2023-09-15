@@ -23,6 +23,7 @@ import DropdownReverse from '../../Icons/DropdownReverse.svg';
 import HTML from 'react-native-render-html';
 import PlusIco from '../../Icons/Plus.svg';
 import MinusIco from '../../Icons/Minus.svg';
+import {showMessage} from 'react-native-flash-message';
 import {
   BottomSheetBackdrop,
   BottomSheetFooter,
@@ -31,7 +32,6 @@ import {
   BottomSheetScrollView,
 } from '@gorhom/bottom-sheet';
 import {GetProductByID} from '../../api';
-import Loader from '../../components/Loader';
 import CustomSkeleton from '../../components/Skeleton';
 
 function ProductDetails({navigation}) {
@@ -53,7 +53,17 @@ function ProductDetails({navigation}) {
       }
     } catch (err) {
       setLoading(false);
-      console.log(err);
+      if (err.response) {
+        showMessage({
+          message: err.response.data.message,
+          type: 'danger',
+        });
+      } else {
+        showMessage({
+          message: 'unable to reach server, check internet',
+          type: 'danger',
+        });
+      }
     }
   }, [state?.id]);
 
@@ -136,7 +146,7 @@ function ProductDetails({navigation}) {
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
               {!singleProduct?.title && (
                 <View style={{gap: 5}}>
-                  <CustomSkeleton height={30} width={'90%'} loading={loading} />
+                  <CustomSkeleton height={30} width={150} loading={loading} />
                   <CustomSkeleton height={30} width={50} loading={loading} />
                 </View>
               )}
@@ -232,11 +242,12 @@ function ProductDetails({navigation}) {
                       <ScrollView
                         horizontal
                         showsHorizontalScrollIndicator={false}>
-                        {singleProduct?.variants?.map(variant => (
+                        {singleProduct?.variants?.map((variant, index) => (
                           <TouchableOpacity
-                            onPress={() =>
-                              setVariantTitle(variant.title.toLowerCase())
-                            }
+                            onPress={() => {
+                              setVariantTitle(variant.title.toLowerCase());
+                              setSelectedVariant(Number(index));
+                            }}
                             key={variant.id}
                             style={
                               variantTitle.toLowerCase() ===

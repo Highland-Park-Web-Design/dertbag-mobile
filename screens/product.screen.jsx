@@ -15,6 +15,7 @@ import {ProductContext} from '../context/ProductContext';
 import {GetProductList} from '../api';
 import ProductCard from '../components/ProductCard';
 import CustomSkeleton from '../components/Skeleton';
+import {showMessage} from 'react-native-flash-message';
 function Product({navigation}) {
   const [productText, onChangeProductText] = useState('');
   const [selectedOrientation, onChangeSelectedOrientation] = useState('all');
@@ -48,7 +49,17 @@ function Product({navigation}) {
         }
       } catch (err) {
         setLoading(false);
-        console.log(err);
+        if (err.response) {
+          showMessage({
+            message: err.response.data.message,
+            type: 'danger',
+          });
+        } else {
+          showMessage({
+            message: 'unable to reach server, check internet',
+            type: 'danger',
+          });
+        }
       }
     }
     getProducts();
