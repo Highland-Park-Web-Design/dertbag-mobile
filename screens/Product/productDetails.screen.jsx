@@ -1,4 +1,11 @@
-import {useCallback, useContext, useMemo, useRef} from 'react';
+import {
+  useCallback,
+  useContext,
+  useMemo,
+  useRef,
+  useEffect,
+  useState,
+} from 'react';
 import {
   Image,
   ScrollView,
@@ -6,15 +13,17 @@ import {
   Text,
   TouchableOpacity,
   View,
+  useWindowDimensions,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {ProductContext} from '../../context/ProductContext';
 import Header from '../../components/Header';
 import DropdownIco from '../../Icons/Dropdown.svg';
 import DropdownReverse from '../../Icons/DropdownReverse.svg';
-
+import HTML from 'react-native-render-html';
 import PlusIco from '../../Icons/Plus.svg';
 import MinusIco from '../../Icons/Minus.svg';
+import {showMessage} from 'react-native-flash-message';
 import {
   BottomSheetBackdrop,
   BottomSheetFooter,
@@ -22,10 +31,45 @@ import {
   BottomSheetModalProvider,
   BottomSheetScrollView,
 } from '@gorhom/bottom-sheet';
+import {GetProductByID} from '../../api';
+import CustomSkeleton from '../../components/Skeleton';
 
 function ProductDetails({navigation}) {
   const {state} = useContext(ProductContext);
   const bottomSheetRef = useRef(null);
+  const [singleProduct, setSingleProduct] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [counter, setCounter] = useState(Number(1));
+  const [selectedVariant, setSelectedVariant] = useState(Number(0));
+  const [variantTitle, setVariantTitle] = useState('small');
+
+  const getProductByID = useCallback(async () => {
+    try {
+      const {data} = await GetProductByID(state?.id);
+
+      if (data?.product) {
+        setSingleProduct(data?.product);
+        setLoading(false);
+      }
+    } catch (err) {
+      setLoading(false);
+      if (err.response) {
+        showMessage({
+          message: err.response.data.message,
+          type: 'danger',
+        });
+      } else {
+        showMessage({
+          message: 'unable to reach server, check internet',
+          type: 'danger',
+        });
+      }
+    }
+  }, [state?.id]);
+
+  useEffect(() => {
+    getProductByID();
+  }, [getProductByID]);
 
   // variables
   const snapPoints = useMemo(() => ['25%', '70%'], []);
@@ -39,109 +83,76 @@ function ProductDetails({navigation}) {
   const handleClosePress = useCallback(() => {
     bottomSheetRef.current?.close();
   }, []);
-
-  const renderFooter = useCallback(
-    props => (
-      <BottomSheetFooter {...props} bottomInset={24}>
-        <View style={styles.footerContainer}>
-          <Text style={styles.footerText}>Footer</Text>
-        </View>
-      </BottomSheetFooter>
-    ),
-    [],
-  );
-  // console.log(state, 'idpage');
+  // console.log(singleProduct?.variants[0]?.price, 'idpage');
+  const {width} = useWindowDimensions();
   return (
     <BottomSheetModalProvider>
       <SafeAreaView style={{flex: 1}}>
         <Header navigation={navigation} title={'Product Details'} />
-        <ScrollView style={styles.pageContainer}>
-          {/* <Text>{state.id}</Text> */}
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={styles.ProjectScrollContainer}>
-            <View style={{marginRight: 10}}>
-              <Image
-                style={styles.productImage}
-                source={require('../../assets/images/ProdDetails.png')}
-              />
-            </View>
-            <View style={{marginRight: 10}}>
-              <Image
-                style={styles.productImage}
-                source={require('../../assets/images/ProdDetails.png')}
-              />
+
+        <>
+          <ScrollView style={styles.pageContainer}>
+            {/* <Text>{state.id}</Text> */}
+            {singleProduct && (
+              <ScrollView
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                style={styles.ProjectScrollContainer}>
+                {!singleProduct?.images && (
+                  <CustomSkeleton loading={loading} height={493} width={380} />
+                )}
+                {singleProduct?.images &&
+                  singleProduct?.images.map(image => (
+                    <View
+                      key={image.id}
+                      style={{backgroundColor: '', height: 493}}>
+                      <View
+                        key={image.id}
+                        style={{marginRight: 10, height: 493}}>
+                        <Image
+                          style={styles.productImage}
+                          source={{uri: image?.src}}
+                        />
+                      </View>
+                    </View>
+                  ))}
+              </ScrollView>
+            )}
+
+            <View
+              style={{
+                gap: 4,
+                marginTop: 10,
+                flexDirection: 'row',
+                justifyContent: 'center',
+              }}>
+              <View
+                style={{
+                  backgroundColor: '#111',
+                  width: 16,
+                  height: 8,
+                  borderRadius: 4,
+                }}></View>
+              <View
+                style={{
+                  backgroundColor: '#D9D9D9',
+                  width: 8,
+                  height: 8,
+                  borderRadius: 4,
+                }}></View>
             </View>
           </ScrollView>
-          <View
-            style={{
-              gap: 4,
-              marginTop: 10,
-              flexDirection: 'row',
-              justifyContent: 'center',
-            }}>
-            <View
-              style={{
-                backgroundColor: '#111',
-                width: 16,
-                height: 8,
-                borderRadius: 4,
-              }}></View>
-            <View
-              style={{
-                backgroundColor: '#D9D9D9',
-                width: 8,
-                height: 8,
-                borderRadius: 4,
-              }}></View>
-          </View>
-        </ScrollView>
-        <View style={styles.bottomView}>
-          <View style={{flexDirection: 'row', alignItems: 'center'}}>
-            <Text style={styles.productName}>BRAILLE TRENCH JACKET</Text>
-            <TouchableOpacity onPress={handlePresentModalPress}>
-              <DropdownIco width={24} height={24} />
-            </TouchableOpacity>
-          </View>
-          <View
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}>
-            <Text style={styles.productPrice}>$360.00</Text>
-            <Text style={styles.productQuantity}>x1</Text>
-          </View>
-          <View style={{gap: 16, flexDirection: 'row', paddingVertical: 16}}>
-            <TouchableOpacity style={styles.AddCartBtn}>
-              <Text style={styles.AddCartBtnText}>ADD TO BAG</Text>
-            </TouchableOpacity>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: 10,
-              }}>
-              <TouchableOpacity
-                // onPress={handlePresentModalPress}
-                style={styles.Btn}>
-                <PlusIco />
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.Btn}>
-                <MinusIco />
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-        <ProductSheet
-          snapPoints={snapPoints}
-          handleSheetChanges={handleSheetChanges}
-          bottomSheetRef={bottomSheetRef}>
-          <View style={{paddingHorizontal: 24, paddingVertical: 16}}>
+          <View style={styles.bottomView}>
             <View style={{flexDirection: 'row', alignItems: 'center'}}>
-              <Text style={styles.productName}>BRAILLE TRENCH JACKET</Text>
-              <TouchableOpacity onPress={handleClosePress}>
-                <DropdownReverse width={24} height={24} />
+              {!singleProduct?.title && (
+                <View style={{gap: 5}}>
+                  <CustomSkeleton height={30} width={150} loading={loading} />
+                  <CustomSkeleton height={30} width={50} loading={loading} />
+                </View>
+              )}
+              <Text style={styles.productName}>{singleProduct?.title}</Text>
+              <TouchableOpacity onPress={handlePresentModalPress}>
+                <DropdownIco width={24} height={24} />
               </TouchableOpacity>
             </View>
             <View
@@ -149,94 +160,199 @@ function ProductDetails({navigation}) {
                 flexDirection: 'row',
                 alignItems: 'center',
               }}>
-              <Text style={styles.productPrice}>$360.00</Text>
-              <Text style={styles.productQuantity}>x1</Text>
+              <Text style={styles.productPrice}>
+                {singleProduct?.variants &&
+                  ` $` +
+                    singleProduct?.variants[selectedVariant]?.price * counter}
+              </Text>
+              <Text style={styles.productQuantity}>x{counter}</Text>
             </View>
-            <ScrollView
+            <View style={{gap: 16, flexDirection: 'row', paddingVertical: 16}}>
+              <TouchableOpacity disabled={loading} style={styles.AddCartBtn}>
+                <Text style={styles.AddCartBtnText}>ADD TO BAG</Text>
+              </TouchableOpacity>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 10,
+                }}>
+                <TouchableOpacity
+                  onPress={() => setCounter(prev => prev + 1)}
+                  style={styles.Btn}>
+                  <PlusIco />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    if (counter > 1) {
+                      setCounter(prev => prev - 1);
+                    }
+                  }}
+                  style={styles.Btn}>
+                  <MinusIco />
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+          <ProductSheet
+            snapPoints={snapPoints}
+            handleSheetChanges={handleSheetChanges}
+            bottomSheetRef={bottomSheetRef}>
+            <View
               style={{
-                // backgroundColor: 'green',
-                // height: '80%',
-                gap: 16,
+                paddingHorizontal: 24,
+                paddingVertical: 16,
+                // backgroundColor: 'red',
+                height: '95%',
               }}>
-              <View style={{marginBottom: 16}}>
-                <Text style={{marginBottom: 16}}>SIZE</Text>
-                <ScrollView
-                  sty
-                  horizontal
-                  showsHorizontalScrollIndicator={false}>
-                  <View style={styles.Activepills}>
-                    <Text style={styles.activePillsText}>Small</Text>
-                  </View>
-                  <View style={styles.pills}>
-                    <Text style={styles.pillsText}>medium</Text>
-                  </View>
-                  <View style={styles.pills}>
-                    <Text style={styles.pillsText}>large</Text>
-                  </View>
-                  <View style={styles.pills}>
-                    <Text style={styles.pillsText}>xl</Text>
-                  </View>
-                </ScrollView>
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Text style={styles.productName}>{singleProduct?.title}</Text>
+                <TouchableOpacity onPress={handleClosePress}>
+                  <DropdownReverse width={24} height={24} />
+                </TouchableOpacity>
               </View>
-              <View style={{marginBottom: 16}}>
-                <Text style={{marginBottom: 16}}>COLOR</Text>
-                <View>
-                  <View style={styles.colors}></View>
-                </View>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                }}>
+                <Text style={styles.productPrice}>
+                  $
+                  {singleProduct?.variants &&
+                    singleProduct?.variants[selectedVariant]?.price * counter}
+                </Text>
+                <Text style={styles.productQuantity}>x{counter}</Text>
               </View>
-              <BottomSheetScrollView>
-                <View style={{marginBottom: 16}}>
-                  <Text
-                    style={{
-                      marginBottom: 16,
-                      fontWeight: 700,
-                      fontFamily: 'Helvetica',
-                      color: '#111',
-                      fontSize: 16,
-                      textTransform: 'uppercase',
-                    }}>
-                    Description
-                  </Text>
+              <View
+                style={{
+                  // backgroundColor: 'green',
+                  height: '80%',
+                  gap: 16,
+                }}>
+                <BottomSheetScrollView
+                  style={
+                    {
+                      // backgroundColor: 'red',
+                      // height: 'auto',
+                    }
+                  }>
                   <View>
-                    <View>
-                      <Text style={{color: '#111', fontFamily: 'Helvetica'}}>
-                        MADE TO ORDER + PLEASE GIVE 2 WEEKS FOR PRODUCTION FROM
-                        ORDER DATE Weight = 6.5OZ Black Cotton RipStop two
-                        slanted welt pockets on front DERTBAG BRAILLE SNAPS
-                        CLOSURE & SINGULAR SNAPS CLOSURE DERTBAG SIDE LABEL SEWN
-                        IN SIDE SEAM ROUNDED COLLAR TRUE TO SIZE MADE IN
-                        BRIDGEPORT, CONNECTICUT TRENCH JACKET SIZE CHART MEDIUM
-                        HPS = 36" P2P = 24" SLEEVE = 26" JACKET SIZE CHART LARGE
-                        HPS = 36" P2P = 25" SLEEVE = 26" JACKET SIZE CHART
-                        XLARGE HPS = 38" P2P = 26" SLEEVE = 27"
+                    <View style={{marginBottom: 16}}>
+                      <Text style={{marginBottom: 16}}>SIZE</Text>
+                      <BottomSheetScrollView
+                        horizontal
+                        showsHorizontalScrollIndicator={false}>
+                        {singleProduct?.variants?.map((variant, index) => (
+                          <View key={variant.id}>
+                            <TouchableOpacity
+                              onPress={() => {
+                                setVariantTitle(variant.title.toLowerCase());
+                                setSelectedVariant(Number(index));
+                              }}
+                              style={
+                                variantTitle.toLowerCase() ===
+                                variant.title.toLowerCase()
+                                  ? styles.Activepills
+                                  : styles.pills
+                              }>
+                              <Text
+                                style={
+                                  variantTitle.toLowerCase() ===
+                                  variant.title.toLowerCase()
+                                    ? styles.activePillsText
+                                    : styles.pillsText
+                                }>
+                                {variant.title}
+                              </Text>
+                            </TouchableOpacity>
+                          </View>
+                        ))}
+
+                        {/* <View style={styles.pills}>
+                      <Text style={styles.pillsText}>medium</Text>
+                    </View>
+                    <View style={styles.pills}>
+                      <Text style={styles.pillsText}>large</Text>
+                    </View>
+                    <View style={styles.pills}>
+                      <Text style={styles.pillsText}>xl</Text>
+                    </View> */}
+                      </BottomSheetScrollView>
+                    </View>
+                    {/* <View style={{marginBottom: 16}}>
+                      <Text style={{marginBottom: 16}}>COLOR</Text>
+                      <View>
+                        <View style={styles.colors}></View>
+                      </View>
+                    </View> */}
+
+                    <View style={{marginBottom: 16}}>
+                      <Text
+                        style={{
+                          marginBottom: 16,
+                          fontWeight: 700,
+                          fontFamily: 'Helvetica',
+                          color: '#111',
+                          fontSize: 16,
+                          textTransform: 'uppercase',
+                        }}>
+                        Description
                       </Text>
+                      <View>
+                        <View>
+                          {/* <Text style={{color: '#111', fontFamily: 'Helvetica'}}> */}
+                          <HTML
+                            contentWidth={width}
+                            ignoredDomTags={['meta']}
+                            source={{html: singleProduct?.body_html}}
+                          />
+                          {/* </Text> */}
+                        </View>
+                      </View>
+                    </View>
+                  </View>
+                </BottomSheetScrollView>
+
+                <View
+                  style={{
+                    // backgroundColor: 'red',
+                    // position: 'absolute',
+                    bottom: 0,
+                  }}>
+                  <View style={{gap: 16, flexDirection: 'row'}}>
+                    <TouchableOpacity
+                      disabled={loading}
+                      style={styles.AddCartBtn}>
+                      <Text style={styles.AddCartBtnText}>ADD TO BAG</Text>
+                    </TouchableOpacity>
+                    <View
+                      style={{
+                        // backgroundColor: 'green',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        gap: 10,
+                      }}>
+                      <TouchableOpacity
+                        onPress={() => setCounter(prev => prev + 1)}
+                        style={styles.Btn}>
+                        <PlusIco />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => {
+                          if (counter > 1) {
+                            setCounter(prev => prev - 1);
+                          }
+                        }}
+                        style={styles.Btn}>
+                        <MinusIco />
+                      </TouchableOpacity>
                     </View>
                   </View>
                 </View>
-              </BottomSheetScrollView>
-
-              <View style={{gap: 16, flexDirection: 'row'}}>
-                <TouchableOpacity style={styles.AddCartBtn}>
-                  <Text style={styles.AddCartBtnText}>ADD TO BAG</Text>
-                </TouchableOpacity>
-                <View
-                  style={{
-                    // backgroundColor: 'green',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    gap: 10,
-                  }}>
-                  <TouchableOpacity style={styles.Btn}>
-                    <PlusIco />
-                  </TouchableOpacity>
-                  <TouchableOpacity style={styles.Btn}>
-                    <MinusIco />
-                  </TouchableOpacity>
-                </View>
               </View>
-            </ScrollView>
-          </View>
-        </ProductSheet>
+            </View>
+          </ProductSheet>
+        </>
       </SafeAreaView>
     </BottomSheetModalProvider>
   );
@@ -257,6 +373,7 @@ const styles = StyleSheet.create({
   },
   ProjectScrollContainer: {
     flexDirection: 'row',
+    height: 493,
   },
   bottomView: {
     paddingHorizontal: 24,
@@ -266,10 +383,9 @@ const styles = StyleSheet.create({
     right: 0,
     backgroundColor: '#fff',
     paddingVertical: 10,
-    height: '21%',
+    // height: '21%',
     gap: 5,
     zIndex: 10,
-
     // marginBottom: 15,
   },
   productName: {
@@ -385,7 +501,7 @@ function ProductSheet({
       ref={bottomSheetRef}
       index={1}
       snapPoints={snapPoints}
-      footerComponent={renderFooter}
+      // footerComponent={renderFooter}
       backdropComponent={renderBackdrop}
       onChange={handleSheetChanges}>
       <>

@@ -109,7 +109,7 @@ function SlideOne({navigation}) {
             width: '100%',
             zIndex: 10,
           }}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('Welcome')}>
             <Text
               style={{
                 color: '#FFF',
@@ -181,7 +181,7 @@ function SlideTwo({navigation}) {
             width: '100%',
             zIndex: 10,
           }}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
             <Text
               style={{
                 color: '#FFF',
@@ -253,7 +253,7 @@ function SlideThree({navigation}) {
             width: '100%',
             zIndex: 10,
           }}>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => navigation.navigate('SignIn')}>
             <Text
               style={{
                 color: '#FFF',
