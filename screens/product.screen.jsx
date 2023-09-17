@@ -10,7 +10,6 @@ import {
   ScrollView,
 } from 'react-native';
 import CustomInput from '../components/input';
-import {productDemoData} from './constant';
 import {ProductContext} from '../context/ProductContext';
 import {GetProductList} from '../api';
 import ProductCard from '../components/ProductCard';
@@ -29,8 +28,6 @@ function Product({navigation}) {
     async function getProducts() {
       try {
         const {data} = await GetProductList();
-        // setAllProducts(data?.products);
-
         if (data?.products?.length > 0) {
           data?.products?.sort((a, b) => b.created_at - a.created_at);
 
