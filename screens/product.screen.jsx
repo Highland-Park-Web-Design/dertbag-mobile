@@ -21,6 +21,7 @@ function Product({navigation}) {
   const [selectedOrientation, onChangeSelectedOrientation] = useState('all');
   const {dispatch} = useContext(ProductContext);
   const [allProduct, setAllProducts] = useState();
+  const [allActiveProduct, setAllActiveProducts] = useState();
   const [newArivals, setNewArivals] = useState();
   const [recomendation, setRecomendation] = useState();
   const [loading, setLoading] = useState(false);
@@ -31,20 +32,17 @@ function Product({navigation}) {
         // setAllProducts(data?.products);
 
         if (data?.products?.length > 0) {
-          const oneWeekAgo = new Date();
-          oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+          data?.products?.sort((a, b) => b.created_at - a.created_at);
 
-          const filternewArival = data?.products?.filter(
-            product =>
-              product.created_at >= oneWeekAgo &&
-              product.created_at <= new Date(),
-          );
+          const get10MostRecent = data?.products?.slice(0, 10);
+          setNewArivals(get10MostRecent);
 
-          const filterBystatus = data?.products?.filter(
+          const filterByActivestatus = data?.products?.filter(
             product => product.status === 'active',
           );
-          setAllProducts(filterBystatus);
-          setNewArivals(filternewArival);
+
+          setAllProducts(data?.products);
+          setAllActiveProducts(filterByActivestatus);
           setLoading(false);
         }
       } catch (err) {
@@ -64,6 +62,10 @@ function Product({navigation}) {
     }
     getProducts();
   }, []);
+
+  // const filterByName() {
+
+  // }
 
   return (
     <SafeAreaView style={styles.screenContainer}>
@@ -218,19 +220,19 @@ function Product({navigation}) {
           <View style={styles.scrollableSection}>
             <Text style={styles.screenHeading}>RECOMMENDATIONS</Text>
             <View style={styles.newArrivalContainer}>
-              {!allProduct && (
+              {!allActiveProduct && (
                 <View style={{gap: 5, flexDirection: 'row', marginLeft: 24}}>
                   <CustomSkeleton loading={!loading} height={384} width={281} />
                   <CustomSkeleton loading={!loading} height={384} width={281} />
                 </View>
               )}
 
-              {allProduct && (
+              {allActiveProduct && (
                 <>
                   <FlatList
                     style={{width: '100%'}}
                     horizontal
-                    data={allProduct}
+                    data={allActiveProduct}
                     renderItem={({item}) => (
                       <ProductCard
                         index={item.id}

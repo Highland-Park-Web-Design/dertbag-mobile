@@ -6487,6 +6487,11 @@ react-native-otp-textinput@^1.1.1:
   dependencies:
     react "^16.8.6"
 
+react-native-reanimated-skeleton@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/react-native-reanimated-skeleton/-/react-native-reanimated-skeleton-1.2.1.tgz#275086ee0ee3259b304e11e63b65f3e1a9cbde86"
+  integrity sha512-CvU2puJp2f+lriJxeQkGQcSJ2uoRMacCh+JkrrH+mRzblL1RBjABewmtMKnT+Xrk2feCsYR8y2r1VJnK1y/neQ==
+
 react-native-reanimated@^3.5.1:
   version "3.5.1"
   resolved "https://registry.yarnpkg.com/react-native-reanimated/-/react-native-reanimated-3.5.1.tgz#72b2f84b522aad3aabcbc7c9fc2d718b82226339"

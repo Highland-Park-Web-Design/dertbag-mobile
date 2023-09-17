@@ -239,32 +239,33 @@ function ProductDetails({navigation}) {
                   <View>
                     <View style={{marginBottom: 16}}>
                       <Text style={{marginBottom: 16}}>SIZE</Text>
-                      <ScrollView
+                      <BottomSheetScrollView
                         horizontal
                         showsHorizontalScrollIndicator={false}>
                         {singleProduct?.variants?.map((variant, index) => (
-                          <TouchableOpacity
-                            onPress={() => {
-                              setVariantTitle(variant.title.toLowerCase());
-                              setSelectedVariant(Number(index));
-                            }}
-                            key={variant.id}
-                            style={
-                              variantTitle.toLowerCase() ===
-                              variant.title.toLowerCase()
-                                ? styles.Activepills
-                                : styles.pills
-                            }>
-                            <Text
+                          <View key={variant.id}>
+                            <TouchableOpacity
+                              onPress={() => {
+                                setVariantTitle(variant.title.toLowerCase());
+                                setSelectedVariant(Number(index));
+                              }}
                               style={
                                 variantTitle.toLowerCase() ===
                                 variant.title.toLowerCase()
-                                  ? styles.activePillsText
-                                  : styles.pillsText
+                                  ? styles.Activepills
+                                  : styles.pills
                               }>
-                              {variant.title}
-                            </Text>
-                          </TouchableOpacity>
+                              <Text
+                                style={
+                                  variantTitle.toLowerCase() ===
+                                  variant.title.toLowerCase()
+                                    ? styles.activePillsText
+                                    : styles.pillsText
+                                }>
+                                {variant.title}
+                              </Text>
+                            </TouchableOpacity>
+                          </View>
                         ))}
 
                         {/* <View style={styles.pills}>
@@ -276,7 +277,7 @@ function ProductDetails({navigation}) {
                     <View style={styles.pills}>
                       <Text style={styles.pillsText}>xl</Text>
                     </View> */}
-                      </ScrollView>
+                      </BottomSheetScrollView>
                     </View>
                     {/* <View style={{marginBottom: 16}}>
                       <Text style={{marginBottom: 16}}>COLOR</Text>
