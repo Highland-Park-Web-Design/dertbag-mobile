@@ -33,6 +33,7 @@ import {
 } from '@gorhom/bottom-sheet';
 import {GetProductByID} from '../../api';
 import CustomSkeleton from '../../components/Skeleton';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function ProductDetails({navigation}) {
   const {state} = useContext(ProductContext);
@@ -42,6 +43,7 @@ function ProductDetails({navigation}) {
   const [counter, setCounter] = useState(Number(1));
   const [selectedVariant, setSelectedVariant] = useState(Number(0));
   const [variantTitle, setVariantTitle] = useState('small');
+  const [bagStatus, setBagStatus] = useState(false);
 
   const getProductByID = useCallback(async () => {
     try {
@@ -67,8 +69,22 @@ function ProductDetails({navigation}) {
     }
   }, [state?.id]);
 
+  async function getProductbagStatus(id) {
+    const value = await AsyncStorage.getItem('CartItems');
+    if (value !== null) {
+      const ParsedList = JSON.parse(value);
+
+      const itemInCart = ParsedList.find(obj => obj.id === id);
+
+      if (itemInCart) {
+        setBagStatus(true);
+      }
+    }
+  }
+
   useEffect(() => {
     getProductByID();
+    getProductbagStatus(state?.id);
   }, [getProductByID]);
 
   // variables
@@ -85,6 +101,53 @@ function ProductDetails({navigation}) {
   }, []);
   // console.log(singleProduct?.variants[0]?.price, 'idpage');
   const {width} = useWindowDimensions();
+
+  async function addToCart(cartContent) {
+    try {
+      // const datas = await AsyncStorage.getAllKeys();
+      // await AsyncStorage.removeItem('CartItems');
+      // console.log(datas, 'all keys');
+
+      const value = await AsyncStorage.getItem('CartItems');
+
+      if (value !== null) {
+        const ParsedList = JSON.parse(value);
+
+        const itemInCart = ParsedList.find(obj => obj.id === cartContent.id);
+
+        if (!itemInCart) {
+          ParsedList.push(cartContent);
+
+          const strigifyItems = JSON.stringify(ParsedList);
+          await AsyncStorage.setItem('CartItems', strigifyItems);
+        }
+        showMessage({
+          message: 'Item in Bag',
+          type: 'sucess',
+        });
+        setBagStatus(true);
+      }
+
+      if (value === null) {
+        const cartData = JSON.stringify([cartContent]);
+
+        await AsyncStorage.setItem('CartItems', cartData);
+      }
+    } catch (err) {
+      console.log(err);
+      if (err.response) {
+        showMessage({
+          message: err.response.data.message,
+          type: 'danger',
+        });
+      } else {
+        showMessage({
+          message: 'unable to reach server, check internet',
+          type: 'danger',
+        });
+      }
+    }
+  }
   return (
     <BottomSheetModalProvider>
       <SafeAreaView style={{flex: 1}}>
@@ -168,8 +231,23 @@ function ProductDetails({navigation}) {
               <Text style={styles.productQuantity}>x{counter}</Text>
             </View>
             <View style={{gap: 16, flexDirection: 'row', paddingVertical: 16}}>
-              <TouchableOpacity disabled={loading} style={styles.AddCartBtn}>
-                <Text style={styles.AddCartBtnText}>ADD TO BAG</Text>
+              <TouchableOpacity
+                onPress={() =>
+                  addToCart({
+                    name: singleProduct?.title,
+                    variant: singleProduct?.variants[selectedVariant]?.title,
+                    id: singleProduct?.id,
+                    price:
+                      singleProduct?.variants[selectedVariant]?.price * counter,
+                    quantity: counter,
+                    image: singleProduct?.image?.src,
+                  })
+                }
+                disabled={loading}
+                style={styles.AddCartBtn}>
+                <Text style={styles.AddCartBtnText}>
+                  {bagStatus ? 'Already In Bag' : 'ADD TO BAG'}
+                </Text>
               </TouchableOpacity>
               <View
                 style={{
@@ -250,15 +328,13 @@ function ProductDetails({navigation}) {
                                 setSelectedVariant(Number(index));
                               }}
                               style={
-                                variantTitle.toLowerCase() ===
-                                variant.title.toLowerCase()
+                                index === selectedVariant
                                   ? styles.Activepills
                                   : styles.pills
                               }>
                               <Text
                                 style={
-                                  variantTitle.toLowerCase() ===
-                                  variant.title.toLowerCase()
+                                  index === selectedVariant
                                     ? styles.activePillsText
                                     : styles.pillsText
                                 }>
@@ -321,9 +397,23 @@ function ProductDetails({navigation}) {
                   }}>
                   <View style={{gap: 16, flexDirection: 'row'}}>
                     <TouchableOpacity
+                      onPress={() =>
+                        addToCart({
+                          name: singleProduct?.title,
+                          variant:
+                            singleProduct?.variants[selectedVariant]?.title,
+                          id: singleProduct?.id,
+                          price:
+                            singleProduct?.variants[selectedVariant]?.price *
+                            counter,
+                          quantity: counter,
+                        })
+                      }
                       disabled={loading}
                       style={styles.AddCartBtn}>
-                      <Text style={styles.AddCartBtnText}>ADD TO BAG</Text>
+                      <Text style={styles.AddCartBtnText}>
+                        {bagStatus ? 'Already In Bag' : 'ADD TO BAG'}
+                      </Text>
                     </TouchableOpacity>
                     <View
                       style={{
@@ -426,6 +516,7 @@ const styles = StyleSheet.create({
     color: '#FFF',
     fontWeight: '700',
     fontFamily: 'Helvetica',
+    textTransform: 'uppercase',
   },
   cartActions: {
     flexDirection: 'row',
