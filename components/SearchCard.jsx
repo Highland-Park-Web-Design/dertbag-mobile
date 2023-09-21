@@ -1,6 +1,6 @@
 import React from 'react';
 import {StyleSheet, View, Image, Text, TouchableOpacity} from 'react-native';
-function ProductCard({product, navigation, index, dispatch}) {
+function SearchCard({product, navigation, index, dispatch}) {
   return (
     <View>
       <TouchableOpacity
@@ -26,12 +26,12 @@ function ProductCard({product, navigation, index, dispatch}) {
   );
 }
 
-export default ProductCard;
+export default SearchCard;
 
 const styles = StyleSheet.create({
   productCard: {
     height: 384,
-    width: 281,
+    width: '100%',
     borderRadius: 8,
     marginLeft: 24,
     backgroundColor: '#f5f5f5',
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   },
 
   productImage: {
-    width: 281,
+    width: '100%',
     height: 280,
   },
   ImageStyle: {

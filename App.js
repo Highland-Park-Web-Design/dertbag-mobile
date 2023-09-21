@@ -50,7 +50,7 @@ import ProfileEdit from './screens/Profile/ProfileEdit';
 import Onboarding from './screens/Onboarding';
 import Welcome from './screens/Onboarding/Welcome';
 import MyTabBar from './components/CustomTab';
-
+import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -146,155 +146,157 @@ function ProductScreens() {
 const App = () => {
   return (
     <GestureHandlerRootView style={{flex: 1}}>
-      <ProductProvider>
-        <RecreationProvider>
-          <NavigationContainer>
-            <Stack.Navigator>
-              <Stack.Screen
-                name="Onboarding"
-                component={Onboarding}
-                options={{title: 'Onboarding', headerShown: false}}
-              />
-              <Stack.Screen
-                name="Welcome"
-                component={Welcome}
-                options={{title: 'Welcome', headerShown: false}}
-              />
-              <Stack.Screen
-                name="SignIn"
-                component={SignIn}
-                options={{title: 'Sign In', headerShown: false}}
-              />
-              <Stack.Screen
-                name="Product"
-                component={ProductScreens}
-                options={{title: 'Home', headerShown: false}}
-              />
-              <Stack.Screen
-                name="ProductDetails"
-                component={ProductDetails}
-                options={{title: 'ProductDetails', headerShown: false}}
-              />
-              <Stack.Screen
-                name="Setting"
-                component={MainSettings}
-                options={{title: 'Setting', headerShown: false}}
-              />
-              <Stack.Screen
-                name="Notification"
-                component={Notification}
-                options={{title: 'Setting', headerShown: false}}
-              />
-              <Stack.Screen
-                name="ChangePassword"
-                component={ChangePassword}
-                options={{title: 'Setting', headerShown: false}}
-              />
-              <Stack.Screen
-                name="DeleteAccount"
-                component={DeleteAccount}
-                options={{title: 'Setting', headerShown: false}}
-              />
-              <Stack.Screen
-                name="RecreationView"
-                component={RecreationView}
-                options={{title: 'Setting', headerShown: false}}
-              />
-              <Stack.Screen
-                name="Orders"
-                component={Orders}
-                options={{title: 'Orders', headerShown: false}}
-              />
-              <Stack.Screen
-                name="OrderDetails"
-                component={OrderDetails}
-                options={{title: 'Orders', headerShown: false}}
-              />
-              <Stack.Screen
-                name="Stores"
-                component={Store}
-                options={{title: 'Stores', headerShown: false}}
-              />
-              <Stack.Screen
-                name="Help"
-                component={Help}
-                options={{title: 'Help', headerShown: false}}
-              />
-              <Stack.Screen
-                name="Feedback"
-                component={Feedback}
-                options={{title: 'Feedback', headerShown: false}}
-              />
-              <Stack.Screen
-                name="Legal"
-                component={Legal}
-                options={{title: 'Legal', headerShown: false}}
-              />
-              <Stack.Screen
-                name="TermsAndCondition"
-                component={TermsAndCondition}
-                options={{title: 'TermsAndCondition', headerShown: false}}
-              />
-              <Stack.Screen
-                name="PrivacyPolicy"
-                component={PrivacyPolicy}
-                options={{title: 'PrivacyPolicy', headerShown: false}}
-              />
-              <Stack.Screen
-                name="About"
-                component={About}
-                options={{title: 'About', headerShown: false}}
-              />
-              <Stack.Screen
-                name="Profile"
-                component={Profile}
-                options={{title: 'Profile', headerShown: false}}
-              />
-              <Stack.Screen
-                name="ProfileEdit"
-                component={ProfileEdit}
-                options={{title: 'Profile', headerShown: false}}
-              />
-              <Stack.Screen
-                name="SignUp"
-                component={SignUp}
-                options={{title: 'Sign Up', headerShown: false}}
-              />
-              <Stack.Screen
-                name="ResetPassword"
-                component={ResetPassword}
-                options={{title: 'Reset Password', headerShown: false}}
-              />
-              <Stack.Screen
-                name="NewPassword"
-                component={NewPassword}
-                options={{title: 'Reset Password', headerShown: false}}
-              />
-              <Stack.Screen
-                name="OtpValidation"
-                component={OtpValidation}
-                options={{title: 'Reset Password', headerShown: false}}
-              />
-              <Stack.Screen
-                name="DeliveryDetails"
-                component={DeliveryDetails}
-                options={{title: 'Delivery Details', headerShown: false}}
-              />
-              <Stack.Screen
-                name="StoreDetails"
-                component={StoreDetails}
-                options={{title: 'Delivery Details', headerShown: false}}
-              />
-              <Stack.Screen
-                name="Checkout"
-                component={Checkout}
-                options={{title: 'Delivery Details', headerShown: false}}
-              />
-            </Stack.Navigator>
-          </NavigationContainer>
-          <FlashMessage position="top" />
-        </RecreationProvider>
-      </ProductProvider>
+      <BottomSheetModalProvider>
+        <ProductProvider>
+          <RecreationProvider>
+            <NavigationContainer>
+              <Stack.Navigator>
+                <Stack.Screen
+                  name="Onboarding"
+                  component={Onboarding}
+                  options={{title: 'Onboarding', headerShown: false}}
+                />
+                <Stack.Screen
+                  name="Welcome"
+                  component={Welcome}
+                  options={{title: 'Welcome', headerShown: false}}
+                />
+                <Stack.Screen
+                  name="SignIn"
+                  component={SignIn}
+                  options={{title: 'Sign In', headerShown: false}}
+                />
+                <Stack.Screen
+                  name="Product"
+                  component={ProductScreens}
+                  options={{title: 'Home', headerShown: false}}
+                />
+                <Stack.Screen
+                  name="ProductDetails"
+                  component={ProductDetails}
+                  options={{title: 'ProductDetails', headerShown: false}}
+                />
+                <Stack.Screen
+                  name="Setting"
+                  component={MainSettings}
+                  options={{title: 'Setting', headerShown: false}}
+                />
+                <Stack.Screen
+                  name="Notification"
+                  component={Notification}
+                  options={{title: 'Setting', headerShown: false}}
+                />
+                <Stack.Screen
+                  name="ChangePassword"
+                  component={ChangePassword}
+                  options={{title: 'Setting', headerShown: false}}
+                />
+                <Stack.Screen
+                  name="DeleteAccount"
+                  component={DeleteAccount}
+                  options={{title: 'Setting', headerShown: false}}
+                />
+                <Stack.Screen
+                  name="RecreationView"
+                  component={RecreationView}
+                  options={{title: 'Setting', headerShown: false}}
+                />
+                <Stack.Screen
+                  name="Orders"
+                  component={Orders}
+                  options={{title: 'Orders', headerShown: false}}
+                />
+                <Stack.Screen
+                  name="OrderDetails"
+                  component={OrderDetails}
+                  options={{title: 'Orders', headerShown: false}}
+                />
+                <Stack.Screen
+                  name="Stores"
+                  component={Store}
+                  options={{title: 'Stores', headerShown: false}}
+                />
+                <Stack.Screen
+                  name="Help"
+                  component={Help}
+                  options={{title: 'Help', headerShown: false}}
+                />
+                <Stack.Screen
+                  name="Feedback"
+                  component={Feedback}
+                  options={{title: 'Feedback', headerShown: false}}
+                />
+                <Stack.Screen
+                  name="Legal"
+                  component={Legal}
+                  options={{title: 'Legal', headerShown: false}}
+                />
+                <Stack.Screen
+                  name="TermsAndCondition"
+                  component={TermsAndCondition}
+                  options={{title: 'TermsAndCondition', headerShown: false}}
+                />
+                <Stack.Screen
+                  name="PrivacyPolicy"
+                  component={PrivacyPolicy}
+                  options={{title: 'PrivacyPolicy', headerShown: false}}
+                />
+                <Stack.Screen
+                  name="About"
+                  component={About}
+                  options={{title: 'About', headerShown: false}}
+                />
+                <Stack.Screen
+                  name="Profile"
+                  component={Profile}
+                  options={{title: 'Profile', headerShown: false}}
+                />
+                <Stack.Screen
+                  name="ProfileEdit"
+                  component={ProfileEdit}
+                  options={{title: 'Profile', headerShown: false}}
+                />
+                <Stack.Screen
+                  name="SignUp"
+                  component={SignUp}
+                  options={{title: 'Sign Up', headerShown: false}}
+                />
+                <Stack.Screen
+                  name="ResetPassword"
+                  component={ResetPassword}
+                  options={{title: 'Reset Password', headerShown: false}}
+                />
+                <Stack.Screen
+                  name="NewPassword"
+                  component={NewPassword}
+                  options={{title: 'Reset Password', headerShown: false}}
+                />
+                <Stack.Screen
+                  name="OtpValidation"
+                  component={OtpValidation}
+                  options={{title: 'Reset Password', headerShown: false}}
+                />
+                <Stack.Screen
+                  name="DeliveryDetails"
+                  component={DeliveryDetails}
+                  options={{title: 'Delivery Details', headerShown: false}}
+                />
+                <Stack.Screen
+                  name="StoreDetails"
+                  component={StoreDetails}
+                  options={{title: 'Delivery Details', headerShown: false}}
+                />
+                <Stack.Screen
+                  name="Checkout"
+                  component={Checkout}
+                  options={{title: 'Delivery Details', headerShown: false}}
+                />
+              </Stack.Navigator>
+            </NavigationContainer>
+            <FlashMessage position="top" />
+          </RecreationProvider>
+        </ProductProvider>
+      </BottomSheetModalProvider>
     </GestureHandlerRootView>
   );
 };
