@@ -74,3 +74,8 @@ export const GetProductList = async () => {
 export const GetProductByID = async id => {
   return await instance.get(`product/${id}`);
 };
+
+// Endpoint to get User details
+export const GetUserDetails = async () => {
+  return await instance.get(`user/profile`);
+};
