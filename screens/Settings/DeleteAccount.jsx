@@ -11,6 +11,7 @@ import Button from '../../components/Button';
 import {DeleteUser} from '../../api';
 import {showMessage} from 'react-native-flash-message';
 import Loader from '../../components/Loader';
+import {clearStorage} from '../../store';
 
 function DeleteAccount({navigation}) {
   const [submitting, setSubmitting] = useState(false);
@@ -23,7 +24,7 @@ function DeleteAccount({navigation}) {
         message: 'Account Deleted',
         type: 'danger',
       });
-      // await storeData('user', {...res.data.user, token: res?.data?.token});
+      await clearStorage();
       setSubmitting(false);
       navigation.navigate('SignIn');
     } catch (err) {

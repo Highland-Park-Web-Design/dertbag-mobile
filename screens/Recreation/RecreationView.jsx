@@ -11,7 +11,6 @@ import {ProductContext} from '../../context/ProductContext';
 
 function RecreationView({navigation}) {
   const {state} = useContext(RecreationContext);
-  console.log(state.id);
   return (
     <SafeAreaView style={styles.container}>
       <Header title={'KYLA for GERL'} navigation={navigation} />

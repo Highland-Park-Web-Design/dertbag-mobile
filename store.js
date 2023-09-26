@@ -17,3 +17,20 @@ export const getData = async key => {
     // error reading value
   }
 };
+
+export const removeMultipleData = async key => {
+  try {
+    const jsonValue = await AsyncStorage.multiRemove(key);
+    return jsonValue;
+  } catch (e) {
+    // error reading value
+  }
+};
+
+export const clearStorage = async () => {
+  try {
+    return await AsyncStorage.clear();
+  } catch (e) {
+    // error reading value
+  }
+};
