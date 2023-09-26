@@ -68,7 +68,7 @@ function Store({navigation}) {
                       }}
                       borderTopRightRadius={6}
                       borderTopLeftRadius={6}
-                      source={require('../../assets/images/Storemono-1.png')}
+                      source={{uri: store.imageUrl}}
                     />
                   }
                 />
@@ -155,9 +155,6 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingHorizontal: 24,
     backgroundColor: '#fff',
-    // flex: 1,
-    // height: '100%',
-    marginBottom: 115,
   },
   screenContainer: {
     width: '100%',
