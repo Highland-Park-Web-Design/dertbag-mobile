@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import Header from '../../components/Header';
 import {
@@ -13,20 +13,31 @@ import {
 import Button from '../../components/Button';
 
 function StoreDetails({navigation, route}) {
-  console.log(route?.params?.id);
+  const store = route.params.id;
   return (
     <SafeAreaView style={styles.container}>
-      <Header navigation={navigation} title={'DERTBAG ATELIER 🎨'} />
+      <Header navigation={navigation} title={store.name} />
       <ScrollView style={styles.contentContainer}>
         <View>
           <View>
-            <Image
-              style={{
-                width: 380,
-                height: 335,
-              }}
-              source={require('../../assets/images/StoreImage.png')}
-            />
+            {store.imageUrl ? (
+              <Image
+                style={{
+                  width: '100%',
+                  height: 335,
+                }}
+                borderRadius={16}
+                source={{uri: store.imageUrl}}
+              />
+            ) : (
+              <Image
+                style={{
+                  width: '100%',
+                  height: 335,
+                }}
+                source={require('../../assets/images/StoreImage.png')}
+              />
+            )}
           </View>
           <View
             style={{
@@ -69,7 +80,7 @@ function StoreDetails({navigation, route}) {
                   fontSize: 16,
                   fontWeight: '400',
                 }}>
-                ARCADE MALL 1001 MAIN ST. #21 BRIDGEPORT, CT 06604
+                {store.location}
               </Text>
             </View>
           </View>
@@ -83,27 +94,19 @@ function StoreDetails({navigation, route}) {
               OPEN HOURS
             </Text>
             <View style={{gap: 6}}>
-              <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text style={styles.captionText}>THURSDAY</Text>
-                <Text style={[styles.captionText, {textAlign: 'right'}]}>
-                  12 - 6PM
-                </Text>
-              </View>
-              <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text style={styles.captionText}>FRIDAY</Text>
-                <Text style={[styles.captionText, {textAlign: 'right'}]}>
-                  12 - 6PM
-                </Text>
-              </View>
-              <View
-                style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-                <Text style={styles.captionText}>SATURDAY</Text>
-                <Text style={[styles.captionText, {textAlign: 'right'}]}>
-                  12 - 6PM
-                </Text>
-              </View>
+              {store.openingHours &&
+                store.openingHours.map(time => (
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      justifyContent: 'space-between',
+                    }}>
+                    <Text style={styles.captionText}>{time.day}</Text>
+                    <Text style={[styles.captionText, {textAlign: 'right'}]}>
+                      {time.openingTime} - {time.closingTime}
+                    </Text>
+                  </View>
+                ))}
             </View>
           </View>
         </View>
@@ -138,6 +141,7 @@ const styles = StyleSheet.create({
   captionText: {
     width: '50%',
     color: '#000',
+    textTransform: 'uppercase',
     fontSize: 16,
     fontWeight: '400',
   },
