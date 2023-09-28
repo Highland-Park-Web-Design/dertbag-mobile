@@ -12,22 +12,18 @@ import Header from '../../components/Header';
 import EditIco from '../../Icons/EditIco.svg';
 import {GetUser} from '../../api';
 import dayjs from 'dayjs';
-
+import {getData} from '../../store';
+import {useIsFocused} from '@react-navigation/native';
 function Profile({navigation}) {
   const [userProfile, setUserProfile] = useState();
-
+  const isFocused = useIsFocused();
   useEffect(() => {
-    async function GetUserProfile() {
-      try {
-        const {data} = await GetUser();
-        setUserProfile(data?.user);
-        console.log(data);
-      } catch (err) {
-        console.log(err);
-      }
+    async function getUserDetails() {
+      const data = await getData('UserData');
+      setUserProfile(data);
     }
-    GetUserProfile();
-  }, []);
+    getUserDetails();
+  }, [isFocused]);
   return (
     <SafeAreaView style={styles.container}>
       <Header navigation={navigation} title={'Profile'} />
@@ -45,13 +41,22 @@ function Profile({navigation}) {
               <Image
                 style={{width: 128, height: 128, marginBottom: 16}}
                 borderRadius={64}
-                source={require('../../assets/images/profileImg.png')}
+                resizeMode="stretch"
+                source={
+                  userProfile?.profileAvatarUrl
+                    ? {uri: userProfile?.profileAvatarUrl}
+                    : require('../../assets/images/db-profile-icon.png')
+                }
               />
-              <Text style={styles.username}>{userProfile?.fullName}</Text>
+              <Text style={styles.username}>
+                {userProfile?.firstName} {userProfile?.lastName}
+              </Text>
               <Text style={styles.email}>{userProfile?.email}</Text>
               <Text style={styles.date}>
                 Member Since:
-                {dayjs(userProfile?.createdAt).format(' MMM YYYY')}
+                {(userProfile &&
+                  dayjs(userProfile?.createdAt).format(' MMM YYYY')) ||
+                  'N/A'}
               </Text>
             </View>
             <TouchableOpacity
@@ -62,21 +67,65 @@ function Profile({navigation}) {
           </View>
         </View>
         <View style={styles.profileView}>
-          <ViewItem caption={'14 June 1953'} title={'DATE OF BIRTH'} />
-          <ViewItem caption={'Male'} title={'GENDER'} />
           <ViewItem
             caption={
-              '4932 Jacobs Street, Pittsburgh, Pennsylvania, United State of America.'
+              (userProfile?.dateOfBirth &&
+                dayjs(userProfile?.dateOfBirth).format('DD MMM YYYY')) ||
+              'N/A'
+            }
+            title={'DATE OF BIRTH'}
+          />
+          <ViewItem
+            caption={(userProfile && userProfile?.gender) || 'N/A'}
+            title={'GENDER'}
+          />
+          <ViewItem
+            caption={
+              userProfile?.address ||
+              userProfile?.state ||
+              userProfile?.city ||
+              userProfile?.country
+                ? `${
+                    userProfile?.address === null ? '' : userProfile?.address
+                  } ${userProfile?.city === null ? '' : userProfile?.city} ${
+                    userProfile?.state === null ? '' : userProfile?.state
+                  } ${
+                    userProfile?.country === null ? '' : userProfile?.country
+                  }`
+                : 'N/A'
             }
             title={'ADDRESS'}
           />
           <ViewItem
             caption={
-              '2177 Morningview Lane, Ackley, Iowa, United State of America'
+              userProfile?.billingAddress ||
+              userProfile?.billingAddressCity ||
+              userProfile?.billingAddressCountry
+                ? `${
+                    userProfile?.billingAddress === null
+                      ? ''
+                      : userProfile?.billingAddress
+                  } ${
+                    userProfile?.billingAddressCity === null
+                      ? ''
+                      : userProfile?.billingAddressCity
+                  } ${
+                    userProfile?.billingAddressState === null
+                      ? ''
+                      : userProfile?.billingAddressState
+                  } ${
+                    userProfile?.billingAddressCountry === null
+                      ? ''
+                      : userProfile?.billingAddressCountry
+                  }`
+                : 'N/A'
             }
             title={'BILLING ADDRESS'}
           />
-          <ViewItem caption={'412-363-0148'} title={'PHONE'} />
+          <ViewItem
+            caption={(userProfile && userProfile?.phoneNumber) || 'N/A'}
+            title={'PHONE'}
+          />
         </View>
       </ScrollView>
     </SafeAreaView>

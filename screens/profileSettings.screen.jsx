@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -10,7 +10,9 @@ import {
 } from 'react-native';
 import ChevronIcon from '../components/ChevronIcon';
 import ProfileCard from '../components/ProfileCard';
-
+import {getData, removeMultipleData} from '../store';
+import {GetUser} from '../api';
+import {useIsFocused} from '@react-navigation/native';
 const menuOptions = [
   {
     title: 'SETTINGS',
@@ -55,10 +57,25 @@ const menuOptions = [
 ];
 
 const Settings = ({navigation}) => {
+  let [user, setUser] = useState('');
+  const isFocused = useIsFocused();
+  useEffect(() => {
+    async function getEmail() {
+      const data = await getData('UserData');
+      setUser(data);
+      // if (data === null) {
+      //   const fetchuser = await GetUser();
+      //   setUser(fetchuser);
+      // }
+    }
+    getEmail();
+  }, [isFocused]);
+
   const headerComponent = () => (
     <View style={{marginBottom: 36}}>
       <ProfileCard
-        email="philip@dertbag.us"
+        userImage={user?.profileAvatarUrl}
+        email={user?.email}
         onPress={() => navigation.navigate('Profile')}
       />
     </View>
@@ -68,7 +85,7 @@ const Settings = ({navigation}) => {
       <Text style={styles.headingText}>MENU</Text>
       <FlatList
         showsVerticalScrollIndicator={false}
-        ListHeaderComponent={headerComponent}
+        ListHeaderComponent={user && headerComponent}
         style={styles.settings}
         data={menuOptions}
         keyExtractor={(item, index) => index.toString()}
@@ -77,6 +94,12 @@ const Settings = ({navigation}) => {
             style={styles.optionContainer}
             onPress={() => {
               navigation.navigate(item.link);
+              if (item.link === 'SignIn') {
+                async function removeData() {
+                  await removeMultipleData(['UserData', 'user']);
+                }
+                removeData();
+              }
             }}>
             <View style={styles.menuItem}>
               <View style={styles.menuColumn}>

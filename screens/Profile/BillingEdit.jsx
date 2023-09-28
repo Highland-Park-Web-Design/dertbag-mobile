@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -15,8 +15,26 @@ import CustomInput from '../../components/input';
 import Button from '../../components/Button';
 import dropdownStyle from '../../components/dropdown.style';
 import {Dropdown} from 'react-native-element-dropdown';
+import {useFormikContext} from 'formik';
 
-function BillingEdit({navigation, setcurrentStep}) {
+function BillingEdit({
+  navigation,
+  setcurrentStep,
+  handleChange,
+  // setFieldValue,
+  touched,
+  errors,
+  handleBlur,
+  // values,
+  handleSubmit,
+  setCheckState,
+  checkState,
+  submitting,
+  setbillingAddress,
+  setbillingCity,
+  setbillingState,
+  setbillingCountry,
+}) {
   const [state, setstate] = useState([]);
   const [states, setStates] = useState([]);
   const [countries, setCountries] = useState([]);
@@ -25,16 +43,24 @@ function BillingEdit({navigation, setcurrentStep}) {
   const [isFocus, setIsFocus] = useState(false);
 
   const [date, setDate] = useState(new Date());
-  const [checkState, setCheckState] = useState(false);
+
+  const {values, setFieldValue} = useFormikContext();
+  useEffect(() => {
+    if (checkState) {
+      setbillingAddress(values.address);
+      setbillingCity(values.city);
+      setbillingState(values.state);
+      setbillingCountry(values.country);
+    } else {
+      setbillingAddress(values.billingAddress);
+      setbillingCity(values.billingAddressCity);
+      setbillingState(values.billingAddressState);
+      setbillingCountry(values.billingAddressCountry);
+    }
+    // console.log(setbillingAddress);
+  }, [checkState]);
   return (
     <>
-      <View
-        style={{
-          paddingHorizontal: 24,
-          alignItems: 'center',
-        }}>
-        <Image source={require('../../assets/images/stepper3.png')} />
-      </View>
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.contentContainer}>
@@ -45,15 +71,12 @@ function BillingEdit({navigation, setcurrentStep}) {
               alignItems: 'center',
               flexDirection: 'row',
             }}>
-            {!checkState ? (
-              <TouchableOpacity onPress={() => setCheckState(true)}>
-                <InActiveSelect />
-              </TouchableOpacity>
-            ) : (
-              <TouchableOpacity onPress={() => setCheckState(false)}>
-                <ActiveSelect />
-              </TouchableOpacity>
-            )}
+            <TouchableOpacity
+              onPress={() => {
+                setCheckState(prev => !prev);
+              }}>
+              {checkState ? <ActiveSelect /> : <InActiveSelect />}
+            </TouchableOpacity>
 
             <Text
               style={{
@@ -68,13 +91,55 @@ function BillingEdit({navigation, setcurrentStep}) {
           </View>
           <View>
             <Text style={styles.label}>Address</Text>
-            <CustomInput placeholder={'Enter Address'} />
+            <CustomInput
+              onChangeText={text => {
+                setbillingAddress(text);
+              }}
+              onBlur={handleBlur('billingAddress')}
+              value={checkState ? values.address : values.billingAddress}
+              placeholder={'Enter Address'}
+            />
+            {touched.billingAddress && errors.billingAddress ? (
+              <Text style={{color: 'red'}}>{errors.billingAddress}</Text>
+            ) : null}
           </View>
           <View>
             <Text style={styles.label}>City</Text>
-            <CustomInput placeholder={'Enter City'} />
+            <CustomInput
+              onChangeText={handleChange('billingAddressCity')}
+              onBlur={handleBlur('billingAddressCity')}
+              value={checkState ? values.city : values.billingAddressCity}
+              placeholder={'Enter City'}
+            />
+            {touched.billingAddressCity && errors.billingAddressCity ? (
+              <Text style={{color: 'red'}}>{errors.billingAddressCity}</Text>
+            ) : null}
           </View>
           <View>
+            <Text style={styles.label}>State</Text>
+            <CustomInput
+              onChangeText={handleChange('billingAddressState')}
+              onBlur={handleBlur('billingAddressState')}
+              value={checkState ? values.state : values.billingAddressState}
+              placeholder={'Enter State'}
+            />
+            {touched.billingAddressState && errors.billingAddressState ? (
+              <Text style={{color: 'red'}}>{errors.billingAddressState}</Text>
+            ) : null}
+          </View>
+          <View>
+            <Text style={styles.label}>Country</Text>
+            <CustomInput
+              onChangeText={handleChange('billingAddressCountry')}
+              onBlur={handleBlur('billingAddressCountry')}
+              value={checkState ? values.country : values.billingAddressCountry}
+              placeholder={'Enter Country'}
+            />
+            {touched.billingAddressCountry && errors.billingAddressCountry ? (
+              <Text style={{color: 'red'}}>{errors.billingAddressCountry}</Text>
+            ) : null}
+          </View>
+          {/* <View>
             <View style={dropdownStyle.container}>
               <Text style={styles.label}>State</Text>
 
@@ -135,12 +200,12 @@ function BillingEdit({navigation, setcurrentStep}) {
                 }}
               />
             </View>
-          </View>
+          </View> */}
         </View>
         <View
           style={{
-            marginTop: 70,
-            marginBottom: 24,
+            marginTop: 50,
+            marginBottom: 35,
             flexDirection: 'row',
             justifyContent: 'space-between',
           }}>
@@ -152,7 +217,11 @@ function BillingEdit({navigation, setcurrentStep}) {
             />
           </View>
           <View style={{width: '47%'}}>
-            <Button title={'Update'} />
+            <Button
+              disabled={submitting}
+              onPress={handleSubmit}
+              title={submitting ? 'Upadating...' : 'Update'}
+            />
           </View>
         </View>
       </ScrollView>

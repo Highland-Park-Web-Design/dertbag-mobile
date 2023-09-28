@@ -22,7 +22,6 @@ import {storeData} from '../store';
 
 function OtpValidation({navigation, route}) {
   const [submitting, setSubmitting] = useState(false);
-  console.log('route params', route.params);
   const {email, otpToken} = route.params;
   const [screenParams, setScreenParams] = useState({
     email,
@@ -47,6 +46,7 @@ function OtpValidation({navigation, route}) {
       setSubmitting(false);
       return;
     } catch (err) {
+      console.log(err);
       setSubmitting(false);
       if (err.response) {
         showMessage({

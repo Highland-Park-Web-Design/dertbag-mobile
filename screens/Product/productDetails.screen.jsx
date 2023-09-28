@@ -97,15 +97,10 @@ function ProductDetails({navigation}) {
   const handleClosePress = useCallback(() => {
     bottomSheetRef.current?.close();
   }, []);
-  // console.log(singleProduct?.variants[0]?.price, 'idpage');
   const {width} = useWindowDimensions();
 
   async function addToCart(cartContent) {
     try {
-      // const datas = await AsyncStorage.getAllKeys();
-      // await AsyncStorage.removeItem('CartItems');
-      // console.log(datas, 'all keys');
-
       const value = await AsyncStorage.getItem('CartItems');
 
       if (value !== null) {
@@ -132,7 +127,6 @@ function ProductDetails({navigation}) {
         await AsyncStorage.setItem('CartItems', cartData);
       }
     } catch (err) {
-      console.log(err);
       if (err.response) {
         showMessage({
           message: err.response.data.message,

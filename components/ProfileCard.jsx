@@ -2,7 +2,7 @@ import React from 'react';
 import {TouchableOpacity, View, Text, Image, StyleSheet} from 'react-native';
 import PropTypes from 'prop-types';
 import ChevronIcon from './ChevronIcon';
-const ProfileCard = ({email, onPress}) => {
+const ProfileCard = ({email, onPress, userImage}) => {
   return (
     <TouchableOpacity
       activeOpacity={0.7}
@@ -15,7 +15,12 @@ const ProfileCard = ({email, onPress}) => {
             height: 52,
             borderRadius: 4,
           }}
-          source={require('../assets/images/MenuImg.png')}
+          resizeMode="stretch"
+          source={
+            userImage
+              ? {uri: userImage}
+              : require('../assets/images/db-profile-icon.png')
+          }
         />
         <View style={{width: '65%'}}>
           <Text style={styles.boldText}>{email}</Text>

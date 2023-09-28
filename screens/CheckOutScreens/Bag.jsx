@@ -15,6 +15,7 @@ import TrashIco from '../../Icons/TrashIco.svg';
 import Button from '../../components/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useIsFocused} from '@react-navigation/native';
+import {showMessage} from 'react-native-flash-message';
 
 function Bag({navigation}) {
   const [bagState, setBagState] = useState(false);
@@ -36,15 +37,16 @@ function Bag({navigation}) {
       const ParsedList = JSON.parse(value);
       setBagItems(ParsedList);
 
-      const prices = ParsedList.map(item => item.price);
+      const prices = ParsedList?.map(item => item.price);
 
       // Use the reduce() function to calculate the total price
-      const totalPrice = prices.reduce(
-        (acc, currentPrice) => acc + currentPrice,
-        0,
-      );
-      setSubTotal(totalPrice);
-      console.log(ParsedList);
+      if (prices) {
+        const totalPrice = prices?.reduce(
+          (acc, currentPrice) => acc + currentPrice,
+          0,
+        );
+        setSubTotal(totalPrice);
+      }
       setBagState(true);
     } catch (err) {
       console.log(err);
@@ -119,7 +121,7 @@ function Bag({navigation}) {
         {bagItems ? (
           <View style={{gap: 10}}>
             {bagItems &&
-              bagItems.map(item => (
+              bagItems?.map(item => (
                 <CartItem
                   image={item?.image}
                   prodPrice={`$${item.price}`}
