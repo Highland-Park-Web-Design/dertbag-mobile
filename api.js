@@ -65,6 +65,11 @@ export const GetStores = async () => {
   return await instance.get('store');
 };
 
+// Endpoint to get Store by ID
+export const GetSingleStores = async id => {
+  return await instance.get(`store/${id}`);
+};
+
 // Endpoint to get Product
 export const GetProductList = async () => {
   return await instance.get('product');

@@ -24,10 +24,8 @@ function Store({navigation}) {
       try {
         const {data} = await GetStores();
         setStores(data?.stores);
-        console.log(data);
         setLoading(false);
       } catch (err) {
-        console.log(err);
         setLoading(false);
         if (err.response) {
           console.log(err);
@@ -53,61 +51,93 @@ function Store({navigation}) {
       ) : (
         <ScrollView style={styles.contentContainer}>
           <View style={{gap: 16, marginBottom: 50}}>
-            <StoreCard
-              navigation={navigation}
-              id={1}
-              address={'ARCADE MALL 1001 MAIN ST. #21, BRIDGEPORT, CT 06604'}
-              country={'United State'}
-              title={' DERTBAG ATELIER 🎨'}
-              img={
-                <Image
+            {stores?.length > 0 ? (
+              stores?.map(store => (
+                <StoreCard
+                  key={store._id}
                   navigation={navigation}
-                  style={{
-                    width: '100%',
-                    height: 244,
-                  }}
-                  borderTopRightRadius={6}
-                  borderTopLeftRadius={6}
-                  source={require('../../assets/images/Storemono.png')}
+                  id={store}
+                  address={store.location}
+                  country={store.country}
+                  title={store.name}
+                  img={
+                    <Image
+                      style={{
+                        width: '100%',
+                        height: 244,
+                      }}
+                      borderTopRightRadius={6}
+                      borderTopLeftRadius={6}
+                      source={{uri: store.imageUrl}}
+                    />
+                  }
                 />
-              }
-            />
-            <StoreCard
-              navigation={navigation}
-              id={2}
-              address={'ARCADE MALL 1001 MAIN ST. #21, BRIDGEPORT, CT 06604'}
-              country={'United State'}
-              title={' DERTBAG ATELIER 🎨'}
-              img={
-                <Image
-                  style={{
-                    width: '100%',
-                    height: 244,
-                  }}
-                  borderTopRightRadius={6}
-                  borderTopLeftRadius={6}
-                  source={require('../../assets/images/Storemono-1.png')}
+              ))
+            ) : (
+              <>
+                <StoreCard
+                  navigation={navigation}
+                  id={1}
+                  address={
+                    'ARCADE MALL 1001 MAIN ST. #21, BRIDGEPORT, CT 06604'
+                  }
+                  country={'United State'}
+                  title={' DERTBAG ATELIER 🎨'}
+                  img={
+                    <Image
+                      navigation={navigation}
+                      style={{
+                        width: '100%',
+                        height: 244,
+                      }}
+                      borderTopRightRadius={6}
+                      borderTopLeftRadius={6}
+                      source={require('../../assets/images/Storemono.png')}
+                    />
+                  }
                 />
-              }
-            />
-            <StoreCard
-              navigation={navigation}
-              id={3}
-              address={'ARCADE MALL 1001 MAIN ST. #21, BRIDGEPORT, CT 06604 '}
-              country={'United State'}
-              title={' DERTBAG ATELIER 🎨'}
-              img={
-                <Image
-                  style={{
-                    width: '100%',
-                    height: 244,
-                  }}
-                  borderTopRightRadius={6}
-                  borderTopLeftRadius={6}
-                  source={require('../../assets/images/Storemono.png')}
+                <StoreCard
+                  navigation={navigation}
+                  id={2}
+                  address={
+                    'ARCADE MALL 1001 MAIN ST. #21, BRIDGEPORT, CT 06604'
+                  }
+                  country={'United State'}
+                  title={' DERTBAG ATELIER 🎨'}
+                  img={
+                    <Image
+                      style={{
+                        width: '100%',
+                        height: 244,
+                      }}
+                      borderTopRightRadius={6}
+                      borderTopLeftRadius={6}
+                      source={require('../../assets/images/Storemono-1.png')}
+                    />
+                  }
                 />
-              }
-            />
+                <StoreCard
+                  navigation={navigation}
+                  id={3}
+                  address={
+                    'ARCADE MALL 1001 MAIN ST. #21, BRIDGEPORT, CT 06604 '
+                  }
+                  country={'United State'}
+                  title={' DERTBAG ATELIER 🎨'}
+                  img={
+                    <Image
+                      style={{
+                        width: '100%',
+                        height: 244,
+                      }}
+                      borderTopRightRadius={6}
+                      borderTopLeftRadius={6}
+                      source={require('../../assets/images/Storemono.png')}
+                    />
+                  }
+                />
+              </>
+            )}
           </View>
         </ScrollView>
       )}
@@ -125,9 +155,14 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingHorizontal: 24,
     backgroundColor: '#fff',
-    // flex: 1,
-    // height: '100%',
-    marginBottom: 115,
+  },
+  screenContainer: {
+    width: '100%',
+    flex: 1,
+    height: '100%',
+    backgroundColor: '#ffffff',
+    paddingBottom: 0,
+    marginBottom: 0,
   },
 });
 
