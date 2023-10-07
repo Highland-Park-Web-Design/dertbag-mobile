@@ -25,37 +25,35 @@ function BillingEdit({
   touched,
   errors,
   handleBlur,
-  // values,
   handleSubmit,
   setCheckState,
   checkState,
   submitting,
-  setbillingAddress,
-  setbillingCity,
-  setbillingState,
-  setbillingCountry,
+  setbilling,
+  billing,
 }) {
-  const [state, setstate] = useState([]);
-  const [states, setStates] = useState([]);
-  const [countries, setCountries] = useState([]);
-  const [country, setCountry] = useState([]);
-
-  const [isFocus, setIsFocus] = useState(false);
-
-  const [date, setDate] = useState(new Date());
-
   const {values, setFieldValue} = useFormikContext();
   useEffect(() => {
     if (checkState) {
-      setbillingAddress(values.address);
-      setbillingCity(values.city);
-      setbillingState(values.state);
-      setbillingCountry(values.country);
+      setbilling(prevState => {
+        return {
+          ...prevState,
+          country: values?.country,
+          state: values?.state,
+          city: values?.city,
+          address: values?.address,
+        };
+      });
     } else {
-      setbillingAddress(values.billingAddress);
-      setbillingCity(values.billingAddressCity);
-      setbillingState(values.billingAddressState);
-      setbillingCountry(values.billingAddressCountry);
+      setbilling(prevState => {
+        return {
+          ...prevState,
+          country: values?.billingAddressCountry,
+          state: values?.billingAddressState,
+          city: values?.billingAddressCity,
+          address: values?.billingAddress,
+        };
+      });
     }
     // console.log(setbillingAddress);
   }, [checkState]);
@@ -93,7 +91,14 @@ function BillingEdit({
             <Text style={styles.label}>Address</Text>
             <CustomInput
               onChangeText={text => {
-                setbillingAddress(text);
+                console.log(values);
+                // setbilling(prevState => {
+                //   return {
+                //     ...prevState,
+                //     address: text,
+                //   };
+                // });
+                setFieldValue('billingAddress', text);
               }}
               onBlur={handleBlur('billingAddress')}
               value={checkState ? values.address : values.billingAddress}
@@ -106,7 +111,14 @@ function BillingEdit({
           <View>
             <Text style={styles.label}>City</Text>
             <CustomInput
-              onChangeText={handleChange('billingAddressCity')}
+              onChangeText={text => {
+                setbilling(prevState => {
+                  return {
+                    ...prevState,
+                    city: text,
+                  };
+                });
+              }}
               onBlur={handleBlur('billingAddressCity')}
               value={checkState ? values.city : values.billingAddressCity}
               placeholder={'Enter City'}
@@ -118,7 +130,14 @@ function BillingEdit({
           <View>
             <Text style={styles.label}>State</Text>
             <CustomInput
-              onChangeText={handleChange('billingAddressState')}
+              onChangeText={text => {
+                setbilling(prevState => {
+                  return {
+                    ...prevState,
+                    state: text,
+                  };
+                });
+              }}
               onBlur={handleBlur('billingAddressState')}
               value={checkState ? values.state : values.billingAddressState}
               placeholder={'Enter State'}
@@ -130,7 +149,15 @@ function BillingEdit({
           <View>
             <Text style={styles.label}>Country</Text>
             <CustomInput
-              onChangeText={handleChange('billingAddressCountry')}
+              onChangeText={text => {
+                console.log(text);
+                setbilling(prevState => {
+                  return {
+                    ...prevState,
+                    country: text,
+                  };
+                });
+              }}
               onBlur={handleBlur('billingAddressCountry')}
               value={checkState ? values.country : values.billingAddressCountry}
               placeholder={'Enter Country'}

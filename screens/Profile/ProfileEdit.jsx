@@ -35,39 +35,66 @@ function ProfileEdit({navigation}) {
   const [selectedImage, setSelectedImage] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [checkState, setCheckState] = useState(false);
-  const [billingAddress, setbillingAddress] = useState('');
-  const [billingCity, setbillingCity] = useState('');
-  const [billingState, setbillingState] = useState('');
-  const [billingCountry, setbillingCountry] = useState('');
+  const [billing, setBilling] = useState({
+    address: null,
+    country: null,
+    city: null,
+    state: null,
+  });
   const handleProfileUpdate = async (values, formikBag) => {
     try {
       setSubmitting(true);
       const formData = new FormData();
-      formData.append('image', {
-        uri: selectedImage?.uri,
-        type: selectedImage?.type,
-        name: 'profileImage.jpg',
-      });
-      if (values.firstName !== null)
+      // formData.append('image', {
+      //   uri: selectedImage?.uri,
+      //   type: selectedImage?.type,
+      //   name: 'profileImage.jpg',
+      // });
+      // console.log(formData);
+      if (values.firstName !== null || values.firstName !== '')
         formData.append('firstName', values.firstName);
-      if (values.lastName !== null)
+
+      if (values.lastName !== null || values.lastName !== '')
         formData.append('lastName', values.lastName);
-      if (values.phoneNumber !== null)
+
+      if (values.phoneNumber !== null || values.phoneNumber !== '')
         formData.append('phoneNumber', values.phoneNumber);
-      if (values.gender !== null) formData.append('gender', values.gender);
+
+      if (values.gender !== null || values.gender !== '')
+        formData.append('gender', values.gender);
 
       formData.append('dateOfBirth', values.dateOfBirth);
-      if (values.address !== null) formData.append('address', values.address);
-      if (values.city !== null) formData.append('city', values.city);
-      if (values.state !== null) formData.append('state', values.state);
-      if (values.country !== null) formData.append('country', values.country);
-      if (values.billingAddress !== null)
+
+      if (values.address !== null || values.address !== '')
+        formData.append('address', values.address);
+
+      if (values.city !== null || values.city !== '')
+        formData.append('city', values.city);
+
+      if (values.state !== null || values.state !== '')
+        formData.append('state', values.state);
+
+      if (values.country !== null || values.country !== '')
+        formData.append('country', values.country);
+
+      if (values.billingAddress !== null || values.billingAddress !== '')
         formData.append('billingAddress', values.billingAddress);
-      if (values.billingAddressCity !== null)
+
+      if (
+        values.billingAddressCity !== null ||
+        values.billingAddressCity !== ''
+      )
         formData.append('billingAddressCity', values.billingAddressCity);
-      if (values.billingAddressState !== null)
+
+      if (
+        values.billingAddressState !== null ||
+        values.billingAddressState !== ''
+      )
         formData.append('billingAddressState', values.billingAddressState);
-      if (values.billingAddressCountry !== null)
+      if (
+        values.billingAddressCountry !== null ||
+        values.billingAddressCountry !== ''
+      )
         formData.append('billingAddressCountry', values.billingAddressCountry);
 
       await UpdateUserDetails(formData);
@@ -129,10 +156,19 @@ function ProfileEdit({navigation}) {
         //BUT FORMIK HAS SOME CRAZY BAHAVIOUR DOESN'T ALLOW FORM STATE TO
         // UPDATE UNLESS THE FORM IS TAMPERED WITH THAT MADE ME SPEND
         //3 HOURS FIND A SOLUTION TO AND I DIDN'T FIND FOR FORMIK WITH MOBILE
-        setbillingAddress(data?.user?.billingAddress);
-        setbillingCity(data?.user?.billingAddressCity);
-        setbillingState(data?.user?.billingAddressState);
-        setbillingCountry(data?.user?.billingAddressCountry);
+        setBilling(prevState => {
+          return {
+            ...prevState,
+            country: data?.user?.billingAddressCountry,
+            state: data?.user?.billingAddressState,
+            city: data?.user?.billingAddressCity,
+            address: data?.user?.billingAddress,
+          };
+        });
+        // setbillingAddress(data?.user?.billingAddress);
+        // setbillingCity(data?.user?.billingAddressCity);
+        // setbillingState(data?.user?.billingAddressState);
+        // setbillingCountry(data?.user?.billingAddressCountry);
         if (data.user.profileAvatarUrl !== null) {
           setSelectedImage({
             uri: data.user.profileAvatarUrl,
@@ -140,7 +176,7 @@ function ProfileEdit({navigation}) {
           });
         }
       } catch (err) {
-        console.log(err);
+        console.log(err?.response);
       }
     }
     getDetails();
@@ -175,15 +211,15 @@ function ProfileEdit({navigation}) {
       {/* <View style={{backgroundColor: 'red', height: 200}}></View> */}
       {userDetail ? (
         <Formik
-          enableReinitialize={true}
+          // enableReinitialize={true}
           onSubmit={handleProfileUpdate}
           // initialValues={userDetail}
           initialValues={{
             dateOfBirth: userDetail?.dateOfBirth,
-            billingAddress: billingAddress,
-            billingAddressCity: billingCity,
-            billingAddressState: billingState,
-            billingAddressCountry: billingCountry,
+            billingAddress: billing?.address,
+            billingAddressCity: billing?.city,
+            billingAddressState: billing?.state,
+            billingAddressCountry: billing?.country,
             firstName: userDetail?.firstName,
             lastName: userDetail?.lastName,
             phoneNumber: userDetail?.phoneNumber,
@@ -242,10 +278,8 @@ function ProfileEdit({navigation}) {
                     values={values}
                     handleSubmit={handleSubmit}
                     checkState={checkState}
-                    setbillingAddress={setbillingAddress}
-                    setbillingCity={setbillingCity}
-                    setbillingState={setbillingState}
-                    setbillingCountry={setbillingCountry}
+                    setbilling={setBilling}
+                    billing={billing}
                     setCheckState={setCheckState}
                     setcurrentStep={setCurrentStep}
                     submitting={submitting}
@@ -280,15 +314,19 @@ function Step1({
 
   const [isFocus, setIsFocus] = useState(false);
 
-  const [date, setDate] = useState(
-    new Date(values?.dateOfBirth !== null && values?.dateOfBirth),
-  );
+  const [date, setDate] = useState(new Date());
+  console.log(typeof values?.billingAddress);
   const [open, setOpen] = useState(false);
   useEffect(() => {
     setGenderlist([
       {name: 'Male', value: 'male'},
       {name: 'Female', value: 'female'},
     ]);
+    // if (values?.dateOfBirth === 'null' || values?.dateOfBirth === null) {
+    //   setDate(new Date());
+    // } else {
+    //   setDate(new Date(values?.dateOfBirth));
+    // }
   }, []);
   return (
     <>
@@ -300,18 +338,18 @@ function Step1({
           modal
           open={open}
           date={date}
+          // minimumDate={new Date()}
           onConfirm={date => {
             setOpen(false);
             setDate(date);
-            console.log(date);
-            setFieldValue('dateOfBirth', String(date));
+            console.log(date, 'frm confirm');
+            setFieldValue('dateOfBirth', date);
           }}
           onCancel={() => {
             setOpen(false);
           }}
           // onConfirm={(date) => setFieldValue('dateOfBirth', date)}
           // onDateChange={date => {
-          //   console.log(date);
           //   setFieldValue('dateOfBirth', date);
           // }}
         />

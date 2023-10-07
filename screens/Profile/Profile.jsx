@@ -69,7 +69,8 @@ function Profile({navigation}) {
         <View style={styles.profileView}>
           <ViewItem
             caption={
-              (userProfile?.dateOfBirth &&
+              (userProfile?.dateOfBirth !== null &&
+                userProfile?.dateOfBirth &&
                 dayjs(userProfile?.dateOfBirth).format('DD MMM YYYY')) ||
               'N/A'
             }

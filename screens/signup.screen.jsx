@@ -26,12 +26,12 @@ function SignUp({navigation}) {
   };
 
   const validationSchema = Yup.object().shape({
+    lastName: Yup.string().required('Lastname is Required'),
+    firstName: Yup.string().required('Firstname is Required'),
     email: Yup.string()
       .email('Please enter a valid email')
       .required('Email Address is Required'),
     password: Yup.string().required('Password is Required'),
-    lastName: Yup.string().required('Lastname is Required'),
-    firstName: Yup.string().required('Firstname is Required'),
   });
 
   const handleSignUp = async (values, formikBag) => {
