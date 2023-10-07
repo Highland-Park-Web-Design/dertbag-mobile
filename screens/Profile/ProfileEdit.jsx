@@ -45,12 +45,12 @@ function ProfileEdit({navigation}) {
     try {
       setSubmitting(true);
       const formData = new FormData();
-      // formData.append('image', {
-      //   uri: selectedImage?.uri,
-      //   type: selectedImage?.type,
-      //   name: 'profileImage.jpg',
-      // });
-      // console.log(formData);
+      formData.append('image', {
+        uri: selectedImage?.uri,
+        type: selectedImage?.type,
+        name: 'profileImage.jpg',
+      });
+      console.log(formData);
       if (values.firstName !== null || values.firstName !== '')
         formData.append('firstName', values.firstName);
 
@@ -152,10 +152,7 @@ function ProfileEdit({navigation}) {
       try {
         const {data} = await GetUserDetails();
         setUserDetail(data?.user);
-        //I HONESTLY DIDN'T WAN'T TO DO THIS LIKE THIS
-        //BUT FORMIK HAS SOME CRAZY BAHAVIOUR DOESN'T ALLOW FORM STATE TO
-        // UPDATE UNLESS THE FORM IS TAMPERED WITH THAT MADE ME SPEND
-        //3 HOURS FIND A SOLUTION TO AND I DIDN'T FIND FOR FORMIK WITH MOBILE
+
         setBilling(prevState => {
           return {
             ...prevState,
@@ -165,10 +162,7 @@ function ProfileEdit({navigation}) {
             address: data?.user?.billingAddress,
           };
         });
-        // setbillingAddress(data?.user?.billingAddress);
-        // setbillingCity(data?.user?.billingAddressCity);
-        // setbillingState(data?.user?.billingAddressState);
-        // setbillingCountry(data?.user?.billingAddressCountry);
+
         if (data.user.profileAvatarUrl !== null) {
           setSelectedImage({
             uri: data.user.profileAvatarUrl,
