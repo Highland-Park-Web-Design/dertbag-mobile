@@ -82,35 +82,37 @@ const Settings = ({navigation}) => {
   );
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.headingText}>MENU</Text>
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        ListHeaderComponent={user && headerComponent}
-        style={styles.settings}
-        data={menuOptions}
-        keyExtractor={(item, index) => index.toString()}
-        renderItem={({item}) => (
-          <TouchableOpacity
-            style={styles.optionContainer}
-            onPress={() => {
-              navigation.navigate(item.link);
-              if (item.link === 'SignIn') {
-                async function removeData() {
-                  await removeMultipleData(['UserData', 'user']);
+      <View style={styles.innercontainer}>
+        <Text style={styles.headingText}>MENU</Text>
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          ListHeaderComponent={user && headerComponent}
+          style={styles.settings}
+          data={menuOptions}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({item}) => (
+            <TouchableOpacity
+              style={styles.optionContainer}
+              onPress={() => {
+                navigation.navigate(item.link);
+                if (item.link === 'SignIn') {
+                  async function removeData() {
+                    await removeMultipleData(['UserData', 'user']);
+                  }
+                  removeData();
                 }
-                removeData();
-              }
-            }}>
-            <View style={styles.menuItem}>
-              <View style={styles.menuColumn}>
-                <Image style={styles.icons} source={item.imageSource} />
-                <Text style={styles.optionText}>{item.title}</Text>
+              }}>
+              <View style={styles.menuItem}>
+                <View style={styles.menuColumn}>
+                  <Image style={styles.icons} source={item.imageSource} />
+                  <Text style={styles.optionText}>{item.title}</Text>
+                </View>
+                <ChevronIcon />
               </View>
-              <ChevronIcon />
-            </View>
-          </TouchableOpacity>
-        )}
-      />
+            </TouchableOpacity>
+          )}
+        />
+      </View>
     </SafeAreaView>
   );
 };
@@ -119,10 +121,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    paddingHorizontal: 24,
   },
-  optionContainer: {
-    // paddingVertical: 20,
+  innercontainer: {
+    paddingHorizontal: 24,
+    flex: 1,
   },
   optionText: {
     fontSize: 18,
