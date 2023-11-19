@@ -396,6 +396,7 @@ function ProductDetails({navigation}) {
                           singleProduct?.variants[selectedVariant]?.price *
                           counter,
                         quantity: counter,
+                        image: singleProduct?.images[0]?.src,
                       })
                     }
                     disabled={loading}

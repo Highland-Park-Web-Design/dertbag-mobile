@@ -36,8 +36,7 @@ function Bag({navigation}) {
 
       const ParsedList = JSON.parse(value);
       setBagItems(ParsedList);
-
-      const prices = ParsedList?.map(item => item.price);
+      const prices = ParsedList?.map(item => item.price * item.quantity);
 
       // Use the reduce() function to calculate the total price
       if (prices) {
@@ -135,11 +134,11 @@ function Bag({navigation}) {
               ))}
           </View>
         ) : (
-          <EmptyState setBagState={setBagState} />
+          <EmptyState navigation={navigation} setBagState={setBagState} />
         )}
 
         {bagItems && bagItems?.length === 0 && (
-          <EmptyState setBagState={setBagState} />
+          <EmptyState navigation={navigation} setBagState={setBagState} />
         )}
 
         <View style={styles.detailsContainer}>
@@ -196,7 +195,13 @@ function Bag({navigation}) {
             disabled={bagState ? false : true}
             title={'proceed to checkout'}
           />
-          {bagState && <Button variation={'ghost'} title={'Get More stuffs'} />}
+          {bagState && (
+            <Button
+              onpress={() => navigation.navigate('FOR YOU')}
+              variation={'ghost'}
+              title={'Get More stuffs'}
+            />
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -205,14 +210,14 @@ function Bag({navigation}) {
 
 export default Bag;
 
-function EmptyState({setBagState}) {
+function EmptyState({setBagState, navigation}) {
   return (
     <View style={styles.EmptyContainer}>
       <Image source={require('../../assets/images/Tags.png')} />
       <Text style={{fontWeight: '400', fontSize: 16, color: '#111'}}>
         CART IS EMPTY
       </Text>
-      <TouchableOpacity onPress={() => setBagState(true)}>
+      <TouchableOpacity onPress={() => navigation.navigate('FOR YOU')}>
         <Text style={{fontWeight: '300', fontSize: 12, color: '#111'}}>
           ADD ITEM TO BAG
         </Text>
