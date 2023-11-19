@@ -39,7 +39,7 @@ const ProfileCard = ({email, onPress, userImage}) => {
 };
 const styles = StyleSheet.create({
   ProfileCardContainer: {
-    // height: 115,
+    height: 115,
   },
   ProfileCard: {
     flex: 1,

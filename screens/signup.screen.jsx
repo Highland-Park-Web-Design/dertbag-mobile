@@ -39,6 +39,7 @@ function SignUp({navigation}) {
       setSubmtting(true);
       let res = await RegisterUser(values);
       await storeData('user', {...res.data.user, token: res.data.token});
+      await storeData('AppOpened', true);
       setSubmtting(false);
       return navigation.navigate('Product');
     } catch (err) {

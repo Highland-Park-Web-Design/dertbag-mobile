@@ -37,8 +37,10 @@ import RoundCheckbox from '../components/RoundCheckbox';
 import SquareCheckbox from '../components/SquareCheckbox';
 import styles from './product.style';
 import {getData, storeData} from '../store';
+import {UserContext} from '../context/AuthContext';
 
 function Product({navigation}) {
+  const {state} = useContext(UserContext);
   const [productText, onChangeProductText] = useState('');
   const [selectedOrientation, onChangeSelectedOrientation] = useState('all');
   const {dispatch} = useContext(ProductContext);
@@ -91,7 +93,7 @@ function Product({navigation}) {
       }
     }
     getProducts();
-    getDetails();
+    if (state.isRegisterd === true) getDetails();
   }, []);
 
   const handleTextSubmit = () => {

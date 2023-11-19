@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -15,8 +15,10 @@ import {LoginUser} from '../api';
 import {storeData} from '../store';
 import * as Yup from 'yup';
 import Loader from '../components/Loader';
+import {UserContext} from '../context/AuthContext';
 
 function SignIn({navigation}) {
+  const {state, dispatch} = useContext(UserContext);
   const [submitting, setSubmitting] = useState(false);
 
   const backgroundStyle = {
@@ -35,7 +37,9 @@ function SignIn({navigation}) {
       setSubmitting(true);
       let res = await LoginUser(values);
       await storeData('user', {...res.data.user, token: res.data.token});
+      await storeData('AppOpened', true);
       setSubmitting(false);
+      dispatch({type: 'SET_LOGIN', payload: true});
       return navigation?.navigate('Product');
     } catch (err) {
       setSubmitting(false);
