@@ -87,15 +87,5 @@ export const GetUserDetails = async () => {
 
 // Endpoint to Update User details
 export const UpdateUserDetails = async data => {
-  instance.interceptors.request.use(
-    async config => {
-      config.headers['Content-Type'] = `multipart/form-data`;
-      return config;
-    },
-    error => {
-      return Promise.reject(error);
-    },
-  );
-  console.log(data);
   return await instance.put(`user/update-profile`, data);
 };

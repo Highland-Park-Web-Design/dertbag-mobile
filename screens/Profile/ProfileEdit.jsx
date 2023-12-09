@@ -27,6 +27,7 @@ import Loader from '../../components/Loader';
 import {showMessage} from 'react-native-flash-message';
 import {storeData} from '../../store';
 import {launchImageLibrary} from 'react-native-image-picker';
+import {REACT_APP_API_URL} from '@env';
 
 function ProfileEdit({navigation}) {
   // const [currentStep, setcurrentStep] = useState(1);
@@ -41,63 +42,10 @@ function ProfileEdit({navigation}) {
     city: null,
     state: null,
   });
-  const handleProfileUpdate = async (values, formikBag) => {
+  const handleProfileUpdate = async values => {
     try {
       setSubmitting(true);
-      const formData = new FormData();
-      formData.append('image', {
-        uri: selectedImage?.uri,
-        type: selectedImage?.type,
-        name: 'profileImage.jpg',
-      });
-      console.log(formData);
-      if (values.firstName !== null || values.firstName !== '')
-        formData.append('firstName', values.firstName);
-
-      if (values.lastName !== null || values.lastName !== '')
-        formData.append('lastName', values.lastName);
-
-      if (values.phoneNumber !== null || values.phoneNumber !== '')
-        formData.append('phoneNumber', values.phoneNumber);
-
-      if (values.gender !== null || values.gender !== '')
-        formData.append('gender', values.gender);
-
-      formData.append('dateOfBirth', values.dateOfBirth);
-
-      if (values.address !== null || values.address !== '')
-        formData.append('address', values.address);
-
-      if (values.city !== null || values.city !== '')
-        formData.append('city', values.city);
-
-      if (values.state !== null || values.state !== '')
-        formData.append('state', values.state);
-
-      if (values.country !== null || values.country !== '')
-        formData.append('country', values.country);
-
-      if (values.billingAddress !== null || values.billingAddress !== '')
-        formData.append('billingAddress', values.billingAddress);
-
-      if (
-        values.billingAddressCity !== null ||
-        values.billingAddressCity !== ''
-      )
-        formData.append('billingAddressCity', values.billingAddressCity);
-
-      if (
-        values.billingAddressState !== null ||
-        values.billingAddressState !== ''
-      )
-        formData.append('billingAddressState', values.billingAddressState);
-      if (
-        values.billingAddressCountry !== null ||
-        values.billingAddressCountry !== ''
-      )
-        formData.append('billingAddressCountry', values.billingAddressCountry);
-
-      await UpdateUserDetails(formData);
+      await UpdateUserDetails(values);
       const {data} = await GetUserDetails();
       if (data) await storeData('UserData', data.user);
       showMessage({
@@ -107,7 +55,8 @@ function ProfileEdit({navigation}) {
       setSubmitting(false);
       return navigation.navigate('Profile');
     } catch (err) {
-      console.log(err);
+      console.log('err obj', err.response.data);
+      console.log('response message', err.response.data.message);
       setSubmitting(false);
       if (err.response) {
         showMessage({
@@ -152,7 +101,7 @@ function ProfileEdit({navigation}) {
       try {
         const {data} = await GetUserDetails();
         setUserDetail(data?.user);
-
+        setCheckState(data?.user.sameAddress);
         setBilling(prevState => {
           return {
             ...prevState,
@@ -167,6 +116,7 @@ function ProfileEdit({navigation}) {
           setSelectedImage({
             uri: data.user.profileAvatarUrl,
             type: 'image/jpeg',
+            name: 'profileImage.jpg',
           });
         }
       } catch (err) {
@@ -191,6 +141,7 @@ function ProfileEdit({navigation}) {
     billingAddressCity: Yup.string().nullable(),
     state: Yup.string().nullable(),
     profileAvatarUrl: Yup.string().nullable(),
+    sameAddress: Yup.boolean(),
   });
 
   return (
@@ -210,10 +161,10 @@ function ProfileEdit({navigation}) {
           // initialValues={userDetail}
           initialValues={{
             dateOfBirth: userDetail?.dateOfBirth,
-            billingAddress: billing?.address,
-            billingAddressCity: billing?.city,
-            billingAddressState: billing?.state,
-            billingAddressCountry: billing?.country,
+            billingAddress: userDetail?.billingAddress,
+            billingAddressCity: userDetail?.billingAddressCity,
+            billingAddressState: userDetail?.billingAddressState,
+            billingAddressCountry: userDetail?.billingAddressCountry,
             firstName: userDetail?.firstName,
             lastName: userDetail?.lastName,
             phoneNumber: userDetail?.phoneNumber,
@@ -222,6 +173,7 @@ function ProfileEdit({navigation}) {
             country: userDetail?.country,
             gender: userDetail?.gender,
             state: userDetail?.state,
+            sameAddress: userDetail?.sameAddress,
           }}
           validateOnBlur
           validationSchema={validationSchema}>
