@@ -44,10 +44,10 @@ function BillingEdit({
       setFieldValue('billingAddressCity', values?.city);
       setFieldValue('billingAddress', values?.address);
     } else {
-      setFieldValue('billingAddressCountry', null);
-      setFieldValue('billingAddressState', null);
-      setFieldValue('billingAddressCity', null);
-      setFieldValue('billingAddress', null);
+      setFieldValue('billingAddressCountry', values?.billingAddressCountry);
+      setFieldValue('billingAddressState', values?.billingAddressState);
+      setFieldValue('billingAddressCity', values?.billingAddressCity);
+      setFieldValue('billingAddress', values?.billingAddress);
       // setbilling(prevState => {
       //   return {
       //     ...prevState,
@@ -110,7 +110,7 @@ function BillingEdit({
                 handleChange('billingAddress')
               }
               onBlur={handleBlur('billingAddress')}
-              value={values.billingAddress}
+              value={checkState ? values.address : values.billingAddress}
               placeholder={'Enter Address'}
               editable={!checkState}
               selectTextOnFocus={!checkState}
@@ -134,7 +134,7 @@ function BillingEdit({
                 handleChange('billingAddressCity')
               }
               onBlur={handleBlur('billingAddressCity')}
-              value={values.billingAddressCity}
+              value={checkState ? values.city : values.billingAddressCity}
               placeholder={'Enter City'}
               editable={!checkState}
               selectTextOnFocus={!checkState}
@@ -148,7 +148,7 @@ function BillingEdit({
             <CustomInput
               onChangeText={handleChange('billingAddressState')}
               onBlur={handleBlur('billingAddressState')}
-              value={values.billingAddressState}
+              value={checkState ? values.state : values.billingAddressState}
               placeholder={'Enter State'}
               editable={!checkState}
               selectTextOnFocus={!checkState}
@@ -162,8 +162,10 @@ function BillingEdit({
             <CustomInput
               onChangeText={handleChange('billingAddressCountry')}
               onBlur={handleBlur('billingAddressCountry')}
-              value={values.billingAddressCountry}
+              value={checkState ? values.country : values.billingAddressCountry}
               placeholder={'Enter Country'}
+              editable={!checkState}
+              selectTextOnFocus={!checkState}
             />
             {touched.billingAddressCountry && errors.billingAddressCountry ? (
               <Text style={{color: 'red'}}>{errors.billingAddressCountry}</Text>

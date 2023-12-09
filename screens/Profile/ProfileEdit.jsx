@@ -8,6 +8,7 @@ import {
   ScrollView,
   Image,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import Header from '../../components/Header';
 import CalenderIco from '../../Icons/calenderIco.svg';
@@ -27,7 +28,12 @@ import Loader from '../../components/Loader';
 import {showMessage} from 'react-native-flash-message';
 import {storeData} from '../../store';
 import {launchImageLibrary} from 'react-native-image-picker';
-import {REACT_APP_API_URL} from '@env';
+import {
+  CLOUDINARY_CLOUD_NAME,
+  CLOUDINARY_API_KEY,
+  CLOUDINARY_API_SECRET,
+  CLOUDINARY_UPLOAD_PRESET,
+} from '@env';
 
 function ProfileEdit({navigation}) {
   // const [currentStep, setcurrentStep] = useState(1);
@@ -36,6 +42,7 @@ function ProfileEdit({navigation}) {
   const [selectedImage, setSelectedImage] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [checkState, setCheckState] = useState(false);
+  const [selectedFile, setSelectedFile] = useState('');
   const [billing, setBilling] = useState({
     address: null,
     country: null,
@@ -72,7 +79,7 @@ function ProfileEdit({navigation}) {
     }
   };
 
-  const openImagePicker = async () => {
+  const openImagePicker = async setFieldValue => {
     const options = {
       title: 'Select an Image',
       storageOptions: {
@@ -80,20 +87,64 @@ function ProfileEdit({navigation}) {
         path: 'images',
       },
     };
+
     try {
-      const response = await launchImageLibrary(options);
-      if (response.didCancel) {
+      const imagePickerResponse = await launchImageLibrary(options);
+
+      if (imagePickerResponse.didCancel) {
         console.log('Image picker was canceled');
-      } else if (response.error) {
-        console.error('Image picker error:', response.error);
-      } else if (response.assets) {
-        setSelectedImage({
-          uri: response.assets[0].uri,
-          type: response.assets[0].type,
+      } else if (imagePickerResponse.error) {
+        console.error('Image picker error:', imagePickerResponse.error);
+      } else if (imagePickerResponse.assets) {
+        setSelectedFile('uploading...');
+
+        const formData = new FormData();
+        const selectedImage = imagePickerResponse.assets[0];
+
+        formData.append('file', {
+          uri: selectedImage.uri,
+          type: selectedImage.type,
+          name: selectedImage.fileName,
         });
+
+        formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+        formData.append('api_key', CLOUDINARY_API_KEY);
+        formData.append('api_secret', CLOUDINARY_API_SECRET);
+
+        const cloudinaryResponse = await fetch(
+          `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/upload`,
+          {
+            method: 'POST',
+            body: formData,
+          },
+        );
+
+        if (cloudinaryResponse.ok) {
+          const cloudinaryData = await cloudinaryResponse.json();
+          console.log('Image uploaded:', cloudinaryData?.public_id);
+          setFieldValue('profileAvatarId', cloudinaryData?.public_id);
+          setFieldValue('profileAvatarUrl', cloudinaryData?.secure_url);
+          setSelectedImage({
+            uri: selectedImage.uri,
+            type: selectedImage.type,
+            name: selectedImage.fileName,
+          });
+          setSelectedFile(null);
+          showMessage({
+            message: 'Image Uploaded Succesfully',
+            type: 'success',
+          });
+        } else {
+          // console.log('Image upload failed:', cloudinaryResponse.status);
+          showMessage({
+            message: 'Image upload failed. Please try again',
+            type: 'info',
+          });
+          setSelectedFile(null);
+        }
       }
     } catch (err) {
-      console.log(err);
+      console.error('Error:', err);
     }
   };
   useEffect(() => {
@@ -130,6 +181,8 @@ function ProfileEdit({navigation}) {
     firstName: Yup.string().nullable(),
     lastName: Yup.string().nullable(),
     phoneNumber: Yup.string().nullable(),
+    profileAvatarId: Yup.string().nullable(),
+    profileAvatarUrl: Yup.string().nullable(),
     dateOfBirth: Yup.string().nullable(),
     billingAddress: Yup.string().nullable(),
     billingAddressState: Yup.string().nullable(),
@@ -140,7 +193,6 @@ function ProfileEdit({navigation}) {
     gender: Yup.string().nullable(),
     billingAddressCity: Yup.string().nullable(),
     state: Yup.string().nullable(),
-    profileAvatarUrl: Yup.string().nullable(),
     sameAddress: Yup.boolean(),
   });
 
@@ -173,6 +225,8 @@ function ProfileEdit({navigation}) {
             country: userDetail?.country,
             gender: userDetail?.gender,
             state: userDetail?.state,
+            profileAvatarUrl: userDetail?.profileAvatarUrl,
+            profileAvatarId: userDetail?.profileAvatarId,
             sameAddress: userDetail?.sameAddress,
           }}
           validateOnBlur
@@ -199,6 +253,7 @@ function ProfileEdit({navigation}) {
                     values={values}
                     setcurrentStep={setCurrentStep}
                     selectedImage={selectedImage}
+                    selectedFile={selectedFile}
                   />
                 )}
 
@@ -254,6 +309,7 @@ function Step1({
   values,
   selectedImage,
   openImagePicker,
+  selectedFile,
 }) {
   const [genderList, setGenderlist] = useState([]);
   const [gender, setGender] = useState(values.gender);
@@ -309,18 +365,33 @@ function Step1({
               alignItems: 'center',
               gap: 10,
             }}>
-            <Image
-              style={{width: 128, height: 128}}
-              borderRadius={64}
-              resizeMode="stretch"
-              source={
-                selectedImage
-                  ? {uri: selectedImage.uri}
-                  : require('../../assets/images/db-profile-icon.png')
-              }
-            />
+            {selectedFile ? (
+              <View
+                style={{
+                  width: 128,
+                  height: 128,
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: '#f4f4f4',
+                }}
+                borderRadius={64}>
+                <ActivityIndicator size="large" color="#000" />
+              </View>
+            ) : (
+              <Image
+                style={{width: 128, height: 128}}
+                borderRadius={64}
+                resizeMode="stretch"
+                source={
+                  selectedImage
+                    ? {uri: selectedImage.uri}
+                    : require('../../assets/images/db-profile-icon.png')
+                }
+              />
+            )}
+
             <TouchableOpacity
-              onPress={openImagePicker}
+              onPress={() => openImagePicker(setFieldValue)}
               style={{
                 borderRadius: 8,
                 backgroundColor: '#F7F7F7',

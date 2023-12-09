@@ -100,9 +100,14 @@ function Profile({navigation}) {
           />
           <ViewItem
             caption={
-              userProfile.sameAddress
-                ? `${userProfile.address} ${userProfile.city}  ${userProfile.state}  ${userProfile.country} `
-                : `${userProfile.billingAddress} ${userProfile.billingAddressCity}  ${userProfile.billingAddressState}  ${userProfile.billingAddressCountry} `
+              userProfile?.sameAddress
+                ? `${userProfile?.address} ${userProfile?.city}  ${userProfile?.state}  ${userProfile?.country} `
+                : userProfile?.billingAddress ||
+                  userProfile?.billingAddressState ||
+                  userProfile?.billingAddressCity ||
+                  userProfile?.billingAddressCountry
+                ? `${userProfile?.billingAddress} ${userProfile?.billingAddressCity}  ${userProfile?.billingAddressState}  ${userProfile?.billingAddressCountry} `
+                : 'N/A'
             }
             title={'BILLING ADDRESS'}
           />
