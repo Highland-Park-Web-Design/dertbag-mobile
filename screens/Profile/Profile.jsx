@@ -16,6 +16,7 @@ import {getData} from '../../store';
 import {useIsFocused} from '@react-navigation/native';
 function Profile({navigation}) {
   const [userProfile, setUserProfile] = useState();
+  console.log('user profile', userProfile);
   const isFocused = useIsFocused();
   useEffect(() => {
     async function getUserDetails() {
@@ -99,27 +100,9 @@ function Profile({navigation}) {
           />
           <ViewItem
             caption={
-              userProfile?.billingAddress ||
-              userProfile?.billingAddressCity ||
-              userProfile?.billingAddressCountry
-                ? `${
-                    userProfile?.billingAddress === null
-                      ? ''
-                      : userProfile?.billingAddress
-                  } ${
-                    userProfile?.billingAddressCity === null
-                      ? ''
-                      : userProfile?.billingAddressCity
-                  } ${
-                    userProfile?.billingAddressState === null
-                      ? ''
-                      : userProfile?.billingAddressState
-                  } ${
-                    userProfile?.billingAddressCountry === null
-                      ? ''
-                      : userProfile?.billingAddressCountry
-                  }`
-                : 'N/A'
+              userProfile.sameAddress
+                ? `${userProfile.address} ${userProfile.city}  ${userProfile.state}  ${userProfile.country} `
+                : `${userProfile.billingAddress} ${userProfile.billingAddressCity}  ${userProfile.billingAddressState}  ${userProfile.billingAddressCountry} `
             }
             title={'BILLING ADDRESS'}
           />

@@ -6,15 +6,12 @@ import {
   View,
   Text,
   ScrollView,
-  Image,
 } from 'react-native';
 import Header from '../../components/Header';
 import ActiveSelect from '../../Icons/ActiveSquareSelect.svg';
 import InActiveSelect from '../../Icons/InactiveSquareSelect.svg';
 import CustomInput from '../../components/input';
 import Button from '../../components/Button';
-import dropdownStyle from '../../components/dropdown.style';
-import {Dropdown} from 'react-native-element-dropdown';
 import {useFormikContext} from 'formik';
 
 function BillingEdit({
@@ -29,31 +26,37 @@ function BillingEdit({
   setCheckState,
   checkState,
   submitting,
-  setbilling,
-  billing,
 }) {
   const {values, setFieldValue} = useFormikContext();
   useEffect(() => {
     if (checkState) {
-      setbilling(prevState => {
-        return {
-          ...prevState,
-          country: values?.country,
-          state: values?.state,
-          city: values?.city,
-          address: values?.address,
-        };
-      });
+      // setbilling(prevState => {
+      //   return {
+      //     ...prevState,
+      //     country: values?.country,
+      //     state: values?.state,
+      //     city: values?.city,
+      //     address: values?.address,
+      //   };
+      // });
+      setFieldValue('billingAddressCountry', values?.country);
+      setFieldValue('billingAddressState', values?.state);
+      setFieldValue('billingAddressCity', values?.city);
+      setFieldValue('billingAddress', values?.address);
     } else {
-      setbilling(prevState => {
-        return {
-          ...prevState,
-          country: values?.billingAddressCountry,
-          state: values?.billingAddressState,
-          city: values?.billingAddressCity,
-          address: values?.billingAddress,
-        };
-      });
+      setFieldValue('billingAddressCountry', null);
+      setFieldValue('billingAddressState', null);
+      setFieldValue('billingAddressCity', null);
+      setFieldValue('billingAddress', null);
+      // setbilling(prevState => {
+      //   return {
+      //     ...prevState,
+      //     country: values?.billingAddressCountry,
+      //     state: values?.billingAddressState,
+      //     city: values?.billingAddressCity,
+      //     address: values?.billingAddress,
+      //   };
+      // });
     }
     // console.log(setbillingAddress);
   }, [checkState]);
@@ -71,7 +74,10 @@ function BillingEdit({
             }}>
             <TouchableOpacity
               onPress={() => {
-                setCheckState(prev => !prev);
+                setCheckState(prev => {
+                  setFieldValue('sameAddress', !prev);
+                  return !prev;
+                });
               }}>
               {checkState ? <ActiveSelect /> : <InActiveSelect />}
             </TouchableOpacity>
@@ -90,19 +96,24 @@ function BillingEdit({
           <View>
             <Text style={styles.label}>Address</Text>
             <CustomInput
-              onChangeText={text => {
-                console.log(values);
+              onChangeText={
+                // text => {
+                // console.log(values);
                 // setbilling(prevState => {
                 //   return {
                 //     ...prevState,
                 //     address: text,
                 //   };
                 // });
-                setFieldValue('billingAddress', text);
-              }}
+                //   setFieldValue('billingAddress', text);
+                // }
+                handleChange('billingAddress')
+              }
               onBlur={handleBlur('billingAddress')}
-              value={checkState ? values.address : values.billingAddress}
+              value={values.billingAddress}
               placeholder={'Enter Address'}
+              editable={!checkState}
+              selectTextOnFocus={!checkState}
             />
             {touched.billingAddress && errors.billingAddress ? (
               <Text style={{color: 'red'}}>{errors.billingAddress}</Text>
@@ -111,17 +122,22 @@ function BillingEdit({
           <View>
             <Text style={styles.label}>City</Text>
             <CustomInput
-              onChangeText={text => {
-                setbilling(prevState => {
-                  return {
-                    ...prevState,
-                    city: text,
-                  };
-                });
-              }}
+              onChangeText={
+                //   text => {
+                //   setbilling(prevState => {
+                //     return {
+                //       ...prevState,
+                //       city: text,
+                //     };
+                //   });
+                // }
+                handleChange('billingAddressCity')
+              }
               onBlur={handleBlur('billingAddressCity')}
-              value={checkState ? values.city : values.billingAddressCity}
+              value={values.billingAddressCity}
               placeholder={'Enter City'}
+              editable={!checkState}
+              selectTextOnFocus={!checkState}
             />
             {touched.billingAddressCity && errors.billingAddressCity ? (
               <Text style={{color: 'red'}}>{errors.billingAddressCity}</Text>
@@ -130,17 +146,12 @@ function BillingEdit({
           <View>
             <Text style={styles.label}>State</Text>
             <CustomInput
-              onChangeText={text => {
-                setbilling(prevState => {
-                  return {
-                    ...prevState,
-                    state: text,
-                  };
-                });
-              }}
+              onChangeText={handleChange('billingAddressState')}
               onBlur={handleBlur('billingAddressState')}
-              value={checkState ? values.state : values.billingAddressState}
+              value={values.billingAddressState}
               placeholder={'Enter State'}
+              editable={!checkState}
+              selectTextOnFocus={!checkState}
             />
             {touched.billingAddressState && errors.billingAddressState ? (
               <Text style={{color: 'red'}}>{errors.billingAddressState}</Text>
@@ -149,17 +160,9 @@ function BillingEdit({
           <View>
             <Text style={styles.label}>Country</Text>
             <CustomInput
-              onChangeText={text => {
-                console.log(text);
-                setbilling(prevState => {
-                  return {
-                    ...prevState,
-                    country: text,
-                  };
-                });
-              }}
+              onChangeText={handleChange('billingAddressCountry')}
               onBlur={handleBlur('billingAddressCountry')}
-              value={checkState ? values.country : values.billingAddressCountry}
+              value={values.billingAddressCountry}
               placeholder={'Enter Country'}
             />
             {touched.billingAddressCountry && errors.billingAddressCountry ? (
@@ -247,7 +250,7 @@ function BillingEdit({
             <Button
               disabled={submitting}
               onPress={handleSubmit}
-              title={submitting ? 'Upadating...' : 'Update'}
+              title={submitting ? 'Updating...' : 'Update'}
             />
           </View>
         </View>
