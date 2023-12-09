@@ -48,17 +48,7 @@ function BillingEdit({
       setFieldValue('billingAddressState', values?.billingAddressState);
       setFieldValue('billingAddressCity', values?.billingAddressCity);
       setFieldValue('billingAddress', values?.billingAddress);
-      // setbilling(prevState => {
-      //   return {
-      //     ...prevState,
-      //     country: values?.billingAddressCountry,
-      //     state: values?.billingAddressState,
-      //     city: values?.billingAddressCity,
-      //     address: values?.billingAddress,
-      //   };
-      // });
     }
-    // console.log(setbillingAddress);
   }, [checkState]);
   return (
     <>
@@ -96,19 +86,7 @@ function BillingEdit({
           <View>
             <Text style={styles.label}>Address</Text>
             <CustomInput
-              onChangeText={
-                // text => {
-                // console.log(values);
-                // setbilling(prevState => {
-                //   return {
-                //     ...prevState,
-                //     address: text,
-                //   };
-                // });
-                //   setFieldValue('billingAddress', text);
-                // }
-                handleChange('billingAddress')
-              }
+              onChangeText={handleChange('billingAddress')}
               onBlur={handleBlur('billingAddress')}
               value={checkState ? values.address : values.billingAddress}
               placeholder={'Enter Address'}
@@ -122,17 +100,7 @@ function BillingEdit({
           <View>
             <Text style={styles.label}>City</Text>
             <CustomInput
-              onChangeText={
-                //   text => {
-                //   setbilling(prevState => {
-                //     return {
-                //       ...prevState,
-                //       city: text,
-                //     };
-                //   });
-                // }
-                handleChange('billingAddressCity')
-              }
+              onChangeText={handleChange('billingAddressCity')}
               onBlur={handleBlur('billingAddressCity')}
               value={checkState ? values.city : values.billingAddressCity}
               placeholder={'Enter City'}

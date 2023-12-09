@@ -7,7 +7,6 @@ import {
   Text,
   ScrollView,
   Image,
-  Platform,
   ActivityIndicator,
 } from 'react-native';
 import Header from '../../components/Header';
@@ -62,8 +61,6 @@ function ProfileEdit({navigation}) {
       setSubmitting(false);
       return navigation.navigate('Profile');
     } catch (err) {
-      console.log('err obj', err.response.data);
-      console.log('response message', err.response.data.message);
       setSubmitting(false);
       if (err.response) {
         showMessage({
@@ -92,9 +89,16 @@ function ProfileEdit({navigation}) {
       const imagePickerResponse = await launchImageLibrary(options);
 
       if (imagePickerResponse.didCancel) {
-        console.log('Image picker was canceled');
+        showMessage({
+          message: 'Image picker was canceled',
+          type: 'info',
+        });
       } else if (imagePickerResponse.error) {
-        console.error('Image picker error:', imagePickerResponse.error);
+        showMessage({
+          message: 'Image picker error',
+          type: 'error',
+        });
+        // console.error('Image picker error:', imagePickerResponse.error);
       } else if (imagePickerResponse.assets) {
         setSelectedFile('uploading...');
 
@@ -121,7 +125,6 @@ function ProfileEdit({navigation}) {
 
         if (cloudinaryResponse.ok) {
           const cloudinaryData = await cloudinaryResponse.json();
-          console.log('Image uploaded:', cloudinaryData?.public_id);
           setFieldValue('profileAvatarId', cloudinaryData?.public_id);
           setFieldValue('profileAvatarUrl', cloudinaryData?.secure_url);
           setSelectedImage({
@@ -135,7 +138,6 @@ function ProfileEdit({navigation}) {
             type: 'success',
           });
         } else {
-          // console.log('Image upload failed:', cloudinaryResponse.status);
           showMessage({
             message: 'Image upload failed. Please try again',
             type: 'info',
@@ -171,7 +173,11 @@ function ProfileEdit({navigation}) {
           });
         }
       } catch (err) {
-        console.log(err?.response);
+        // console.log(err?.response);
+        showMessage({
+          message: 'Error Occured',
+          type: 'error',
+        });
       }
     }
     getDetails();
@@ -205,12 +211,9 @@ function ProfileEdit({navigation}) {
           setCurrentStep={setCurrentStep}
         />
       </View>
-      {/* <View style={{backgroundColor: 'red', height: 200}}></View> */}
       {userDetail ? (
         <Formik
-          // enableReinitialize={true}
           onSubmit={handleProfileUpdate}
-          // initialValues={userDetail}
           initialValues={{
             dateOfBirth: userDetail?.dateOfBirth,
             billingAddress: userDetail?.billingAddress,
@@ -317,7 +320,6 @@ function Step1({
   const [isFocus, setIsFocus] = useState(false);
 
   const [date, setDate] = useState(new Date());
-  console.log(typeof values?.billingAddress);
   const [open, setOpen] = useState(false);
   useEffect(() => {
     setGenderlist([
@@ -344,7 +346,6 @@ function Step1({
           onConfirm={date => {
             setOpen(false);
             setDate(date);
-            console.log(date, 'frm confirm');
             setFieldValue('dateOfBirth', date);
           }}
           onCancel={() => {
@@ -489,12 +490,7 @@ function Step1({
           </View>
           <View>
             <Text style={styles.label}>Date of Birth</Text>
-            <View
-              style={
-                {
-                  // flexDirection: 'row',
-                }
-              }>
+            <View>
               <CustomInput
                 // onChangeText={handleChange('dateOfBirth')}
                 // onBlur={handleBlur('dateOfBirth')}
