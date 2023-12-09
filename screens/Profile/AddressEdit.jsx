@@ -14,7 +14,15 @@ import Button from '../../components/Button';
 import dropdownStyle from '../../components/dropdown.style';
 import {Dropdown} from 'react-native-element-dropdown';
 
-function AddressEdit({setcurrentStep}) {
+function AddressEdit({
+  setcurrentStep,
+  handleChange,
+  setFieldValue,
+  touched,
+  errors,
+  handleBlur,
+  values,
+}) {
   const [state, setstate] = useState([]);
   const [states, setStates] = useState([]);
   const [countries, setCountries] = useState([]);
@@ -26,26 +34,66 @@ function AddressEdit({setcurrentStep}) {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <View
+      {/* <View
         style={{
           paddingHorizontal: 24,
           alignItems: 'center',
         }}>
         <Image source={require('../../assets/images/stepper2.png')} />
-      </View>
+      </View> */}
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={styles.contentContainer}>
         <View style={styles.inputGroup}>
           <View>
             <Text style={styles.label}>Address</Text>
-            <CustomInput placeholder={'Enter Address'} />
+            <CustomInput
+              onChangeText={handleChange('address')}
+              onBlur={handleBlur('address')}
+              value={values.address}
+              placeholder={'Enter Address'}
+            />
+            {touched.address && errors.address ? (
+              <Text style={{color: 'red'}}>{errors.address}</Text>
+            ) : null}
           </View>
           <View>
             <Text style={styles.label}>City</Text>
-            <CustomInput placeholder={'Enter City'} />
+            <CustomInput
+              onChangeText={handleChange('city')}
+              onBlur={handleBlur('city')}
+              value={values.city}
+              placeholder={'Enter City'}
+            />
+            {touched.city && errors.city ? (
+              <Text style={{color: 'red'}}>{errors.city}</Text>
+            ) : null}
           </View>
           <View>
+            <Text style={styles.label}>State</Text>
+            <CustomInput
+              onChangeText={handleChange('state')}
+              onBlur={handleBlur('state')}
+              value={values.state}
+              placeholder={'Enter State'}
+            />
+            {touched.state && errors.state ? (
+              <Text style={{color: 'red'}}>{errors.state}</Text>
+            ) : null}
+          </View>
+          <View>
+            <Text style={styles.label}>Country</Text>
+            <CustomInput
+              onChangeText={handleChange('country')}
+              onBlur={handleBlur('country')}
+              value={values.country}
+              placeholder={'Enter Country'}
+            />
+            {touched.country && errors.country ? (
+              <Text style={{color: 'red'}}>{errors.country}</Text>
+            ) : null}
+          </View>
+          {/* <View>
             <View style={dropdownStyle.container}>
               <Text style={styles.label}>State</Text>
 
@@ -106,13 +154,13 @@ function AddressEdit({setcurrentStep}) {
                 }}
               />
             </View>
-          </View>
+          </View> */}
         </View>
 
         <View
           style={{
-            marginTop: 70,
-            marginBottom: 24,
+            marginTop: 50,
+            marginBottom: 35,
             flexDirection: 'row',
             justifyContent: 'space-between',
           }}>

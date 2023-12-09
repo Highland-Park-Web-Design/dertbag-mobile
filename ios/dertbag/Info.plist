@@ -60,5 +60,9 @@
 		<string>Helvetica-Oblique.ttf</string>
 		<string>Helvetica.ttf</string>
 	</array>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Allow Photo Library Usage</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Allow Camera Usage</string>
 </dict>
 </plist>

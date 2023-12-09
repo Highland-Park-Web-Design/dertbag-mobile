@@ -26,12 +26,12 @@ function SignUp({navigation}) {
   };
 
   const validationSchema = Yup.object().shape({
+    lastName: Yup.string().required('Lastname is Required'),
+    firstName: Yup.string().required('Firstname is Required'),
     email: Yup.string()
       .email('Please enter a valid email')
       .required('Email Address is Required'),
     password: Yup.string().required('Password is Required'),
-    phoneNumber: Yup.string().required('Phone is Required'),
-    fullName: Yup.string().required('Full Name is Required'),
   });
 
   const handleSignUp = async (values, formikBag) => {
@@ -39,6 +39,7 @@ function SignUp({navigation}) {
       setSubmtting(true);
       let res = await RegisterUser(values);
       await storeData('user', {...res.data.user, token: res.data.token});
+      await storeData('AppOpened', true);
       setSubmtting(false);
       return navigation.navigate('Product');
     } catch (err) {
@@ -59,10 +60,6 @@ function SignUp({navigation}) {
     }
   };
 
-  // useEffect(() => {
-  //   getProduct();
-  // }, []);
-
   return (
     <>
       {submitting ? (
@@ -76,8 +73,8 @@ function SignUp({navigation}) {
           <Formik
             onSubmit={handleSignUp}
             initialValues={{
-              fullName: '',
-              phoneNumber: '',
+              firstName: '',
+              lastName: '',
               email: '',
               password: '',
             }}
@@ -121,34 +118,32 @@ function SignUp({navigation}) {
                           style={{
                             marginBottom: 17,
                           }}>
-                          <Text style={styles.inputLabel}>FullName</Text>
+                          <Text style={styles.inputLabel}>First Name</Text>
                           <TextInput
-                            placeholder="Enter FullName"
+                            placeholder="Enter Name"
                             style={styles.inputControl}
-                            onChangeText={handleChange('fullName')}
-                            onBlur={handleBlur('fullName')}
-                            value={values.fullName}
+                            onChangeText={handleChange('firstName')}
+                            onBlur={handleBlur('firstName')}
+                            value={values.firstName}
                           />
-                          {touched.fullName && errors.fullName ? (
-                            <Text style={styles.error}>{errors.fullName}</Text>
+                          {touched.firstName && errors.firstName ? (
+                            <Text style={styles.error}>{errors.firstName}</Text>
                           ) : null}
                         </View>
                         <View
                           style={{
                             marginBottom: 17,
                           }}>
-                          <Text style={styles.inputLabel}>Phone</Text>
+                          <Text style={styles.inputLabel}>Last Name</Text>
                           <TextInput
-                            placeholder="Enter Phone"
+                            placeholder="Enter Name"
                             style={styles.inputControl}
-                            onChangeText={handleChange('phoneNumber')}
-                            onBlur={handleBlur('phoneNumber')}
-                            value={values.phoneNumber}
+                            onChangeText={handleChange('lastName')}
+                            onBlur={handleBlur('lastName')}
+                            value={values.lastName}
                           />
-                          {touched.phoneNumber && errors.phoneNumber ? (
-                            <Text style={styles.error}>
-                              {errors.phoneNumber}
-                            </Text>
+                          {touched.lastName && errors.lastName ? (
+                            <Text style={styles.error}>{errors.lastName}</Text>
                           ) : null}
                         </View>
                         <View

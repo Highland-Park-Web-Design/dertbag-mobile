@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {
   StyleSheet,
@@ -13,9 +13,92 @@ import {ScrollView} from 'react-native-gesture-handler';
 import RightIco from '../../Icons/RightIco.svg';
 import TrashIco from '../../Icons/TrashIco.svg';
 import Button from '../../components/Button';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {useIsFocused} from '@react-navigation/native';
+import {showMessage} from 'react-native-flash-message';
 
 function Bag({navigation}) {
   const [bagState, setBagState] = useState(false);
+  const [bagItems, setBagItems] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [shipping, setShipping] = useState(0);
+  const [subtotal, setSubTotal] = useState(0);
+  const isFocused = useIsFocused();
+
+  // const [total, setTotal] = useState(0);
+  async function getCartList() {
+    try {
+      const value = await AsyncStorage.getItem('CartItems');
+
+      if (value === null) {
+        setBagState(false);
+      }
+
+      const ParsedList = JSON.parse(value);
+      setBagItems(ParsedList);
+      const prices = ParsedList?.map(item => item.price * item.quantity);
+
+      // Use the reduce() function to calculate the total price
+      if (prices) {
+        const totalPrice = prices?.reduce(
+          (acc, currentPrice) => acc + currentPrice,
+          0,
+        );
+        setSubTotal(totalPrice);
+      }
+      setBagState(true);
+    } catch (err) {
+      console.log(err);
+      if (err.response) {
+        showMessage({
+          message: err.response.data.message,
+          type: 'danger',
+        });
+      } else {
+        showMessage({
+          message: 'unable to reach server, check internet',
+          type: 'danger',
+        });
+      }
+    }
+  }
+
+  async function RemoveItemFromCart(id) {
+    try {
+      const value = await AsyncStorage.getItem('CartItems');
+
+      const parsedData = JSON.parse(value);
+
+      const itemIndexToRemove = parsedData.findIndex(item => item.id === id);
+
+      if (itemIndexToRemove !== -1) {
+        parsedData.splice(itemIndexToRemove, 1);
+
+        // Update the AsyncStorage data with the modified array
+        await AsyncStorage.setItem('CartItems', JSON.stringify(parsedData));
+      }
+      getCartList();
+      setBagState(true);
+    } catch (err) {
+      console.log(err);
+      if (err.response) {
+        showMessage({
+          message: err.response.data.message,
+          type: 'danger',
+        });
+      } else {
+        showMessage({
+          message: 'unable to reach server, check internet',
+          type: 'danger',
+        });
+      }
+    }
+  }
+
+  useEffect(() => {
+    getCartList();
+  }, [isFocused]);
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={{paddingTop: 24, paddingBottom: 16}}>
@@ -33,10 +116,29 @@ function Bag({navigation}) {
           }}>
           YOUR BAG ITEMS
         </Text>
-        {bagState ? (
-          <CartItem setBagState={setBagState} />
+
+        {bagItems ? (
+          <View style={{gap: 10}}>
+            {bagItems &&
+              bagItems?.map(item => (
+                <CartItem
+                  image={item?.image}
+                  prodPrice={`$${item.price}`}
+                  prodQuantity={item.quantity}
+                  prodTitle={item.name}
+                  prodVariant={item?.variant}
+                  key={item.id}
+                  setBagState={setBagState}
+                  deleteProd={() => RemoveItemFromCart(item.id)}
+                />
+              ))}
+          </View>
         ) : (
-          <EmptyState setBagState={setBagState} />
+          <EmptyState navigation={navigation} setBagState={setBagState} />
+        )}
+
+        {bagItems && bagItems?.length === 0 && (
+          <EmptyState navigation={navigation} setBagState={setBagState} />
         )}
 
         <View style={styles.detailsContainer}>
@@ -80,11 +182,11 @@ function Bag({navigation}) {
           </View>
           <View style={styles.summaryGroupItem}>
             <Text style={styles.GroupText}>SUBTOTAL</Text>
-            <Text style={styles.GroupText}>$0.00</Text>
+            <Text style={styles.GroupText}>${subtotal}.00</Text>
           </View>
           <View style={styles.summaryGroupItem}>
             <Text style={styles.GroupBoldText}>TOTAL</Text>
-            <Text style={styles.GroupBoldText}>$0.00</Text>
+            <Text style={styles.GroupBoldText}>${subtotal + shipping}.00</Text>
           </View>
         </View>
         <View style={{paddingVertical: 24, gap: 24}}>
@@ -93,7 +195,13 @@ function Bag({navigation}) {
             disabled={bagState ? false : true}
             title={'proceed to checkout'}
           />
-          {bagState && <Button variation={'ghost'} title={'Get More stuffs'} />}
+          {bagState && (
+            <Button
+              onpress={() => navigation.navigate('FOR YOU')}
+              variation={'ghost'}
+              title={'Get More stuffs'}
+            />
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -102,14 +210,14 @@ function Bag({navigation}) {
 
 export default Bag;
 
-function EmptyState({setBagState}) {
+function EmptyState({setBagState, navigation}) {
   return (
     <View style={styles.EmptyContainer}>
       <Image source={require('../../assets/images/Tags.png')} />
       <Text style={{fontWeight: '400', fontSize: 16, color: '#111'}}>
         CART IS EMPTY
       </Text>
-      <TouchableOpacity onPress={() => setBagState(true)}>
+      <TouchableOpacity onPress={() => navigation.navigate('FOR YOU')}>
         <Text style={{fontWeight: '300', fontSize: 12, color: '#111'}}>
           ADD ITEM TO BAG
         </Text>
@@ -120,12 +228,11 @@ function EmptyState({setBagState}) {
 
 function CartItem({
   prodTitle,
-  prodAmmout,
+  prodVariant,
   prodPrice,
-  prodCaption,
   prodQuantity,
-  setBagState,
-  // prodQuantity,
+  deleteProd,
+  image,
 }) {
   return (
     <View
@@ -136,13 +243,13 @@ function CartItem({
       }}>
       <Image
         style={{width: 129, height: 112, borderRadius: 4}}
-        source={require('../../assets/images/cartItemImg.png')}
+        source={{uri: image}}
       />
       <View style={{justifyContent: 'space-between', width: '50%'}}>
         <View style={{gap: 4}}>
-          <Text style={styles.CartItemTitle}>BRAILLE TRENCH...</Text>
-          <Text style={styles.CartItemCaption}>LONGSLEEVE</Text>
-          <Text style={styles.CartItemCaption}>MEDIUM</Text>
+          <Text style={styles.CartItemTitle}>{prodTitle}</Text>
+          {/* <Text style={styles.CartItemCaption}>LONGSLEEVE</Text> */}
+          <Text style={styles.CartItemCaption}>{prodVariant}</Text>
         </View>
 
         <View
@@ -151,11 +258,11 @@ function CartItem({
             justifyContent: 'space-between',
             // alignSelf: 'flex-end',
           }}>
-          <Text>$360.00</Text>
-          <Text>QTY: 1</Text>
+          <Text>{prodPrice}</Text>
+          <Text>QTY: {prodQuantity}</Text>
         </View>
       </View>
-      <TouchableOpacity onPress={() => setBagState(false)}>
+      <TouchableOpacity onPress={deleteProd}>
         <TrashIco />
       </TouchableOpacity>
     </View>

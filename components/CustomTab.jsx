@@ -9,7 +9,7 @@ export default function MyTabBar({state, descriptors, navigation}) {
         padding: 24,
         paddingBottom: 32,
         justifyContent: 'center',
-        gap: 16,
+        gap: 10,
         alignItems: 'center',
       }}>
       {state.routes.map((route, index) => {

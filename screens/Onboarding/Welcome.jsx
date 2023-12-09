@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {
   View,
@@ -9,8 +9,12 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
+import {UserContext} from '../../context/AuthContext';
+import {storeData} from '../../store';
 
 function Welcome({navigation}) {
+  const {state, dispatch} = useContext(UserContext);
+
   return (
     <SafeAreaView style={styles.container}>
       <ImageBackground
@@ -63,7 +67,10 @@ function Welcome({navigation}) {
                 <Text style={styles.actionCaption}>Create an account</Text>
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => navigation.navigate('Product')}
+                onPress={async () => {
+                  await storeData('AppOpened', true);
+                  dispatch({type: 'SET_LOGIN', payload: false});
+                }}
                 activeOpacity={0.8}>
                 <Text style={styles.bottomtext}>GUEST ACCESS</Text>
               </TouchableOpacity>
