@@ -319,7 +319,7 @@ function Step1({
 
   const [isFocus, setIsFocus] = useState(false);
 
-  const [date, setDate] = useState(new Date());
+  const [date, setDate] = useState(new Date(values.dateOfBirth));
   const [open, setOpen] = useState(false);
   useEffect(() => {
     setGenderlist([
