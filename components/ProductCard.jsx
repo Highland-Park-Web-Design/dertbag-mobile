@@ -15,7 +15,11 @@ function ProductCard({product, navigation, index, dispatch}) {
         }}
         key={index}
         style={styles.productCard}>
-        <Image source={{uri: product?.image.src}} style={styles.productImage} />
+        <Image
+          source={{uri: product?.image?.src}}
+          // source={{uri: product?.images[0]?.src}}
+          style={styles.productImage}
+        />
         <View style={styles.productCaption}>
           <Text style={styles.productTitle}>{product?.title}</Text>
           <Text>{product?.product_type}</Text>

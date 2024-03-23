@@ -36,8 +36,9 @@ import CancelIco from '../Icons/cancelIco.svg';
 import RoundCheckbox from '../components/RoundCheckbox';
 import SquareCheckbox from '../components/SquareCheckbox';
 import styles from './product.style';
-import {getData, storeData} from '../store';
+import {getData, removeData, removeMultipleData, storeData} from '../store';
 import {UserContext} from '../context/AuthContext';
+import {shopifyClient} from '../utils';
 
 function Product({navigation}) {
   const {state} = useContext(UserContext);
@@ -54,6 +55,26 @@ function Product({navigation}) {
     try {
       const {data} = await GetUserDetails();
       if (data) await storeData('UserData', data.user);
+
+      // const checkoutData = await shopifyClient.checkout
+      //   .create()
+      //   .then(checkout => {
+      //     storeData('checkoutId', checkout.id);
+      //     // Do something with the checkout
+      //     return checkout;
+      //   });
+
+      // const checkoutId = checkoutData.id;
+
+      // const checkoutId = await getData('checkoutId');
+
+      const lineItemsToAdd = [
+        {
+          variantId: 'gid://shopify/ProductVariant/42283137401015',
+          quantity: 5,
+          customAttributes: [{key: 'hello', value: 'world'}],
+        },
+      ];
     } catch (err) {
       console.log(err);
     }
@@ -73,6 +94,16 @@ function Product({navigation}) {
             product => product.status === 'active',
           );
 
+          const filterByAvailability = data?.products?.map(product =>
+            product.variants.filter(item => item?.inventory_quantity > 0),
+          );
+
+          setRecomendation(filterByAvailability);
+          // shopifyClient.product.fetchAll().then(products => {
+          //   // Do something with the products
+          //   // setAllProducts(products);
+          //   // console.log({products: products[0].images});
+          // });
           setAllProducts(data?.products);
           setAllActiveProducts(filterByActivestatus);
           setLoading(false);
@@ -98,7 +129,7 @@ function Product({navigation}) {
 
   const handleTextSubmit = () => {
     // Handle the action when the user presses "Enter" on the keyboard
-    console.log('Enter key pressed. Text entered:', productText);
+    // console.log('Enter key pressed. Text entered:', productText);
   };
 
   const filterData = () => {
@@ -241,7 +272,7 @@ function Product({navigation}) {
                       <FlatList
                         style={{width: '100%'}}
                         horizontal
-                        data={newArivals}
+                        data={allActiveProduct}
                         renderItem={({item}) => (
                           <ProductCard
                             index={item?.id}
@@ -433,8 +464,6 @@ function SearchScreen({filterData, navigation, dispatch}) {
   const handleClosePress = useCallback(() => {
     bottomSheetRef.current?.close();
   }, []);
-  // console.log(singleProduct?.variants[0]?.price, 'idpage');
-  // const {width} = useWindowDimensions();
   return (
     <View style={styles.pageWrapper}>
       <View
