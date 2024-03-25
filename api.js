@@ -3,7 +3,7 @@ import {REACT_APP_API_URL} from '@env';
 import {getData} from './store';
 
 const instance = axios.create({
-  baseURL: 'http://192.168.1.28:4006/',
+  baseURL: REACT_APP_API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
