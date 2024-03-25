@@ -32,17 +32,19 @@ import {
 import {GetProductByID} from '../../api';
 import CustomSkeleton from '../../components/Skeleton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {shopifyClient} from '../../utils';
+import {getData, storeData} from '../../store';
 
 function ProductDetails({navigation}) {
   const {state} = useContext(ProductContext);
   const bottomSheetRef = useRef(null);
   const [singleProduct, setSingleProduct] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [counter, setCounter] = useState(Number(1));
+  const [addItemToCart, setAddItemToCart] = useState(false);
+  const [counter, setCounter] = useState(Number(0));
   const [selectedVariant, setSelectedVariant] = useState(Number(0));
   const [variantTitle, setVariantTitle] = useState('small');
   const [bagStatus, setBagStatus] = useState(false);
-
   const getProductByID = useCallback(async () => {
     try {
       const {data} = await GetProductByID(state?.id);
@@ -75,6 +77,7 @@ function ProductDetails({navigation}) {
       const itemInCart = ParsedList.find(obj => obj.id === id);
 
       if (itemInCart) {
+        setCounter(itemInCart.quantity);
         setBagStatus(true);
       }
     }
@@ -102,42 +105,104 @@ function ProductDetails({navigation}) {
   async function addToCart(cartContent) {
     try {
       const value = await AsyncStorage.getItem('CartItems');
+      const ParsedList = value ? JSON.parse(value) : [];
+      const itemInCartIndex = ParsedList.findIndex(
+        obj => obj.variantID === cartContent.variantID,
+      );
 
-      if (value !== null) {
-        const ParsedList = JSON.parse(value);
+      if (itemInCartIndex === -1) {
+        ParsedList.push(cartContent);
+        const getcheckoutId = await getData('checkoutId');
+        if (getcheckoutId === null) {
+          setAddItemToCart(true);
+          const checkout = await shopifyClient.checkout
+            .create()
+            .then(checkout => {
+              return checkout;
+            });
+          const storing = await storeData('checkoutId', checkout.id);
 
-        const itemInCart = ParsedList.find(obj => obj.id === cartContent.id);
+          const lineItemsToAdd = [
+            {
+              variantId: cartContent.variantID,
+              quantity: cartContent.quantity,
+              // customAttributes: [{key: 'hello', value: 'world'}],
+            },
+          ];
+          const addItem = await shopifyClient.checkout
+            .addLineItems(checkout.id, lineItemsToAdd)
+            .then(checkout => checkout);
 
-        if (!itemInCart) {
-          ParsedList.push(cartContent);
+          setAddItemToCart(false);
+        } else {
+          const lineItemsToAdd = [
+            {
+              variantId: cartContent.variantID,
+              quantity: cartContent.quantity,
+            },
+          ];
 
-          const strigifyItems = JSON.stringify(ParsedList);
-          await AsyncStorage.setItem('CartItems', strigifyItems);
+          setAddItemToCart(true);
+          const addItem = await shopifyClient.checkout
+            .addLineItems(getcheckoutId, lineItemsToAdd)
+            .then(checkout => {
+              // Do something with the updated checkout
+              setAddItemToCart(false);
+              return checkout;
+            });
         }
-        showMessage({
-          message: 'Item Added to Bag',
-          type: 'success',
-        });
-        setBagStatus(true);
-      }
-
-      if (value === null) {
-        const cartData = JSON.stringify([cartContent]);
-
-        await AsyncStorage.setItem('CartItems', cartData);
-      }
-    } catch (err) {
-      if (err.response) {
-        showMessage({
-          message: err.response.data.message,
-          type: 'danger',
-        });
       } else {
-        showMessage({
-          message: 'unable to reach server, check internet',
-          type: 'danger',
-        });
+        if (ParsedList[itemInCartIndex].quantity !== cartContent.quantity) {
+          ParsedList[itemInCartIndex].quantity = cartContent.quantity;
+
+          const checkoutId = await getData('checkoutId');
+
+          const checkout = await shopifyClient.checkout
+            .fetch(checkoutId)
+            .then(checkout => {
+              return checkout;
+            });
+
+          const findLineItem = checkout.lineItems.find(item => {
+            return item.variant.id === ParsedList[itemInCartIndex].variantID;
+          });
+
+          // ,
+
+          setAddItemToCart(true);
+
+          if (checkoutId && findLineItem !== undefined) {
+            const lineItemsToUpdate = [
+              {
+                id: findLineItem.id,
+                quantity: cartContent.quantity,
+              },
+            ];
+            await shopifyClient.checkout
+              .updateLineItems(checkoutId, lineItemsToUpdate)
+              .then(checkout => {
+                // Do something with the updated checkout
+                console.log(checkout.lineItems); // Quantity of line item 'gid://shopify/Product/7857989384' updated to 2
+              });
+          }
+          setAddItemToCart(false);
+        }
       }
+
+      const strigifyItems = JSON.stringify(ParsedList);
+      await AsyncStorage.setItem('CartItems', strigifyItems);
+
+      showMessage({
+        message: 'Item Added to Bag',
+        type: 'success',
+      });
+      setBagStatus(true);
+    } catch (err) {
+      console.error(err);
+      showMessage({
+        message: 'Error adding item to cart',
+        type: 'danger',
+      });
     }
   }
   return (
@@ -217,24 +282,40 @@ function ProductDetails({navigation}) {
                 ` $` +
                   singleProduct?.variants[selectedVariant]?.price * counter}
             </Text>
-            <Text style={styles.productQuantity}>x{counter}</Text>
+            <Text style={styles.productQuantity}>
+              x{counter} In Stock:
+              {singleProduct?.variants &&
+                singleProduct?.variants[selectedVariant]?.inventory_quantity}
+            </Text>
           </View>
           <View style={{gap: 16, flexDirection: 'row', paddingVertical: 16}}>
             <TouchableOpacity
-              onPress={() =>
-                addToCart({
-                  name: singleProduct?.title,
-                  variant: singleProduct?.variants[selectedVariant]?.title,
-                  id: singleProduct?.id,
-                  price:
-                    singleProduct?.variants[selectedVariant]?.price * counter,
-                  quantity: counter,
-                  image: singleProduct?.images[0]?.src,
-                })
-              }
+              onPress={() => {
+                if (counter <= 0) {
+                  showMessage({
+                    message: 'Increase Item Count',
+                    type: 'warning',
+                  });
+                } else {
+                  addToCart({
+                    name: singleProduct?.title,
+                    variant: singleProduct?.variants[selectedVariant]?.title,
+                    variantID:
+                      singleProduct?.variants[selectedVariant]
+                        ?.admin_graphql_api_id,
+                    id: singleProduct?.id,
+                    price:
+                      singleProduct?.variants[selectedVariant]?.price * counter,
+                    quantity: counter,
+                    image: singleProduct?.images[0]?.src,
+                  });
+                }
+              }}
               disabled={loading}
               style={styles.AddCartBtn}>
               <Text style={styles.AddCartBtnText}>
+                {!addItemToCart ? '' : 'Adding '}
+
                 {bagStatus ? 'Already In Bag' : 'ADD TO BAG'}
               </Text>
             </TouchableOpacity>
@@ -245,13 +326,30 @@ function ProductDetails({navigation}) {
                 gap: 10,
               }}>
               <TouchableOpacity
-                onPress={() => setCounter(prev => prev + 1)}
+                onPress={() => {
+                  if (
+                    counter ===
+                    Number(
+                      singleProduct?.variants[selectedVariant]
+                        ?.inventory_quantity,
+                    )
+                  ) {
+                    setCounter(
+                      Number(
+                        singleProduct?.variants[selectedVariant]
+                          ?.inventory_quantity,
+                      ),
+                    );
+                  } else {
+                    setCounter(prev => prev + 1);
+                  }
+                }}
                 style={styles.Btn}>
                 <PlusIco />
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
-                  if (counter > 1) {
+                  if (counter > 0) {
                     setCounter(prev => prev - 1);
                   }
                 }}
@@ -288,7 +386,11 @@ function ProductDetails({navigation}) {
                 {singleProduct?.variants &&
                   singleProduct?.variants[selectedVariant]?.price * counter}
               </Text>
-              <Text style={styles.productQuantity}>x{counter}</Text>
+              <Text style={styles.productQuantity}>
+                x{counter} In Stock:
+                {singleProduct?.variants &&
+                  singleProduct?.variants[selectedVariant]?.inventory_quantity}
+              </Text>
             </View>
             <View
               style={{
@@ -386,40 +488,68 @@ function ProductDetails({navigation}) {
                 }}>
                 <View style={{gap: 16, flexDirection: 'row'}}>
                   <TouchableOpacity
-                    onPress={() =>
-                      addToCart({
-                        name: singleProduct?.title,
-                        variant:
-                          singleProduct?.variants[selectedVariant]?.title,
-                        id: singleProduct?.id,
-                        price:
-                          singleProduct?.variants[selectedVariant]?.price *
-                          counter,
-                        quantity: counter,
-                        image: singleProduct?.images[0]?.src,
-                      })
-                    }
+                    onPress={() => {
+                      if (counter <= 0) {
+                        showMessage({
+                          message: 'Increase Item Count',
+                          type: 'warning',
+                        });
+                      } else {
+                        addToCart({
+                          name: singleProduct?.title,
+                          variant:
+                            singleProduct?.variants[selectedVariant]?.title,
+                          variantID:
+                            singleProduct?.variants[selectedVariant]
+                              ?.admin_graphql_api_id,
+                          id: singleProduct?.id,
+                          price:
+                            singleProduct?.variants[selectedVariant]?.price *
+                            counter,
+                          quantity: counter,
+                          image: singleProduct?.images[0]?.src,
+                        });
+                      }
+                    }}
                     disabled={loading}
                     style={styles.AddCartBtn}>
                     <Text style={styles.AddCartBtnText}>
+                      {!addItemToCart ? '' : 'Adding'}
+
                       {bagStatus ? 'Already In Bag' : 'ADD TO BAG'}
                     </Text>
                   </TouchableOpacity>
                   <View
                     style={{
-                      // backgroundColor: 'green',
                       flexDirection: 'row',
                       alignItems: 'center',
                       gap: 10,
                     }}>
                     <TouchableOpacity
-                      onPress={() => setCounter(prev => prev + 1)}
+                      onPress={() => {
+                        if (
+                          counter ===
+                          Number(
+                            singleProduct?.variants[selectedVariant]
+                              ?.inventory_quantity,
+                          )
+                        ) {
+                          setCounter(
+                            Number(
+                              singleProduct?.variants[selectedVariant]
+                                ?.inventory_quantity,
+                            ),
+                          );
+                        } else {
+                          setCounter(prev => prev + 1);
+                        }
+                      }}
                       style={styles.Btn}>
                       <PlusIco />
                     </TouchableOpacity>
                     <TouchableOpacity
                       onPress={() => {
-                        if (counter > 1) {
+                        if (counter > 0) {
                           setCounter(prev => prev - 1);
                         }
                       }}

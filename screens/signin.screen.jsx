@@ -43,6 +43,7 @@ function SignIn({navigation}) {
       return navigation?.navigate('Product');
     } catch (err) {
       setSubmitting(false);
+      console.log(err);
       if (err.response) {
         showMessage({
           message: err.response.data.message,

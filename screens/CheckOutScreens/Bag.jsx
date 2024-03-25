@@ -16,6 +16,8 @@ import Button from '../../components/Button';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useIsFocused} from '@react-navigation/native';
 import {showMessage} from 'react-native-flash-message';
+import {shopifyClient} from '../../utils';
+import {getData} from '../../store';
 
 function Bag({navigation}) {
   const [bagState, setBagState] = useState(false);
@@ -24,6 +26,7 @@ function Bag({navigation}) {
   const [shipping, setShipping] = useState(0);
   const [subtotal, setSubTotal] = useState(0);
   const isFocused = useIsFocused();
+  const [checkoutURL, setCheckoutURL] = useState([]);
 
   // const [total, setTotal] = useState(0);
   async function getCartList() {
@@ -36,9 +39,17 @@ function Bag({navigation}) {
 
       const ParsedList = JSON.parse(value);
       setBagItems(ParsedList);
+
       const prices = ParsedList?.map(item => item.price * item.quantity);
 
-      // Use the reduce() function to calculate the total price
+      const checkoutId = await getData('checkoutId');
+      shopifyClient.checkout
+        .fetch(checkoutId)
+        .then(checkout => {
+          setCheckoutURL(checkout);
+        })
+        .catch(err => console.log(err));
+
       if (prices) {
         const totalPrice = prices?.reduce(
           (acc, currentPrice) => acc + currentPrice,
@@ -63,7 +74,7 @@ function Bag({navigation}) {
     }
   }
 
-  async function RemoveItemFromCart(id) {
+  async function RemoveItemFromCart(id, variantID) {
     try {
       const value = await AsyncStorage.getItem('CartItems');
 
@@ -74,7 +85,23 @@ function Bag({navigation}) {
       if (itemIndexToRemove !== -1) {
         parsedData.splice(itemIndexToRemove, 1);
 
-        // Update the AsyncStorage data with the modified array
+        const checkoutId = await getData('checkoutId');
+
+        if (checkoutId) {
+          const findLineItem = checkoutURL.lineItems.find(item => {
+            return item.variant.id === variantID;
+          });
+
+          if (findLineItem) {
+            const lineItemIdsToRemove = [findLineItem.id];
+            shopifyClient.checkout
+              .removeLineItems(checkoutId, lineItemIdsToRemove)
+              .then(checkout => {
+                return checkout;
+              });
+          }
+        }
+
         await AsyncStorage.setItem('CartItems', JSON.stringify(parsedData));
       }
       getCartList();
@@ -129,7 +156,7 @@ function Bag({navigation}) {
                   prodVariant={item?.variant}
                   key={item.id}
                   setBagState={setBagState}
-                  deleteProd={() => RemoveItemFromCart(item.id)}
+                  deleteProd={() => RemoveItemFromCart(item.id, item.variantID)}
                 />
               ))}
           </View>
@@ -191,7 +218,7 @@ function Bag({navigation}) {
         </View>
         <View style={{paddingVertical: 24, gap: 24}}>
           <Button
-            onpress={() => navigation.navigate('Checkout')}
+            onpress={() => navigation.navigate('Checkout', {data: checkoutURL})}
             disabled={bagState ? false : true}
             title={'proceed to checkout'}
           />

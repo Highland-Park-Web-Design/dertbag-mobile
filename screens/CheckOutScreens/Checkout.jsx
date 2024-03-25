@@ -13,13 +13,14 @@ import CustomInput from '../../components/input';
 import ActiveIcon from '../../Icons/ActiveRoundSelect.svg';
 import InActiveIcon from '../../Icons/InactiveRoundSelect.svg';
 import Button from '../../components/Button';
+import {WebView} from 'react-native-webview';
 
-function Checkout({navigation}) {
+function Checkout({navigation, route}) {
   const [paymentState, setPaymentState] = useState('card');
   return (
     <SafeAreaView style={styles.container}>
       <Header navigation={navigation} title={'Checkout'} />
-      <ScrollView style={styles.contentContainer}>
+      {/* <ScrollView style={styles.contentContainer}>
         <View>
           <Text style={styles.label}>Add Note</Text>
           <CustomInput
@@ -104,7 +105,11 @@ function Checkout({navigation}) {
             <Image source={require('../../assets/images/PayPal.png')} />
           </TouchableOpacity>
         </View>
-      </ScrollView>
+      </ScrollView> */}
+      <WebView
+        // originWhitelist={['*']}
+        source={{uri: route.params.data.webUrl}}
+      />
     </SafeAreaView>
   );
 }
